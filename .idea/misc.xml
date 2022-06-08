@@ -4,8 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/file_48.xml" value="0.194" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/mobile_48.xml" value="0.1835" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_main.xml" value="0.203125" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmark_item.xml" value="0.203125" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/contains_internal_storage.xml" value="0.15942028985507245" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row.xml" value="1.25" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage.xml" value="0.9" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_card_view.xml" value="0.25" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_item.xml" value="0.203125" />
       </map>
     </option>
   </component>

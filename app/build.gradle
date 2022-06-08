@@ -42,4 +42,5 @@ dependencies {
 
     implementation "com.mikepenz:fastadapter:${latestVersion}"
     implementation "com.mikepenz:fastadapter-commons:${latestVersion}"
+
 }

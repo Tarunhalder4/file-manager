@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FileManagers</string>
+
+    <string name="contains_internal_storage_and_sd_card">Contains internal storage and SD card</string>
+    <string name="bookmark">Bookmarks</string>
+    <string name="hide">Hide</string>
+
 </resources>
