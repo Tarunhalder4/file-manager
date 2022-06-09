@@ -3,16 +3,38 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/add_box_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/app_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/blue_dot.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/camera_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/dot_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/download_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/file_24.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/file_48.xml" value="0.194" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/fill_folder_48.xml" value="0.1835" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/green_dot.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/magenta_dot.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/mobile_48.xml" value="0.1835" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/music_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/pink_dot_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/red_dot.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/safe_box_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/video_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/watch_later_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/white_dot_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/yellow_dot.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_lufick_file_manager.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_main.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmark_item.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks_cardview.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/contains_internal_storage.xml" value="0.15942028985507245" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row.xml" value="1.25" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage.xml" value="0.9" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage.xml" value="0.3440514469453376" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage_cardview.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_card_view.xml" value="0.25" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_item.xml" value="0.203125" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_cardview.xml" value="0.203125" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_item.xml" value="0.25" />
       </map>
     </option>
   </component>
