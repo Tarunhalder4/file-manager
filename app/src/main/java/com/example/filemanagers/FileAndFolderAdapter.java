@@ -40,12 +40,12 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
 
     public static class ViewHolder extends FastAdapter.ViewHolder<FileAndFolderAdapter>{
         ImageView fileAndFolderImage;
-        TextView fileAndFolderName, numberOfItem;
+        TextView fileAndFolderName, date, fileSize;
         public ViewHolder(View itemView) {
             super(itemView);
             fileAndFolderImage = itemView.findViewById(R.id.file_and_folder_image);
             fileAndFolderName = itemView.findViewById(R.id.file_and_folder_name);
-            numberOfItem = itemView.findViewById(R.id.number_of_item);
+            fileSize = itemView.findViewById(R.id.date);
         }
 
         @Override
@@ -54,7 +54,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
                 fileAndFolderImage.setImageResource(R.drawable.fill_folder_48);
                 List<File> files = Arrays.asList(Objects.requireNonNull(item.fileAndFolder.listFiles()));
                 if (files.size()!=0) {
-                    numberOfItem.setText(String.valueOf(files.size()));
+                    fileSize.setText(String.valueOf(files.size()));
                 }
             }else{
                 fileAndFolderImage.setImageResource(R.drawable.file_48);
@@ -68,7 +68,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
         public void unbindView(FileAndFolderAdapter item) {
             fileAndFolderName.setText(null);
             fileAndFolderImage.setImageResource(0);
-            numberOfItem.setText(null);
+            fileSize.setText(null);
         }
 
     }

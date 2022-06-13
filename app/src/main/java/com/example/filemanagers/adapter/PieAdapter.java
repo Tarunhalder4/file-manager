@@ -1,4 +1,4 @@
-package com.example.filemanagers;
+package com.example.filemanagers.adapter;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.filemanagers.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class PieAdapter extends AbstractItem<PieAdapter, PieAdapter.ViewHolder> 
         super.bindView(holder, payloads);
         holder.dotImage.setImageResource(dotImage);
         holder.fileType.setText(fileType);
-        holder.fileSize.setText(fileSize);
+        holder.fileSize.setText(fileSize +"MB");
     }
 
     @Override

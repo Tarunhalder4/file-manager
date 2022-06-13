@@ -9,7 +9,7 @@
     <androidx.cardview.widget.CardView
         style="@style/child_card_theme"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,14 +23,11 @@
                 android:id="@+id/folder_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="13dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:src="@drawable/fill_folder_48"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/folder_name"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,27 +35,23 @@
                 android:id="@+id/folder_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:text="Download"
                 android:textColor="@color/white"
                 android:textSize="11dp"
-                app:layout_constraintBottom_toBottomOf="@+id/folder_image"
-                app:layout_constraintEnd_toStartOf="@+id/more"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/folder_image"
-                app:layout_constraintTop_toTopOf="@+id/folder_image" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/more"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/more_vert_48"
-                app:layout_constraintBottom_toBottomOf="@+id/folder_name"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/folder_name"
-                app:layout_constraintTop_toTopOf="@+id/folder_name" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

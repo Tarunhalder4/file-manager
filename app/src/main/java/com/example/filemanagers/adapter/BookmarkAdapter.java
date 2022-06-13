@@ -1,4 +1,4 @@
-package com.example.filemanagers;
+package com.example.filemanagers.adapter;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.filemanagers.Constant;
+import com.example.filemanagers.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.List;
@@ -41,7 +43,7 @@ public class BookmarkAdapter extends AbstractItem<BookmarkAdapter, BookmarkAdapt
     @Override
     public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
-        if(layoutType==Constant.CONTAINS_INTERNAL_STORAGE){
+        if(layoutType== Constant.CONTAINS_INTERNAL_STORAGE){
             holder.moreImage.setVisibility(View.INVISIBLE);
             holder.folderImage.setImageResource(folderImage);
             holder.folderName.setText(folderName);

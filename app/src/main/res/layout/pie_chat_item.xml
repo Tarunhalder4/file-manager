@@ -6,46 +6,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/gray"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
     tools:ignore="RtlSymmetry">
 
     <ImageView
         android:id="@+id/dot_image"
         android:layout_width="8dp"
         android:layout_height="8dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/pink_dot_24"
-        app:layout_constraintBottom_toBottomOf="@+id/file_type"
-        app:layout_constraintEnd_toStartOf="@+id/file_type"
-        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/file_type" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/file_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="4dp"
         android:text="Audio"
         android:textColor="@color/white"
         android:textSize="11dp"
-        app:layout_constraintBottom_toBottomOf="@+id/file_size"
-        app:layout_constraintEnd_toStartOf="@+id/file_size"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dot_image"
-        app:layout_constraintTop_toTopOf="@+id/file_size" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/file_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="41 MB"
         android:textColor="@color/white"
         android:textSize="11dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/file_type"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

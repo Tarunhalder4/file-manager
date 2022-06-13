@@ -29,6 +29,8 @@ android {
     buildFeatures{
         viewBinding = true
     }
+
+
 }
 
 dependencies {
@@ -42,5 +44,11 @@ dependencies {
 
     implementation "com.mikepenz:fastadapter:${latestVersion}"
     implementation "com.mikepenz:fastadapter-commons:${latestVersion}"
+    implementation "com.mikepenz:fastadapter-extensions:${latestVersion}"
+
+
+    implementation 'com.github.blackfizz:eazegraph:1.2.5l@aar'
+    implementation 'com.nineoldandroids:library:2.4.0'
+
 
 }
