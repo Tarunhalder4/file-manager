@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray">
+
+
+    <View
+        android:id="@+id/cut_view2"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintEnd_toStartOf="@+id/move_to_safe_box_view4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/copy_view3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/cut_24"
+        app:layout_constraintBottom_toBottomOf="@+id/cut_view2"
+        app:layout_constraintEnd_toEndOf="@+id/cut_view2"
+        app:layout_constraintStart_toStartOf="@+id/cut_view2"
+        app:layout_constraintTop_toTopOf="@+id/cut_view2" />
+
+    <TextView
+        android:id="@+id/move"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Move"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintEnd_toEndOf="@+id/cut_view2"
+        app:layout_constraintStart_toStartOf="@+id/cut_view2"
+        app:layout_constraintTop_toBottomOf="@+id/cut_view2" />
+
+
+    <View
+        android:id="@+id/copy_view3"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintEnd_toStartOf="@+id/cut_view2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/copy_24"
+        app:layout_constraintBottom_toBottomOf="@+id/copy_view3"
+        app:layout_constraintEnd_toEndOf="@+id/copy_view3"
+        app:layout_constraintStart_toStartOf="@+id/copy_view3"
+        app:layout_constraintTop_toTopOf="@+id/copy_view3" />
+
+    <TextView
+        android:id="@+id/copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="copy"
+        android:textColor="@color/white"
+        android:textSize="11dp"
+        app:layout_constraintEnd_toEndOf="@+id/copy_view3"
+        app:layout_constraintStart_toStartOf="@+id/copy_view3"
+        app:layout_constraintTop_toBottomOf="@+id/copy_view3" />
+
+
+    <View
+        android:id="@+id/move_to_safe_box_view4"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cut_view2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/safe_box_24"
+        app:layout_constraintBottom_toBottomOf="@+id/move_to_safe_box_view4"
+        app:layout_constraintEnd_toEndOf="@+id/move_to_safe_box_view4"
+        app:layout_constraintStart_toStartOf="@+id/move_to_safe_box_view4"
+        app:layout_constraintTop_toTopOf="@+id/move_to_safe_box_view4" />
+
+    <TextView
+        android:id="@+id/move_to_safe_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Move to safe box"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintEnd_toEndOf="@+id/move_to_safe_box_view4"
+        app:layout_constraintStart_toStartOf="@+id/move_to_safe_box_view4"
+        app:layout_constraintTop_toBottomOf="@+id/move_to_safe_box_view4" />
+
+
+    <!--    secound row-->
+
+
+    <View
+        android:id="@+id/rename_view22"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintEnd_toStartOf="@+id/delete_view24"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/compress_view23"
+        app:layout_constraintTop_toBottomOf="@+id/move" />
+
+    <ImageView
+        android:id="@+id/imageView22"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="2dp"
+        android:src="@drawable/ic_baseline_edit_note_24"
+        app:layout_constraintBottom_toBottomOf="@+id/rename_view22"
+        app:layout_constraintEnd_toEndOf="@+id/rename_view22"
+        app:layout_constraintStart_toStartOf="@+id/rename_view22"
+        app:layout_constraintTop_toTopOf="@+id/rename_view22" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Rename"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rename_view22"
+        app:layout_constraintStart_toStartOf="@+id/rename_view22"
+        app:layout_constraintTop_toBottomOf="@+id/rename_view22" />
+
+
+    <View
+        android:id="@+id/compress_view23"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintEnd_toStartOf="@+id/rename_view22"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/copy" />
+
+    <ImageView
+        android:id="@+id/imageView23"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/folder_zip_24"
+        app:layout_constraintBottom_toBottomOf="@+id/compress_view23"
+        app:layout_constraintEnd_toEndOf="@+id/compress_view23"
+        app:layout_constraintStart_toStartOf="@+id/compress_view23"
+        app:layout_constraintTop_toTopOf="@+id/compress_view23" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Compress"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/compress_view23"
+        app:layout_constraintStart_toStartOf="@+id/compress_view23"
+        app:layout_constraintTop_toBottomOf="@+id/compress_view23" />
+
+
+    <View
+        android:id="@+id/delete_view24"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rename_view22"
+        app:layout_constraintTop_toBottomOf="@+id/move_to_safe_box" />
+
+    <ImageView
+        android:id="@+id/imageView24"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_baseline_delete_24"
+        app:layout_constraintBottom_toBottomOf="@+id/delete_view24"
+        app:layout_constraintEnd_toEndOf="@+id/delete_view24"
+        app:layout_constraintStart_toStartOf="@+id/delete_view24"
+        app:layout_constraintTop_toTopOf="@+id/delete_view24" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Delete"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/delete_view24"
+        app:layout_constraintStart_toStartOf="@+id/delete_view24"
+        app:layout_constraintTop_toBottomOf="@+id/delete_view24" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

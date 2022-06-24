@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/open_with24"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:text="Open with"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/share_24"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Encrypt"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/ic_baseline_lock_24"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hide"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/hide_24"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to Bookmark"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/ic_baseline_bookmark_add_24"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Shortcut"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/file_24"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray1"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Details"
+        android:textSize="@dimen/text_size"
+        android:textColor="@color/white"
+        android:drawablePadding="4sp"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:drawableLeft="@drawable/ic_baseline_perm_device_information_24"/>
+
+</LinearLayout>

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,6 +25,7 @@ import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,19 +45,21 @@ public class LufickFileManager extends AppCompatActivity {
     private ItemTouchHelper touchHelper;
     private String TAG ="tag";
 
+    private String totalMemory,useOfMemory,availableMemory,present;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLufickFileManagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getAvailableMemory();
-
         mainAdapterFastItemAdapter = new FastItemAdapter<>();
         pieAdapterFastItemAdapter = new FastItemAdapter<>();
         bookmarkAdapterFastItemAdapter = new FastItemAdapter<>();
         containsInternalFastItemAdapter = new FastItemAdapter<>();
         internalStorageAdapterFastItemAdapter = new FastItemAdapter<>();
+
+        Constant.requestPermission(LufickFileManager.this);
 
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.red_dot,"Audio","1"));
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.magenta_dot,"Image","2"));
@@ -74,7 +78,8 @@ public class LufickFileManager extends AppCompatActivity {
         containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.video_24,Constant.VIDEO_FOLDER,Constant.CONTAINS_INTERNAL_STORAGE));
         containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.add_box_24,"Add to quick\naccess",Constant.CONTAINS_INTERNAL_STORAGE));
 
-        internalStorageAdapterFastItemAdapter.add(new InternalStorageAdapter("4.68","17.30","22.30","75"));
+        getMemoryInformation();
+        internalStorageAdapterFastItemAdapter.add(new InternalStorageAdapter(availableMemory,useOfMemory,totalMemory,present));
 
         bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.fill_folder_48,Constant.DOWNLOAD_FOLDER,Constant.BOOKMARK));
         bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.dcim_camera_24,Constant.DCIM_FOLDER,Constant.BOOKMARK));
@@ -91,14 +96,13 @@ public class LufickFileManager extends AppCompatActivity {
 
         mainAdapterFastItemAdapter.getAdapterItem(2).withSelectable(true);
 
-        mainAdapterFastItemAdapter.withOnClickListener(new OnClickListener<MainAdapter>() {
+        mainAdapterFastItemAdapter.getAdapterItem(2).withOnItemClickListener(new OnClickListener<MainAdapter>() {
             @Override
             public boolean onClick(View v, IAdapter<MainAdapter> adapter, MainAdapter item, int position) {
-                Log.d(TAG, "onClick: main");
                 Intent intent = new Intent(LufickFileManager.this,MainActivity.class);
                 intent.putExtra(Constant.PATH,Constant.INTERNAL_STORAGE_PATH);
                 startActivity(intent);
-                return false;
+                return true;
             }
         });
 
@@ -120,18 +124,25 @@ public class LufickFileManager extends AppCompatActivity {
 
     }
 
-    private void getAvailableMemory(){
+    @SuppressLint("DefaultLocale")
+    private void getMemoryInformation(){
+        long tempTotalMemory,tempUseOfMemory,tempAvailableMemory, tempPresent;
         StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        long bytesAvailable;
-        bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
-        long megAvailable = bytesAvailable / (1024 * 1024);
-        Log.d("tag","Available MB : "+megAvailable);
-        Log.d(TAG,"getTotalBytes: "+stat.getTotalBytes());
-        Log.d(TAG, "getAvailableBlocksLong: "+stat.getAvailableBlocksLong());
-        Log.d(TAG, "getFreeBlocksLong: "+stat.getFreeBlocksLong());
-        long totalbyte = stat.getTotalBytes();
-        Log.d(TAG, "use memory: "+(totalbyte-bytesAvailable));
+        long bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
+        long megaBytes= 1000*1000;
+        long gigaBytes=megaBytes*1000;
 
+        tempTotalMemory = stat.getTotalBytes();
+        tempUseOfMemory = (tempTotalMemory-bytesAvailable);
+        tempAvailableMemory = (tempTotalMemory-tempUseOfMemory);
+
+        tempPresent = (tempUseOfMemory*100)/tempTotalMemory;
+
+        present = String.valueOf(tempPresent);
+        totalMemory = String.format("%.2f", (float)tempTotalMemory/gigaBytes);
+        useOfMemory = String.format("%.2f", (float)tempUseOfMemory/gigaBytes);
+        availableMemory = String.format("%.2f", (float)tempAvailableMemory/gigaBytes);
     }
+
 
 }

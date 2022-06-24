@@ -201,9 +201,22 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
                     bookmarkAdapterFastItemAdapter.withOnClickListener(new OnClickListener<BookmarkAdapter>() {
                         @Override
                         public boolean onClick(View v, IAdapter<BookmarkAdapter> adapter, BookmarkAdapter item, int position) {
+                            ///////////////contain internal storage and SD card
+                            if(Objects.equals(item.folderName, Constant.PHOTO_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.PHOTO_FOLDER);
+                                context.startActivity(intent);
+                            }
+
                             if(Objects.equals(item.folderName, Constant.DOWNLOAD_FOLDER)){
                                 Intent intent = new Intent(context,MainActivity.class);
                                 intent.putExtra(Constant.PATH,Constant.DOWNLOAD_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName, Constant.SAFE_BOX_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.SAFE_BOX_FOLDER);
                                 context.startActivity(intent);
                             }
 
@@ -213,11 +226,76 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
                                 context.startActivity(intent);
                             }
 
+                            if(Objects.equals(item.folderName, Constant.RECENT_FILE)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.RECENT_FILE);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName, Constant.DOCUMENTS_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.DOCUMENTS_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName, Constant.APP_MANAGER_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.APP_MANAGER_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName, Constant.VIDEO_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.VIDEO_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName,Constant.AAD_TO_QUICK_ACCESS )){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.AAD_TO_QUICK_ACCESS);
+                                context.startActivity(intent);
+                            }
+
                             return true;
                         }
                     });
 
                 }else {
+
+                    bookmarkAdapterFastItemAdapter.withSelectable(true);
+
+                    bookmarkAdapterFastItemAdapter.withOnClickListener(new OnClickListener<BookmarkAdapter>() {
+                        @Override
+                        public boolean onClick(View v, IAdapter<BookmarkAdapter> adapter, BookmarkAdapter item, int position) {
+
+                            if(Objects.equals(item.folderName,Constant.DCIM_FOLDER )){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.DCIM_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName,Constant.PICTURES_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.PICTURES_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName, Constant.DOWNLOAD_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.DOWNLOAD_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            if(Objects.equals(item.folderName, Constant.MOVIES_FOLDER)){
+                                Intent intent = new Intent(context,MainActivity.class);
+                                intent.putExtra(Constant.PATH,Constant.MOVIES_FOLDER);
+                                context.startActivity(intent);
+                            }
+
+                            return true;
+                        }
+                    });
+
                     holder.bookmarks.setVisibility(View.VISIBLE);
                     holder.hide.setVisibility(View.VISIBLE);
                     holder.containsInternalStorage.setVisibility(View.INVISIBLE);
@@ -242,6 +320,18 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
                             }
                         }
                     });
+
+//                    if(Objects.equals(item.folderName,Constant.DCIM_FOLDER )){
+//                        Intent intent = new Intent(context,MainActivity.class);
+//                        intent.putExtra(Constant.PATH,Constant.DCIM_FOLDER);
+//                        context.startActivity(intent);
+//                    }
+//
+//                    if(Objects.equals(item.folderName,Constant.PICTURES_FOLDER)){
+//                        Intent intent = new Intent(context,MainActivity.class);
+//                        intent.putExtra(Constant.PATH,Constant.PICTURES_FOLDER);
+//                        context.startActivity(intent);
+//                    }
                 }
         }
 

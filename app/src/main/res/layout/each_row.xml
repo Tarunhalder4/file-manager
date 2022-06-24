@@ -7,25 +7,80 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/file_and_folder_image"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/file_and_folder_back_ground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/empty_folder_48"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/photos"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/file_and_folder_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/folder_open_48"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/folder_identifier_cardView"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:backgroundTint="@color/red"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.85"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.75">
+
+                <ImageView
+                    android:id="@+id/folder_identifier_image"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center"
+                    />
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/file_and_folder_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textColor="@color/gray1"
+        android:ellipsize="end"
+        android:textAlignment="textStart"
+        android:maxLines="1"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/date"
-        app:layout_constraintStart_toEndOf="@+id/file_and_folder_image"
-        app:layout_constraintTop_toTopOf="@+id/file_and_folder_image"
+        app:layout_constraintEnd_toStartOf="@+id/more_image"
+        app:layout_constraintStart_toEndOf="@+id/file_and_folder_back_ground"
+        app:layout_constraintTop_toTopOf="@+id/file_and_folder_back_ground"
         app:layout_constraintVertical_chainStyle="packed"
         tool:text="Download" />
 
@@ -35,9 +90,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textSize="10dp"
-        android:textColor="@color/gray1"
-        app:layout_constraintBottom_toBottomOf="@+id/file_and_folder_image"
-        app:layout_constraintStart_toEndOf="@+id/file_and_folder_image"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/file_and_folder_back_ground"
+        app:layout_constraintStart_toEndOf="@+id/file_and_folder_back_ground"
         app:layout_constraintTop_toBottomOf="@+id/file_and_folder_name"
         tool:text="3-4-2022" />
 
@@ -46,10 +101,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:textColor="@color/gray1"
+        android:textColor="@color/white"
         android:textSize="10dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/date"
         app:layout_constraintStart_toEndOf="@+id/date"
         app:layout_constraintTop_toTopOf="@+id/date"
         tool:text="3MB" />
+
+    <ImageView
+        android:id="@+id/more_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/more_vert_48"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:layout_width="343dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/date"
+        app:layout_constraintTop_toBottomOf="@+id/file_and_folder_back_ground" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
