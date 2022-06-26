@@ -21,5 +21,7 @@
     <color name="yellow">#F1D803</color>
     <color name="folderBackground">#024265</color>
     <color name="light_gray">#B7908787</color>
+    
+    <color name="semi_transparency">#80444141</color>
 
 </resources>

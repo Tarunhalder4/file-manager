@@ -204,7 +204,7 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
                             ///////////////contain internal storage and SD card
                             if(Objects.equals(item.folderName, Constant.PHOTO_FOLDER)){
                                 Intent intent = new Intent(context,MainActivity.class);
-                                intent.putExtra(Constant.PATH,Constant.PHOTO_FOLDER);
+                                intent.putExtra(Constant.PATH,Constant.PHOTO_FILE);
                                 context.startActivity(intent);
                             }
 

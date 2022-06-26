@@ -37,9 +37,13 @@ public class Constant {
     public static String FOLDER_PATH="folder_path";
 
     public static String PHOTO_FILE ="photo";
-    public static String PDF_FILE ="file";
+    public static String PDF_FILE ="pdf_file";
     public static String AUDIO_FILE ="audio";
     public static String VIDEO_FILE = "video";
+    public static String DOCUMENTS_FILE = "documents_file";
+    public static String ALL_FILE = "all_file";
+    public static String All_FILE_FOLDER = "file_folder";
+    public static String INTERNAL_STORAGE_FILE_FOLDER = "internal_storage_file_folder";
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
