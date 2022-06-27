@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (type.equals(Constant.DOCUMENTS_FILE)) {
             if (file.getName().endsWith("pdf")
-                    || file.getName().endsWith("txt")
+                  //  || file.getName().endsWith("txt")
                     || file.getName().endsWith("xlsx")
                     || file.getName().equals("csv")
                     || file.getName().equals("pptx")) {
