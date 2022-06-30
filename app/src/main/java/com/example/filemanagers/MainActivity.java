@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             fileAndFolderAdapters.clear();
                             Log.d(TAG, "showFileAndFolder: 45");
-                            binding.noFileAvailable.setVisibility(View.VISIBLE);
+                           // binding.noFileAvailable.setVisibility(View.VISIBLE);
                         }
                     }
                 }
