@@ -95,20 +95,19 @@ public class MainActivity extends AppCompatActivity {
                     peekPath = true;
                     showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
                 } else {
-                    if (item.fileAndFolder.getPath().endsWith(".pdf")) {
+                    if (item.fileAndFolder.getName().endsWith(".pdf")) {
                         openFile(item.fileAndFolder, Constant.PDF_FILE);
                     }
 
-                    if (item.fileAndFolder.getPath().endsWith(".jpg")) {
+                    if (item.fileAndFolder.getName().endsWith(".jpg")||item.fileAndFolder.getName().endsWith(".png")) {
                         openFile(item.fileAndFolder, Constant.PHOTO_FILE);
                     }
 
-                    if (item.fileAndFolder.getPath().endsWith(".mp3")) {
-                        Log.d(TAG, "onClick: " + item.fileAndFolder.getPath().endsWith(".mp3"));
+                    if (item.fileAndFolder.getName().endsWith(".mp3")) {
                         openFile(item.fileAndFolder, Constant.AUDIO_FILE);
                     }
 
-                    if (item.fileAndFolder.getPath().endsWith(".mp4")) {
+                    if (item.fileAndFolder.getName().endsWith(".mp4")) {
                         openFile(item.fileAndFolder, Constant.VIDEO_FILE);
                     }
 
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.PHOTO_FILE)) {
-            if (file.getName().endsWith(".jpg")) {
+            if (file.getName().endsWith(".jpg")||file.getName().endsWith(".png")) {
                 fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.PDF_FILE)) {
@@ -191,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (type.equals(Constant.DOCUMENTS_FILE)) {
             if (file.getName().endsWith("pdf")
-                  //  || file.getName().endsWith("txt")
                     || file.getName().endsWith("xlsx")
                     || file.getName().equals("csv")
                     || file.getName().equals("pptx")) {
@@ -287,10 +285,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showFileAndFolder(File mainFile, String requiredFile) {
+        for (File file: Objects.requireNonNull(mainFile.listFiles())){
+            Log.d(TAG, "onClick: "+file.getName());
+        }
         Log.d(TAG, "formIntentGetData: audio21");
         fileAndFolderAdapterFastItemAdapter.clear();
         if (!Constant.checkPermission(MainActivity.this)) {
-            Log.d(TAG, "showFileAndFolder: d1");
+            Log.d(TAG, "showFileAndFolder: d12");
             binding.noFileAvailable.setText("Permission required for display file");
             binding.noFileAvailable.setVisibility(View.VISIBLE);
         }
@@ -325,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
                 for (File file : filesAndFolders) {
                     if (file.isDirectory()) {
                         scanDirectory(file, Constant.PHOTO_FILE);
-                        //fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     } else {
                         fileScanBySuffix(file, Constant.PHOTO_FILE);
                     }
@@ -335,32 +335,28 @@ public class MainActivity extends AppCompatActivity {
                 for (File file : filesAndFolders) {
                     if (file.isDirectory()) {
                         scanDirectory(file, Constant.VIDEO_FILE);
-                        //fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     } else {
                         fileScanBySuffix(file, Constant.VIDEO_FILE);
                     }
                 }
             } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
-                for (File file : filesAndFolders) {
+
+                for (File file : Objects.requireNonNull(mainFile.listFiles())){
+                    Log.d(TAG, "showFileAndFolder12: "+file.getName());
                     if (file.isDirectory()) {
-                        if (Objects.requireNonNull(file.listFiles()).length > 0) {
-                            fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
-                        } else {
-                            fileAndFolderAdapters.clear();
-                            Log.d(TAG, "showFileAndFolder: 45");
-                           // binding.noFileAvailable.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-                for (File file : filesAndFolders) {
-                    if (file.isFile()) {
-                        binding.noFileAvailable.setVisibility(View.GONE);
                         fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
+
                 }
 
-            }
+                for (File file : Objects.requireNonNull(mainFile.listFiles())){
+                    Log.d(TAG, "showFileAndFolder12: "+file.getName());
+                    if (file.isFile()) {
+                        fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    }
 
+                }
+           }
 
             fileAndFolderAdapterFastItemAdapter.add(fileAndFolderAdapters);
             binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
