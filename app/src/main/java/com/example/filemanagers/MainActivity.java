@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Log.d(TAG, "onCreate: Main activity");
 
         fileAndFolderAdapterFastItemAdapter = new FastItemAdapter<>();
         fileAndFolderAdapterFastItemAdapter.withSelectable(true);
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         newFiles = new ArrayList<>();
         if (Constant.checkPermission(MainActivity.this)) {
+            binding.progressBar.setVisibility(View.VISIBLE);
             formIntentGetData();
         } else {
             Constant.requestPermission(MainActivity.this);
@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onClick(View v, IAdapter<PhotoGridAdapter> adapter, PhotoGridAdapter item, int position) {
 
-                Log.d(TAG, "onClick: "+item.file.getName());
                 if(item.file.isDirectory()){
                     photoGridAdapterFastItemAdapter.clear();
                     showPhotoInFolder(item.file);
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         fileAndFolderAdapterFastItemAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
             @Override
             public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
-
+                binding.progressBar.setVisibility(View.VISIBLE);
                 if (item.fileAndFolder.isDirectory()) {
                     binding.noFileAvailable.setVisibility(View.GONE);
                     path = item.fileAndFolder.getPath();
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ActivityNotFoundException e) {
             Log.d(TAG, "openFile: " + e);
         }
+        binding.progressBar.setVisibility(View.GONE);
     }
 
 
@@ -285,21 +285,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showFileAndFolder(File mainFile, String requiredFile) {
-        for (File file: Objects.requireNonNull(mainFile.listFiles())){
-            Log.d(TAG, "onClick: "+file.getName());
-        }
-        Log.d(TAG, "formIntentGetData: audio21");
         fileAndFolderAdapterFastItemAdapter.clear();
         if (!Constant.checkPermission(MainActivity.this)) {
-            Log.d(TAG, "showFileAndFolder: d12");
             binding.noFileAvailable.setText("Permission required for display file");
             binding.noFileAvailable.setVisibility(View.VISIBLE);
         }
         List<File> filesAndFolders = Arrays.asList(Objects.requireNonNull(mainFile.listFiles()));
         if (filesAndFolders.size() == 0) {
-            Log.d(TAG, "showFileAndFolder: d2");
             binding.noFileAvailable.setVisibility(View.VISIBLE);
-            Log.d(TAG, "empty folder");
         } else {
             binding.noFileAvailable.setVisibility(View.GONE);
             fileAndFolderAdapters = new ArrayList<>();
@@ -307,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
             if (requiredFile.equals(Constant.AUDIO_FILE)) {
                 for (File file : filesAndFolders) {
                     if (file.isDirectory()) {
-                        Log.d(TAG, "showFileAndFolder: Audio file");
                         scanDirectory(file, Constant.AUDIO_FILE);
                     } else {
                         fileScanBySuffix(file, Constant.AUDIO_FILE);
@@ -342,7 +334,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())){
-                    Log.d(TAG, "showFileAndFolder12: "+file.getName());
                     if (file.isDirectory()) {
                         fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
@@ -350,7 +341,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())){
-                    Log.d(TAG, "showFileAndFolder12: "+file.getName());
                     if (file.isFile()) {
                         fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
@@ -363,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
             binding.rec.setAdapter(fileAndFolderAdapterFastItemAdapter);
 
         }
+        binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -379,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         binding.noFileAvailable.setVisibility(View.GONE);
-        Log.e(TAG, "onBackPressed: " + backCount);
+        binding.progressBar.setVisibility(View.VISIBLE);
         if (backCount == -1) {
             backCount = 0;
             super.onBackPressed();
@@ -388,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
                 destinationPath = path;
                 peekPath = false;
             }
+
             File parent = new File(destinationPath);
             parent = parent.getParentFile();
             destinationPath = parent.getAbsolutePath();
@@ -410,10 +402,8 @@ public class MainActivity extends AppCompatActivity {
     public void onMessageEvent(EventMessage event) {
         if (event.isDelete()) {
             String deletePath = event.getDeleteFilePath();
-            Log.d(TAG, "onMessageEvent: " + deletePath);
             File file = new File(deletePath);
-            showFileAndFolder(file, "all");
-            Log.d(TAG, "onMessageEvent: ");
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
         }
     }
 
@@ -451,10 +441,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     void showPhotoFolder(File file){
+        binding.progressBar.setVisibility(View.VISIBLE);
         separatePhotoFolder(file);
         photoGridAdapterFastItemAdapter.add(photoGridAdapters);
         binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this,2));
         binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
+        binding.progressBar.setVisibility(View.GONE);
     }
 
     void showPhotoInFolder(File file){

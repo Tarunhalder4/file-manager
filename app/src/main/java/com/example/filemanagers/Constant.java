@@ -48,9 +48,10 @@ public class Constant {
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
             Toast.makeText(activity, "Storage permission are required", Toast.LENGTH_SHORT).show();
         }
-            Log.d("tag", "requestPermission: 123");
-            ActivityCompat.requestPermissions(activity, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE},111);
+        ActivityCompat.requestPermissions(activity, new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE},
+                111);
 
 
     }

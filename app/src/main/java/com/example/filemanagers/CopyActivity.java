@@ -59,7 +59,6 @@ public class CopyActivity extends AppCompatActivity {
                     path = item.fileAndFolder.getPath();
                     File file = new File(path);
                     destinationPath = file.getAbsolutePath();
-                    Log.d("tag", "onClick: "+destinationPath);
                     showFileAndFolder(file,true);
                 }
                 return true;
@@ -72,14 +71,9 @@ public class CopyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 File sourceFile = new File(sourcePath);
-                Log.d("tag", "onClick: "+destinationPath);
                 File destinationFile = new File(destinationPath);
                 try {
-                    Log.d(TAG, "onClick1: file copy");
-                    Log.d(TAG, "source path: "+sourcePath);
-                    Log.d(TAG, "destination path: "+destinationPath);
                     Files.copy(Paths.get(sourcePath), Paths.get(destinationPath+"/"+sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    Log.d(TAG, "onClick2: file copy");
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.d(TAG, "onClick: "+e);

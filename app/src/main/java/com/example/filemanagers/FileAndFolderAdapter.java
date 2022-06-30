@@ -131,7 +131,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
                 }else if(item.fileAndFolder.getName().endsWith("pdf")){
                     fileAndFolderBackGround.setCardBackgroundColor(item.context.getResources().getColor(R.color.red));
                     fileAndFolderImage.setImageResource(R.drawable.ic_baseline_picture_as_pdf_24);
-                }else if(item.fileAndFolder.getName().endsWith("jpg")||item.fileAndFolder.getName().endsWith("jpeg")){
+                }else if(item.fileAndFolder.getName().endsWith("jpg")||item.fileAndFolder.getName().endsWith("jpeg")||item.fileAndFolder.getName().endsWith(".png")){
                     photo.setVisibility(View.VISIBLE);
                     fileAndFolderImage.setVisibility(View.GONE);
                     Bitmap bitmap = BitmapFactory.decodeFile(item.fileAndFolder.getAbsolutePath());
