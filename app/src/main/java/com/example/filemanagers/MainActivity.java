@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     int backCount = 0;
     String destinationPath = null;
     boolean peekPath = false;
+    boolean backPress = false;
 
     private String TAG = "tag";
     private ActivityMainBinding binding;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<FileAndFolderAdapter> fileAndFolderAdapterList;
     private List<PhotoGridAdapter> photoGridAdapterList;
+    private ArrayDeque<PathAdapter> pathAdapterArrayDeque;
     private List<PathAdapter> pathAdapterList;
 
     ArrayList<File> newFiles = null;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         pathAdapterFastItemAdapter.withSelectable(true);
 
         photoGridAdapterList = new ArrayList<>();
+        pathAdapterArrayDeque = new ArrayDeque<>();
         pathAdapterList = new ArrayList<>();
 
         newFiles = new ArrayList<>();
@@ -82,6 +86,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onClick(View v, IAdapter<PathAdapter> adapter, PathAdapter item, int position) {
                 if (item.file.isDirectory()){
+                    path = item.file.getAbsolutePath();
+                    pathAdapterArrayDeque.clear();
+                    pathAdapterList.clear();
+                    pathAdapterFastItemAdapter.clear();
+
+                    String[] arrOfStr = item.file.getPath().split("/");
+
+                    File file = item.file.getParentFile();
+                    for(int i=4; i<=arrOfStr.length-1;i++){
+                        assert file != null;
+                        pathAdapterArrayDeque.offerFirst(new PathAdapter(file));
+                        file=file.getParentFile();
+
+                    }
+
+                    pathAdapterList.addAll(pathAdapterArrayDeque);
+                    pathAdapterFastItemAdapter.add(pathAdapterList);
+                    binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL, false));
+                    binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
+
                     showFileAndFolder(item.file,Constant.INTERNAL_STORAGE_FILE_FOLDER);
                 }
                 return false;
@@ -111,13 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 if (item.fileAndFolder.isDirectory()) {
                     binding.noFileAvailable.setVisibility(View.GONE);
                     path = item.fileAndFolder.getPath();
-
-                    pathAdapterList.clear();
-                    pathAdapterList.add(new PathAdapter(item.fileAndFolder));
-                    pathAdapterFastItemAdapter.add(pathAdapterList);
-                    binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL, false));
-                    binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
-
                     peekPath = true;
                     showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
                 } else {
@@ -232,12 +249,12 @@ public class MainActivity extends AppCompatActivity {
     private void formIntentGetData() {
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PHOTO_FILE)) {
             File file = Environment.getExternalStorageDirectory();
+            showPath(file);
             showPhotoFolder(file);
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
-            Log.d(TAG, "formIntentGetData: down");
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
             backCount = -1;
@@ -313,9 +330,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void showFileAndFolder(File mainFile, String requiredFile) {
         fileAndFolderAdapterFastItemAdapter.clear();
+        showPath(mainFile);
         if (!Constant.checkPermission(MainActivity.this)) {
             binding.noFileAvailable.setText("Permission required for display file");
             binding.noFileAvailable.setVisibility(View.VISIBLE);
+            binding.pathRec.setVisibility(View.GONE);
         }
         List<File> filesAndFolders = Arrays.asList(Objects.requireNonNull(mainFile.listFiles()));
         if (filesAndFolders.size() == 0) {
@@ -383,6 +402,26 @@ public class MainActivity extends AppCompatActivity {
         binding.progressBar.setVisibility(View.GONE);
     }
 
+    void showPath(File file){
+        if(backPress){
+            pathAdapterFastItemAdapter.clear();
+            pathAdapterList.clear();
+            pathAdapterArrayDeque.pollLast();
+            backPress=false;
+        }else {
+            pathAdapterFastItemAdapter.clear();
+            pathAdapterList.clear();
+            pathAdapterArrayDeque.offerLast(new PathAdapter(file));
+        }
+
+        pathAdapterList.addAll(pathAdapterArrayDeque);
+
+        pathAdapterFastItemAdapter.add(pathAdapterList);
+        binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL, false));
+        binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -396,6 +435,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        backPress = true;
+
         binding.noFileAvailable.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
         if (backCount == -1) {
@@ -411,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
             parent = parent.getParentFile();
             destinationPath = parent.getAbsolutePath();
             fileAndFolderAdapterFastItemAdapter.clear();
+
             showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER);
 
             if (destinationPath.equals("/storage/emulated/0")) {
