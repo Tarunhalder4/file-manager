@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.filemanagers.adapter.PathAdapter;
 import com.example.filemanagers.adapter.PhotoGridAdapter;
 import com.example.filemanagers.databinding.ActivityMainBinding;
 import com.mikepenz.fastadapter.IAdapter;
@@ -27,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,13 +40,20 @@ public class MainActivity extends AppCompatActivity {
     int backCount = 0;
     String destinationPath = null;
     boolean peekPath = false;
+    boolean backPress = false;
 
     private String TAG = "tag";
     private ActivityMainBinding binding;
+
     private FastItemAdapter<FileAndFolderAdapter> fileAndFolderAdapterFastItemAdapter;
     private FastItemAdapter<PhotoGridAdapter> photoGridAdapterFastItemAdapter;
-    private List<FileAndFolderAdapter> fileAndFolderAdapters;
-    private List<PhotoGridAdapter> photoGridAdapters;
+    private FastItemAdapter<PathAdapter> pathAdapterFastItemAdapter;
+
+    private List<FileAndFolderAdapter> fileAndFolderAdapterList;
+    private List<PhotoGridAdapter> photoGridAdapterList;
+    private ArrayDeque<PathAdapter> pathAdapterArrayDeque;
+    private List<PathAdapter> pathAdapterList;
+
     ArrayList<File> newFiles = null;
 
     @Override
@@ -54,11 +63,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         fileAndFolderAdapterFastItemAdapter = new FastItemAdapter<>();
-        fileAndFolderAdapterFastItemAdapter.withSelectable(true);
-
         photoGridAdapterFastItemAdapter = new FastItemAdapter<>();
+        pathAdapterFastItemAdapter = new FastItemAdapter<>();
+
+        fileAndFolderAdapterFastItemAdapter.withSelectable(true);
         photoGridAdapterFastItemAdapter.withSelectable(true);
-        photoGridAdapters = new ArrayList<>();
+        pathAdapterFastItemAdapter.withSelectable(true);
+
+        photoGridAdapterList = new ArrayList<>();
+        pathAdapterArrayDeque = new ArrayDeque<>();
+        pathAdapterList = new ArrayList<>();
 
         newFiles = new ArrayList<>();
         if (Constant.checkPermission(MainActivity.this)) {
@@ -67,6 +81,36 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Constant.requestPermission(MainActivity.this);
         }
+
+        pathAdapterFastItemAdapter.withOnClickListener(new OnClickListener<PathAdapter>() {
+            @Override
+            public boolean onClick(View v, IAdapter<PathAdapter> adapter, PathAdapter item, int position) {
+                if (item.file.isDirectory()){
+                    path = item.file.getAbsolutePath();
+                    pathAdapterArrayDeque.clear();
+                    pathAdapterList.clear();
+                    pathAdapterFastItemAdapter.clear();
+
+                    String[] arrOfStr = item.file.getPath().split("/");
+
+                    File file = item.file.getParentFile();
+                    for(int i=4; i<=arrOfStr.length-1;i++){
+                        assert file != null;
+                        pathAdapterArrayDeque.offerFirst(new PathAdapter(file));
+                        file=file.getParentFile();
+
+                    }
+
+                    pathAdapterList.addAll(pathAdapterArrayDeque);
+                    pathAdapterFastItemAdapter.add(pathAdapterList);
+                    binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL, false));
+                    binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
+
+                    showFileAndFolder(item.file,Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                }
+                return false;
+            }
+        });
 
         photoGridAdapterFastItemAdapter.withOnClickListener(new OnClickListener<PhotoGridAdapter>() {
             @Override
@@ -174,29 +218,29 @@ public class MainActivity extends AppCompatActivity {
     void fileScanBySuffix(File file, String type) {
         if (type.equals(Constant.AUDIO_FILE)) {
             if (file.getName().endsWith(".mp3")) {
-                fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.VIDEO_FILE)) {
             if (file.getName().endsWith(".mp4")) {
-                fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.PHOTO_FILE)) {
             if (file.getName().endsWith(".jpg")||file.getName().endsWith(".png")) {
-                fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.PDF_FILE)) {
             if (file.getName().endsWith(".pdf")) {
-                fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.DOCUMENTS_FILE)) {
             if (file.getName().endsWith("pdf")
                     || file.getName().endsWith("xlsx")
                     || file.getName().equals("csv")
                     || file.getName().equals("pptx")) {
-                fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
             }
         } else if (type.equals(Constant.ALL_FILE)) {
-            fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+            fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
         }
 
     }
@@ -205,12 +249,12 @@ public class MainActivity extends AppCompatActivity {
     private void formIntentGetData() {
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PHOTO_FILE)) {
             File file = Environment.getExternalStorageDirectory();
+            showPath(file);
             showPhotoFolder(file);
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
-            Log.d(TAG, "formIntentGetData: down");
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
             backCount = -1;
@@ -286,16 +330,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void showFileAndFolder(File mainFile, String requiredFile) {
         fileAndFolderAdapterFastItemAdapter.clear();
+        showPath(mainFile);
         if (!Constant.checkPermission(MainActivity.this)) {
             binding.noFileAvailable.setText("Permission required for display file");
             binding.noFileAvailable.setVisibility(View.VISIBLE);
+            binding.pathRec.setVisibility(View.GONE);
         }
         List<File> filesAndFolders = Arrays.asList(Objects.requireNonNull(mainFile.listFiles()));
         if (filesAndFolders.size() == 0) {
             binding.noFileAvailable.setVisibility(View.VISIBLE);
         } else {
             binding.noFileAvailable.setVisibility(View.GONE);
-            fileAndFolderAdapters = new ArrayList<>();
+            fileAndFolderAdapterList = new ArrayList<>();
 
             if (requiredFile.equals(Constant.AUDIO_FILE)) {
                 for (File file : filesAndFolders) {
@@ -335,25 +381,45 @@ public class MainActivity extends AppCompatActivity {
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())){
                     if (file.isDirectory()) {
-                        fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
 
                 }
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())){
                     if (file.isFile()) {
-                        fileAndFolderAdapters.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
 
                 }
            }
 
-            fileAndFolderAdapterFastItemAdapter.add(fileAndFolderAdapters);
+            fileAndFolderAdapterFastItemAdapter.add(fileAndFolderAdapterList);
             binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
             binding.rec.setAdapter(fileAndFolderAdapterFastItemAdapter);
 
         }
         binding.progressBar.setVisibility(View.GONE);
+    }
+
+    void showPath(File file){
+        if(backPress){
+            pathAdapterFastItemAdapter.clear();
+            pathAdapterList.clear();
+            pathAdapterArrayDeque.pollLast();
+            backPress=false;
+        }else {
+            pathAdapterFastItemAdapter.clear();
+            pathAdapterList.clear();
+            pathAdapterArrayDeque.offerLast(new PathAdapter(file));
+        }
+
+        pathAdapterList.addAll(pathAdapterArrayDeque);
+
+        pathAdapterFastItemAdapter.add(pathAdapterList);
+        binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL, false));
+        binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
+
     }
 
     @Override
@@ -369,6 +435,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        backPress = true;
+
         binding.noFileAvailable.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
         if (backCount == -1) {
@@ -384,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
             parent = parent.getParentFile();
             destinationPath = parent.getAbsolutePath();
             fileAndFolderAdapterFastItemAdapter.clear();
+
             showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER);
 
             if (destinationPath.equals("/storage/emulated/0")) {
@@ -427,7 +496,7 @@ public class MainActivity extends AppCompatActivity {
         File[] mfiles = file.listFiles();
         for (File file1:mfiles){
             if (!havefile&&file1.getName().endsWith(".jpg")&&file1.isFile()){
-                photoGridAdapters.add(new PhotoGridAdapter(MainActivity.this,file));
+                photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this,file));
                 havefile = true;
             }else{
                 if (!file1.getName().startsWith(".")&&file1.isDirectory()){
@@ -443,22 +512,22 @@ public class MainActivity extends AppCompatActivity {
     void showPhotoFolder(File file){
         binding.progressBar.setVisibility(View.VISIBLE);
         separatePhotoFolder(file);
-        photoGridAdapterFastItemAdapter.add(photoGridAdapters);
+        photoGridAdapterFastItemAdapter.add(photoGridAdapterList);
         binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this,2));
         binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
         binding.progressBar.setVisibility(View.GONE);
     }
 
     void showPhotoInFolder(File file){
-        photoGridAdapters.clear();
+        photoGridAdapterList.clear();
         File[] files = file.listFiles();
         assert files != null;
         for (File file1:files){
             if(file1.getName().endsWith(".jpg")){
-                photoGridAdapters.add(new PhotoGridAdapter(MainActivity.this,file1));
+                photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this,file1));
             }
         }
-        photoGridAdapterFastItemAdapter.add(photoGridAdapters);
+        photoGridAdapterFastItemAdapter.add(photoGridAdapterList);
         binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this,2));
         binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
     }
