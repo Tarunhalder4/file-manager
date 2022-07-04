@@ -44,6 +44,11 @@ public class Constant {
     public static String All_FILE_FOLDER = "file_folder";
     public static String INTERNAL_STORAGE_FILE_FOLDER = "internal_storage_file_folder";
 
+    public static boolean SHOW_FILE_SIZE = false;
+    public static boolean SHOW_FOLDER_SIZE = false;
+    public static boolean SHOW_FULL_NAME_OF_FILE = false;
+    public static boolean SHOW_HIDDEN_FILE_AND_FOLDER = false;
+
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
             Toast.makeText(activity, "Storage permission are required", Toast.LENGTH_SHORT).show();

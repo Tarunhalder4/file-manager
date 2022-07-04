@@ -4,19 +4,32 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.Spannable;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.filemanagers.adapter.PathAdapter;
@@ -558,4 +571,52 @@ public class MainActivity extends AppCompatActivity {
         binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this,2));
         binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.my_file_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.sort:
+                Toast.makeText(MainActivity.this,"sort",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.create_file:
+                Toast.makeText(MainActivity.this,"create file",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.create_folder:
+                Toast.makeText(MainActivity.this,"create folder",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.view_option:
+                Toast.makeText(MainActivity.this,"view option",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.close:
+                Toast.makeText(MainActivity.this,"close",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.show_file_size:
+                Toast.makeText(MainActivity.this,"show file size",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.show_folder_size:
+                Toast.makeText(MainActivity.this,"show folder size",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.show_full_name_of_files:
+                Toast.makeText(MainActivity.this,"show full name of files",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.show_hidden_folder_files:
+                Toast.makeText(MainActivity.this,"show hidden folder files",Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(MainActivity.this,"default",Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
