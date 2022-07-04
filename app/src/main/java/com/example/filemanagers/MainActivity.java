@@ -2,6 +2,7 @@ package com.example.filemanagers;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,11 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.example.filemanagers.adapter.PathAdapter;
@@ -22,6 +25,8 @@ import com.example.filemanagers.databinding.ActivityMainBinding;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,12 +60,28 @@ public class MainActivity extends AppCompatActivity {
     private List<PathAdapter> pathAdapterList;
 
     ArrayList<File> newFiles = null;
+    private Drawer drawer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolBar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.my_files);
+
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withHasStableIds(true)
+                .withSavedInstance(savedInstanceState)
+                .withToolbar(binding.toolBar)
+                .withSliderBackgroundColor(Color.BLACK)
+                .build();
+
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.folder_background_dark));
+
 
         fileAndFolderAdapterFastItemAdapter = new FastItemAdapter<>();
         photoGridAdapterFastItemAdapter = new FastItemAdapter<>();
@@ -439,6 +460,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.noFileAvailable.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
+
         if (backCount == -1) {
             backCount = 0;
             super.onBackPressed();
@@ -462,7 +484,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else {
-            super.onBackPressed();
+            if(drawer!=null && drawer.isDrawerOpen()){
+                drawer.closeDrawer();
+                binding.progressBar.setVisibility(View.GONE);
+            }else{
+                super.onBackPressed();
+            }
         }
 
     }
@@ -531,5 +558,4 @@ public class MainActivity extends AppCompatActivity {
         binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this,2));
         binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
     }
-
 }
