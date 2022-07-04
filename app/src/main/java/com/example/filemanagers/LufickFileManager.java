@@ -1,16 +1,19 @@
 package com.example.filemanagers;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.filemanagers.adapter.BookmarkAdapter;
 import com.example.filemanagers.adapter.InternalStorageAdapter;
@@ -23,12 +26,9 @@ import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class LufickFileManager extends AppCompatActivity {
@@ -46,12 +46,27 @@ public class LufickFileManager extends AppCompatActivity {
     private String TAG ="tag";
 
     private String totalMemory,useOfMemory,availableMemory,present;
+    private Drawer drawer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLufickFileManagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.dashboard_title);
+
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withHasStableIds(true)
+                .withSavedInstance(savedInstanceState)
+                .withToolbar(binding.toolbar)
+                .withSliderBackgroundColor(Color.BLACK)
+                .build();
+
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(LufickFileManager.this,R.color.folder_background_dark));
 
         mainAdapterFastItemAdapter = new FastItemAdapter<>();
         pieAdapterFastItemAdapter = new FastItemAdapter<>();
@@ -144,5 +159,12 @@ public class LufickFileManager extends AppCompatActivity {
         availableMemory = String.format("%.2f", (float)tempAvailableMemory/gigaBytes);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(drawer!=null && drawer.isDrawerOpen()){
+            drawer.closeDrawer();
+        }else{
+            super.onBackPressed();
+        }
+    }
 }

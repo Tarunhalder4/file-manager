@@ -20,6 +20,7 @@
     <color name="magenta">#5B26B6</color>
     <color name="yellow">#F1D803</color>
     <color name="folderBackground">#024265</color>
+    <color name="folder_background_dark">#012B42</color>
     <color name="light_gray">#B7908787</color>
     
     <color name="semi_transparency">#80444141</color>

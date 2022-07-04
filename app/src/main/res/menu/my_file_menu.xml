@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/sort"
+        android:title="@string/sort"
+        />
+
+    <item
+        android:id="@+id/create_folder"
+        android:title="@string/create_folder"
+        />
+
+    <item
+        android:id="@+id/create_file"
+        android:title="@string/create_file"
+        />
+
+    <item
+        android:id="@+id/view_option"
+        android:title="@string/view_options"
+        />
+
+    <item
+        android:id="@+id/advance_setting"
+        android:title="@string/advance_setting"
+        >
+        <menu>
+            <item
+                android:title="@string/advance_setting"
+                />
+
+            <item
+                android:id="@+id/show_file_size"
+                android:title="@string/show_file_size"
+                android:checkable="true"
+                />
+
+            <item
+                android:id="@+id/show_folder_size"
+                android:title="@string/show_folder_size"
+                android:checkable="true"
+                />
+
+            <item
+                android:id="@+id/show_full_name_of_files"
+                android:title="@string/show_full_name_of_file"
+                android:checkable="true"
+                />
+            <item
+                android:id="@+id/show_hidden_folder_files"
+                android:title="@string/show_hidden_file_and_folder"
+                android:checkable="true"
+                />
+
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/close"
+        android:title="@string/close"
+        />
+
+</menu>
