@@ -20,6 +20,8 @@
 
         <!-- Customize your theme here. -->
     </style>
+
+
     
     <style name="card_theme">
         <item name="android:layout_height">match_parent</item>

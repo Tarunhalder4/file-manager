@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.example.filemanagers.adapter.BookmarkAdapter;
 import com.example.filemanagers.adapter.InternalStorageAdapter;

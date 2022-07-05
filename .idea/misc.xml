@@ -22,6 +22,7 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/file_8.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/file_download_8.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/fill_folder_48.xml" value="0.1835" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/flash_background.xml" value="0.1145" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/folder_zip_24.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/green_dot.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.195" />
@@ -49,6 +50,7 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_copy.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_lufick_file_manager.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_main.xml" value="0.12" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_splash.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_test.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmark_item.xml" value="0.33" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks.xml" value="0.1" />
