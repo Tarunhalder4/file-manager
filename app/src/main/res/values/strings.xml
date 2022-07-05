@@ -7,11 +7,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-<!--    Toolbar Title -->
+    <!--    Toolbar Title -->
     <string name="dashboard_title">Dashboard</string>
     <string name="my_files">My Files</string>
 
-<!--    menu title-->
+    <!--    menu title-->
     <string name="more">More</string>
     <string name="delete">Delete</string>
     <string name="copy">Copy</string>
@@ -19,7 +19,7 @@
     <string name="rename">Rename</string>
     <string name="move">Move</string>
 
-<!--    file menu title-->
+    <!--    file menu title-->
     <string name="sort">Sort</string>
     <string name="create_folder">Create Folder</string>
     <string name="create_file">Create File</string>
@@ -28,12 +28,15 @@
     <string name="advance_setting">Advance Settings</string>
     <string name="close">Close</string>
 
-<!--    sub menu item of file menu item-->
+    <!--    sub menu item of file menu item-->
 
     <string name="show_file_size">Show file size</string>
     <string name="show_folder_size">Show folder size</string>
     <string name="show_full_name_of_file">Show full name of file</string>
     <string name="show_hidden_file_and_folder">Show hidden file and folder</string>
 
+<!--    flash activity text-->
+    <string name="flash_activity_text_flash">Flash</string>
+    <string name="flash_activity_text_2022">2022</string>
 
 </resources>
