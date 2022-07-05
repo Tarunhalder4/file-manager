@@ -20,7 +20,10 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:titleTextColor="@color/white"
+            app:popupTheme="@style/MyToolbarStyle"
+           />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -49,6 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/black"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
         android:layoutAnimation="@anim/layout_animation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
