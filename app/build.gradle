@@ -53,6 +53,12 @@ dependencies {
     implementation "org.greenrobot:eventbus:3.3.1"
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    implementation 'com.mikepenz:iconics-core:3.2.5'
+    implementation "com.mikepenz:iconics-views:3.1.0"
+
+    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
+
+
     implementation('com.mikepenz:materialdrawer:6.1.0') {
         transitive = true
         exclude group: "com.mikepenz"
