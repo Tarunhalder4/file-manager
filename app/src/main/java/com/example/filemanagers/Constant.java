@@ -52,11 +52,27 @@ public class Constant {
     public static boolean SHOW_FULL_NAME_OF_FILE = false;
     public static boolean SHOW_HIDDEN_FILE_AND_FOLDER = false;
 
+    /////sorting Constant
     public static final String SORT_ID = "sort_id";
     public static final int ID_SORT_NAME = 2131231259;
     public static final int ID_SORT_DATE = 2131231258;
     public static final int ID_SORT_SIZE = 2131231261;
     public static final int ID_SORT_TYPE = 2131231262;
+
+    public static boolean ASCENDING_ORDER =false;
+    //public static final int DESCENDING_ORDER =1;
+
+    public static final int NAME_ASCENDING_ORDER =0;
+    public static final int NAME_DESCENDING_ORDER =1;
+    public static final int DATE_ASCENDING_ORDER =2;
+    public static final int DATE_DESCENDING_ORDER =3;
+    public static final int SIZE_ASCENDING_ORDER =4;
+    public static final int SIZE_DESCENDING_ORDER =5;
+    public static final int TYPE_ASCENDING_ORDER =6;
+    public static final int TYPE_DESCENDING_ORDER =7;
+
+    public static int checkedId = 0;
+
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){

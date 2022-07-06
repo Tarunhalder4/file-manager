@@ -1,31 +1,24 @@
 package com.example.filemanagers;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import java.lang.annotation.Retention;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.Spannable;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.InflateException;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,9 +33,12 @@ import android.widget.Toast;
 import com.example.filemanagers.adapter.PathAdapter;
 import com.example.filemanagers.adapter.PhotoGridAdapter;
 import com.example.filemanagers.databinding.ActivityMainBinding;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.Drawer;
@@ -53,9 +49,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.io.Serializable;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,17 +70,24 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private SharePref sharePref;
 
-    private FastItemAdapter<FileAndFolderAdapter> fileAndFolderAdapterFastItemAdapter;
+    private FastAdapter<FileAndFolderAdapter> fileAndFolderFastAdapter;
     private FastItemAdapter<PhotoGridAdapter> photoGridAdapterFastItemAdapter;
     private FastItemAdapter<PathAdapter> pathAdapterFastItemAdapter;
+
+    private ItemAdapter<FileAndFolderAdapter> fileAndFolderItemAdapter;
 
     private List<FileAndFolderAdapter> fileAndFolderAdapterList;
     private List<PhotoGridAdapter> photoGridAdapterList;
     private ArrayDeque<PathAdapter> pathAdapterArrayDeque;
     private List<PathAdapter> pathAdapterList;
 
+    private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
+
     ArrayList<File> newFiles = null;
     private Drawer drawer = null;
+
+    @SortingStrategy
+    private int sortingStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,12 +110,15 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.folder_background_dark));
 
+        comparableItemList = new ComparableItemListImpl<>(getComparator());
 
-        fileAndFolderAdapterFastItemAdapter = new FastItemAdapter<>();
+        fileAndFolderItemAdapter = new ItemAdapter<>(comparableItemList);
+        fileAndFolderFastAdapter = FastAdapter.with(fileAndFolderItemAdapter);
+
         photoGridAdapterFastItemAdapter = new FastItemAdapter<>();
         pathAdapterFastItemAdapter = new FastItemAdapter<>();
 
-        fileAndFolderAdapterFastItemAdapter.withSelectable(true);
+        fileAndFolderFastAdapter.withSelectable(true);
         photoGridAdapterFastItemAdapter.withSelectable(true);
         pathAdapterFastItemAdapter.withSelectable(true);
 
@@ -118,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         pathAdapterList = new ArrayList<>();
 
         newFiles = new ArrayList<>();
+
         if (Constant.checkPermission(MainActivity.this)) {
             binding.progressBar.setVisibility(View.VISIBLE);
             formIntentGetData();
@@ -171,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fileAndFolderAdapterFastItemAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
+        fileAndFolderFastAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
             @Override
             public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -206,6 +216,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @SortingStrategy
+    int toSortingStrategy(int val) {
+        return val;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //add the values which need to be saved from the adapter to the bundle
+        outState = fileAndFolderFastAdapter.saveInstanceState(outState);
+        //We need to persist our sorting strategy between orientation changes
+        outState.putInt("sorting_strategy", sortingStrategy);
+        super.onSaveInstanceState(outState);
     }
 
     void openFile(File file, String type) {
@@ -372,7 +396,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showFileAndFolder(File mainFile, String requiredFile) {
-        fileAndFolderAdapterFastItemAdapter.clear();
+        //fileAndFolderAdapterFastItemAdapter.clear();
+        fileAndFolderItemAdapter.clear();
         showPath(mainFile);
         if (!Constant.checkPermission(MainActivity.this)) {
             binding.noFileAvailable.setText("Permission required for display file");
@@ -437,9 +462,10 @@ public class MainActivity extends AppCompatActivity {
                 }
            }
 
-            fileAndFolderAdapterFastItemAdapter.add(fileAndFolderAdapterList);
+            //fileAndFolderAdapterFastItemAdapter.add(fileAndFolderAdapterList);
+            fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
             binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-            binding.rec.setAdapter(fileAndFolderAdapterFastItemAdapter);
+            binding.rec.setAdapter(fileAndFolderFastAdapter);
 
         }
         binding.progressBar.setVisibility(View.GONE);
@@ -495,7 +521,8 @@ public class MainActivity extends AppCompatActivity {
             File parent = new File(destinationPath);
             parent = parent.getParentFile();
             destinationPath = parent.getAbsolutePath();
-            fileAndFolderAdapterFastItemAdapter.clear();
+            //fileAndFolderAdapterFastItemAdapter.clear();
+            fileAndFolderItemAdapter.clear();
 
             showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER);
 
@@ -624,6 +651,7 @@ public class MainActivity extends AppCompatActivity {
         RadioGroup radioGroup;
         RadioButton nameSort, sizeSort, typeSort, dateSort;
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View view = getLayoutInflater().inflate(R.layout.sort_dialog_box,null);
         builder.setView(view);
@@ -640,6 +668,17 @@ public class MainActivity extends AppCompatActivity {
         ascendingOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Constant.ASCENDING_ORDER = true;
+                setAscendingAndDescendingOrder(sharePref.getSortId());
+                Toast.makeText(MainActivity.this,"ascending order", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        descendingOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constant.ASCENDING_ORDER =false;
+                setAscendingAndDescendingOrder(sharePref.getSortId());
                 Toast.makeText(MainActivity.this,"ascending order", Toast.LENGTH_SHORT).show();
             }
         });
@@ -654,26 +693,128 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 Log.d(TAG, "onCheckedChanged: "+checkedId);
-                switch (checkedId){
-                    case Constant.ID_SORT_NAME:
-                        sharePref.setSortId(checkedId);
-                        break;
-                    case Constant.ID_SORT_DATE:
-                        sharePref.setSortId(checkedId);
-                        break;
-                    case Constant.ID_SORT_TYPE:
-                        sharePref.setSortId(checkedId);
-                        break;
-                    case Constant.ID_SORT_SIZE:
-                        sharePref.setSortId(checkedId);
-                        break;
-                }
+                Constant.checkedId=checkedId;
+                setAscendingAndDescendingOrder(checkedId);
+                dialog.dismiss();
             }
         });
 
+    }
+
+    private void setAscendingAndDescendingOrder(int checkedId){
+        if(Constant.ASCENDING_ORDER){
+            switch (checkedId){
+                case Constant.ID_SORT_NAME:
+                    sharePref.setSortId(checkedId);
+                    sortingStrategy = Constant.NAME_ASCENDING_ORDER;
+                    //Set the new comparator to the list
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case Constant.ID_SORT_DATE:
+                    sharePref.setSortId(checkedId);
+                    sortingStrategy = Constant.DATE_ASCENDING_ORDER;
+                    //Set the new comparator to the list
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case Constant.ID_SORT_SIZE:
+                    sharePref.setSortId(checkedId);
+                    sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
+                    //Set the new comparator to the list
+                    comparableItemList.withComparator(getComparator());
+                    break;
+            }
+        }else {
+            switch (checkedId){
+                case Constant.ID_SORT_NAME:
+                    sharePref.setSortId(checkedId);
+                    sortingStrategy = Constant.NAME_DESCENDING_ORDER;
+                    //Set the new comparator to the list
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case Constant.ID_SORT_DATE:
+                    sharePref.setSortId(checkedId);
+                    sortingStrategy = Constant.DATE_DESCENDING_ORDER;
+                    //Set the new comparator to the list
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case Constant.ID_SORT_SIZE:
+                    sharePref.setSortId(checkedId);
+                    sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
+                    //Set the new comparator to the list
+                    comparableItemList.withComparator(getComparator());
+                    break;
+            }
+        }
+    }
+
+    @NonNull
+    private Comparator<FileAndFolderAdapter> getComparator() {
+        switch (sortingStrategy) {
+            case Constant.NAME_ASCENDING_ORDER:
+                return new NameAscending();
+            case Constant.NAME_DESCENDING_ORDER:
+                return new NameDescending();
+            case Constant.SIZE_ASCENDING_ORDER:
+                return new SizeAscending();
+            case Constant.SIZE_DESCENDING_ORDER:
+                return new SizeDescending();
+            case Constant.DATE_ASCENDING_ORDER:
+                return new DateAscending();
+            case Constant.DATE_DESCENDING_ORDER:
+                return new DateDescending();
+        }
+
+        throw new RuntimeException("This sortingStrategy is not supported.");
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({ Constant.NAME_ASCENDING_ORDER,Constant.NAME_DESCENDING_ORDER,
+    Constant.DATE_ASCENDING_ORDER,Constant.DATE_DESCENDING_ORDER,
+    Constant.SIZE_ASCENDING_ORDER,Constant.SIZE_DESCENDING_ORDER})
+    public @interface SortingStrategy {
+    }
 
 
+    private class NameAscending implements Comparator<FileAndFolderAdapter>, Serializable{
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return o1.fileAndFolder.getName().compareTo(o2.fileAndFolder.getName());
+        }
+    }
 
+    private class NameDescending implements Comparator<FileAndFolderAdapter>, Serializable{
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
+        }
+    }
+
+    private class DateAscending implements Comparator<FileAndFolderAdapter>, Serializable{
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
+        }
+    }
+
+    private class DateDescending implements Comparator<FileAndFolderAdapter>, Serializable{
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
+        }
+    }
+
+    private class SizeAscending implements Comparator<FileAndFolderAdapter>, Serializable{
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
+        }
+    }
+
+    private class SizeDescending implements Comparator<FileAndFolderAdapter>, Serializable{
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+        }
     }
 
 }
