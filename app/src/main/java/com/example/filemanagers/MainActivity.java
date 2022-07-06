@@ -1,6 +1,7 @@
 package com.example.filemanagers;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -30,6 +31,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = "tag";
     private ActivityMainBinding binding;
+    private SharePref sharePref;
 
     private FastItemAdapter<FileAndFolderAdapter> fileAndFolderAdapterFastItemAdapter;
     private FastItemAdapter<PhotoGridAdapter> photoGridAdapterFastItemAdapter;
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolBar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.my_files);
+        sharePref=SharePref.getInstance(MainActivity.this);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -590,37 +596,84 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.sort:
-                Toast.makeText(MainActivity.this,"sort",Toast.LENGTH_SHORT).show();
+                sortingDialogBox();
                 break;
             case R.id.create_file:
-                Toast.makeText(MainActivity.this,"create file",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.create_folder:
-                Toast.makeText(MainActivity.this,"create folder",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.view_option:
-                Toast.makeText(MainActivity.this,"view option",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.close:
-                Toast.makeText(MainActivity.this,"close",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.show_file_size:
-                Toast.makeText(MainActivity.this,"show file size",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.show_folder_size:
-                Toast.makeText(MainActivity.this,"show folder size",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.show_full_name_of_files:
-                Toast.makeText(MainActivity.this,"show full name of files",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.show_hidden_folder_files:
-                Toast.makeText(MainActivity.this,"show hidden folder files",Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                Toast.makeText(MainActivity.this,"default",Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    void sortingDialogBox(){
+        TextView ascendingOrder, descendingOrder;
+        CheckBox checkBoxShowOnlyFolder;
+        RadioGroup radioGroup;
+        RadioButton nameSort, sizeSort, typeSort, dateSort;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.sort_dialog_box,null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        ascendingOrder = view.findViewById(R.id.sort_ascending);
+        descendingOrder = view.findViewById(R.id.sort_descending);
+        checkBoxShowOnlyFolder = view.findViewById(R.id.sort_only_this_folder);
+        radioGroup = view.findViewById(R.id.radio_group);
+        nameSort = view.findViewById(R.id.sort_name);
+
+
+        ascendingOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"ascending order", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        int sortingId = sharePref.getSortId();
+        if(sortingId!=0){
+            radioGroup.check(sortingId);
+        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Log.d(TAG, "onCheckedChanged: "+checkedId);
+                switch (checkedId){
+                    case Constant.ID_SORT_NAME:
+                        sharePref.setSortId(checkedId);
+                        break;
+                    case Constant.ID_SORT_DATE:
+                        sharePref.setSortId(checkedId);
+                        break;
+                    case Constant.ID_SORT_TYPE:
+                        sharePref.setSortId(checkedId);
+                        break;
+                    case Constant.ID_SORT_SIZE:
+                        sharePref.setSortId(checkedId);
+                        break;
+                }
+            }
+        });
+
+
+
+
     }
 
 }

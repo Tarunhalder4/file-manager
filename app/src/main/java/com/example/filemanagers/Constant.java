@@ -45,10 +45,18 @@ public class Constant {
     public static final String ALL_FILE = "all_file";
     public static final String INTERNAL_STORAGE_FILE_FOLDER = "internal_storage_file_folder";
 
+    public static final String MY_SHARE_PREF = "my_share_pref";
+
     public static boolean SHOW_FILE_SIZE = false;
     public static boolean SHOW_FOLDER_SIZE = false;
     public static boolean SHOW_FULL_NAME_OF_FILE = false;
     public static boolean SHOW_HIDDEN_FILE_AND_FOLDER = false;
+
+    public static final String SORT_ID = "sort_id";
+    public static final int ID_SORT_NAME = 2131231259;
+    public static final int ID_SORT_DATE = 2131231258;
+    public static final int ID_SORT_SIZE = 2131231261;
+    public static final int ID_SORT_TYPE = 2131231262;
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
