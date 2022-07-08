@@ -43,6 +43,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/folder_identifier_cardView"
                 android:layout_width="12dp"
@@ -63,6 +65,18 @@
                     android:layout_gravity="center"
                     />
             </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/checked"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:src="@drawable/check_24"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

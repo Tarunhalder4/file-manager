@@ -249,24 +249,15 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     if(fileAndFolderFastAdapter.getSelectedItems().size()==0){
                         Constant.LOG_CLICK_ACTIVATED=false;
+                        item.selectable=false;
                     }
-                    Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
-                    Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
-
-
+                   Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
+                 
                 }
-
                 return false;
-//                return true;
            }
         });
 
-        mUndoHelper = new UndoHelper<>(fileAndFolderFastAdapter, new UndoHelper.UndoListener<FileAndFolderAdapter>() {
-            @Override
-            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<FileAndFolderAdapter>> removed) {
-                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
-            }
-        });
 
         fileAndFolderFastAdapter.withOnPreLongClickListener(new OnLongClickListener<FileAndFolderAdapter>() {
             @Override
@@ -275,13 +266,10 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().hide();
                 Constant.LOG_CLICK_ACTIVATED = true;
                 if (actionMode != null) {
-                    //we want color our CAB
-//                    v.findViewById(R.id.sort_each_row_layout).setBackgroundColor(getResources().getColor(R.color.red));
+                    item.selectable= true;
                     v.findViewById(R.id.each_row_layout).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MainActivity.this, androidx.appcompat.R.attr.color,
                             R.color.red));
                 }
-
-                //if we have no actionMode we do not consume the event
                 return actionMode != null;
             }
         });

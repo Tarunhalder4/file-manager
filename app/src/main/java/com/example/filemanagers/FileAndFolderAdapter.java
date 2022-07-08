@@ -35,6 +35,12 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
     public String TAG = "tag";
     public Context context;
     public MainActivity mainActivity;
+    public boolean selectable;
+
+    public FileAndFolderAdapter(boolean selectable) {
+        this.selectable = selectable;
+    }
+
     public FileAndFolderAdapter(File fileAndFolder, Context context,MainActivity mainActivity) {
         this.fileAndFolder = fileAndFolder;
         this.context = context;
@@ -58,7 +64,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
     }
 
     public static class ViewHolder extends FastAdapter.ViewHolder<FileAndFolderAdapter>{
-        ImageView fileAndFolderImage;
+        ImageView fileAndFolderImage,checkImageView;
         TextView fileAndFolderName, date, fileSize;
         CardView folderIdentifierCardView, fileAndFolderBackGround;
         ImageView folderIdentifierImage, photo, moreImage;
@@ -73,12 +79,15 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
             fileAndFolderBackGround = itemView.findViewById(R.id.file_and_folder_back_ground);
             photo = itemView.findViewById(R.id.photos);
             moreImage = itemView.findViewById(R.id.more_image);
+            checkImageView = itemView.findViewById(R.id.checked);
         }
 
 
         @Override
         public void bindView(FileAndFolderAdapter item, List<Object> payloads) {
+
             UIUtils.setBackground(itemView, FastAdapterUIUtils.getSelectableBackground(item.context, Color.RED, true));
+
             if (item.fileAndFolder.isDirectory()){
                 fileAndFolderBackGround.setCardBackgroundColor(item.context.getResources().getColor(R.color.folderBackground));
 
@@ -205,6 +214,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
             fileAndFolderImage.setImageResource(0);
             date.setText(null);
             fileSize.setText(null);
+            checkImageView.setImageResource(0);
         }
 
     }
