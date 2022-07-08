@@ -45,6 +45,9 @@
     <string name="sort_type">Type</string>
     <string name="sort_only_this_folder">Only this Folder</string>
 
-
+<!--    multiselect tool bar item string -->
+    <string name="multi_select_delete">delete</string>
+    <string name="multi_select_copy">copy</string>
+    <string name="multi_select_past">past</string>
 
 </resources>

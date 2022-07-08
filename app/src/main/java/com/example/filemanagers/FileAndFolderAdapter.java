@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,7 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.materialize.util.UIUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -75,6 +78,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
 
         @Override
         public void bindView(FileAndFolderAdapter item, List<Object> payloads) {
+            UIUtils.setBackground(itemView, FastAdapterUIUtils.getSelectableBackground(item.context, Color.RED, true));
             if (item.fileAndFolder.isDirectory()){
                 fileAndFolderBackGround.setCardBackgroundColor(item.context.getResources().getColor(R.color.folderBackground));
 

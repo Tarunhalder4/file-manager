@@ -4,6 +4,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,14 +36,19 @@ import com.example.filemanagers.adapter.PhotoGridAdapter;
 import com.example.filemanagers.databinding.ActivityMainBinding;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
+import com.mikepenz.fastadapter_extensions.ActionModeHelper;
+import com.mikepenz.fastadapter_extensions.UndoHelper;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialize.util.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,6 +63,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
     private List<PathAdapter> pathAdapterList;
 
     private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
+
+    private ActionModeHelper<FileAndFolderAdapter> mActionModeHelper;
+    private UndoHelper mUndoHelper;
 
     ArrayList<File> newFiles = null;
     private Drawer drawer = null;
@@ -118,9 +128,15 @@ public class MainActivity extends AppCompatActivity {
         photoGridAdapterFastItemAdapter = new FastItemAdapter<>();
         pathAdapterFastItemAdapter = new FastItemAdapter<>();
 
+        fileAndFolderFastAdapter.setHasStableIds(true);
         fileAndFolderFastAdapter.withSelectable(true);
+        fileAndFolderFastAdapter.withMultiSelect(true);
+        fileAndFolderFastAdapter.withSelectOnLongClick(true);
+
         photoGridAdapterFastItemAdapter.withSelectable(true);
         pathAdapterFastItemAdapter.withSelectable(true);
+
+        mActionModeHelper = new ActionModeHelper<>(fileAndFolderFastAdapter, R.menu.multiselect_menu, new ActionBarCallBack());
 
         photoGridAdapterList = new ArrayList<>();
         pathAdapterArrayDeque = new ArrayDeque<>();
@@ -181,38 +197,92 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        fileAndFolderFastAdapter.withSelectionListener(new ISelectionListener<FileAndFolderAdapter>() {
+            @Override
+            public void onSelectionChanged(FileAndFolderAdapter item, boolean selected) {
+                Log.i("FastAdapter", "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size());
+            }
+        });
+
+        fileAndFolderFastAdapter.withOnPreClickListener(new OnClickListener<FileAndFolderAdapter>() {
+            @Override
+            public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, @NonNull FileAndFolderAdapter item, int position) {
+                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+                Boolean res = mActionModeHelper.onClick(item);
+                return res != null ? res : false;
+            }
+        });
+
         fileAndFolderFastAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
             @Override
             public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
-                binding.progressBar.setVisibility(View.VISIBLE);
-                if (item.fileAndFolder.isDirectory()) {
-                    binding.noFileAvailable.setVisibility(View.GONE);
-                    path = item.fileAndFolder.getPath();
-                    peekPath = true;
-                    showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
-                } else {
-                    if (item.fileAndFolder.getName().endsWith(".pdf")) {
-                        openFile(item.fileAndFolder, Constant.PDF_FILE);
-                    }
-
-                    if (item.fileAndFolder.getName().endsWith(".jpg")||item.fileAndFolder.getName().endsWith(".png")) {
-                        openFile(item.fileAndFolder, Constant.PHOTO_FILE);
-                    }
-
-                    if (item.fileAndFolder.getName().endsWith(".mp3")) {
-                        openFile(item.fileAndFolder, Constant.AUDIO_FILE);
-                    }
-
-                    if (item.fileAndFolder.getName().endsWith(".mp4")) {
-                        openFile(item.fileAndFolder, Constant.VIDEO_FILE);
-                    }
-
+                if(!Constant.LOG_CLICK_ACTIVATED){
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     if (item.fileAndFolder.isDirectory()) {
+                        binding.noFileAvailable.setVisibility(View.GONE);
+                        path = item.fileAndFolder.getPath();
+                        peekPath = true;
                         showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                    } else {
+                        if (item.fileAndFolder.getName().endsWith(".pdf")) {
+                            openFile(item.fileAndFolder, Constant.PDF_FILE);
+                        }
+
+                        if (item.fileAndFolder.getName().endsWith(".jpg")||item.fileAndFolder.getName().endsWith(".png")) {
+                            openFile(item.fileAndFolder, Constant.PHOTO_FILE);
+                        }
+
+                        if (item.fileAndFolder.getName().endsWith(".mp3")) {
+                            openFile(item.fileAndFolder, Constant.AUDIO_FILE);
+                        }
+
+                        if (item.fileAndFolder.getName().endsWith(".mp4")) {
+                            openFile(item.fileAndFolder, Constant.VIDEO_FILE);
+                        }
+
+                        if (item.fileAndFolder.isDirectory()) {
+                            showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                        }
+
                     }
+                }else {
+                    if(fileAndFolderFastAdapter.getSelectedItems().size()==0){
+                        Constant.LOG_CLICK_ACTIVATED=false;
+                    }
+                    Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
+                    Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
+
 
                 }
-                return true;
+
+                return false;
+//                return true;
+           }
+        });
+
+        mUndoHelper = new UndoHelper<>(fileAndFolderFastAdapter, new UndoHelper.UndoListener<FileAndFolderAdapter>() {
+            @Override
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<FileAndFolderAdapter>> removed) {
+                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
+            }
+        });
+
+        fileAndFolderFastAdapter.withOnPreLongClickListener(new OnLongClickListener<FileAndFolderAdapter>() {
+            @Override
+            public boolean onLongClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
+                ActionMode actionMode = mActionModeHelper.onLongClick(MainActivity.this, position);
+                getSupportActionBar().hide();
+                Constant.LOG_CLICK_ACTIVATED = true;
+                if (actionMode != null) {
+                    //we want color our CAB
+//                    v.findViewById(R.id.sort_each_row_layout).setBackgroundColor(getResources().getColor(R.color.red));
+                    v.findViewById(R.id.each_row_layout).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MainActivity.this, androidx.appcompat.R.attr.color,
+                            R.color.red));
+                }
+
+                //if we have no actionMode we do not consume the event
+                return actionMode != null;
             }
         });
 
@@ -814,6 +884,32 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
             return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+        }
+    }
+
+    class ActionBarCallBack implements ActionMode.Callback {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
+            //as we no longer have a selection so the actionMode can be finished
+            mode.finish();
+            //we consume the event
+            return true;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
         }
     }
 

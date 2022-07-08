@@ -73,6 +73,8 @@ public class Constant {
 
     public static int checkedId = 0;
 
+    public static boolean LOG_CLICK_ACTIVATED = false;
+
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
