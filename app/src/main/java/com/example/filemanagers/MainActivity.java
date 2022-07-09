@@ -922,8 +922,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
-           // Toast.makeText(MainActivity.this,item.getItemId(),Toast.LENGTH_SHORT).show();
-
             if(item.getTitle().equals(getResources().getString(R.string.multi_select_delete))){
                 for (FileAndFolderAdapter fileAndFolderAdapter :fileAndFolderFastAdapter.getSelectedItems()){
                     if(fileAndFolderAdapter.fileAndFolder.delete()){
