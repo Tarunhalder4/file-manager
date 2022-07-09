@@ -255,18 +255,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
                     Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
-
-//                    for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderAdapters){
-//                        selectableFile.add(fileAndFolderAdapter.fileAndFolder);
-//                        if(fileAndFolderAdapter.fileAndFolder.delete()){
-//                            Toast.makeText(MainActivity.this,fileAndFolderAdapter.fileAndFolder.getName()+" file is delete",Toast.LENGTH_SHORT).show();
-//                        }
-                    }
-
-//                }
-
+                 }
                 return false;
-//                return true;
            }
         });
 
