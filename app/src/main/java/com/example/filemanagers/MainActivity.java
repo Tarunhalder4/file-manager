@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private List<PhotoGridAdapter> photoGridAdapterList;
     private ArrayDeque<PathAdapter> pathAdapterArrayDeque;
     private List<PathAdapter> pathAdapterList;
+    private List<File> selectableFile;
 
     private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
 
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         photoGridAdapterList = new ArrayList<>();
         pathAdapterArrayDeque = new ArrayDeque<>();
         pathAdapterList = new ArrayList<>();
+        selectableFile = new ArrayList<>();
 
         newFiles = new ArrayList<>();
 
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSelectionChanged(FileAndFolderAdapter item, boolean selected) {
                 Log.i("FastAdapter", "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size());
+               // Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
             }
         });
 
@@ -253,8 +256,14 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
                     Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
 
+//                    for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderAdapters){
+//                        selectableFile.add(fileAndFolderAdapter.fileAndFolder);
+//                        if(fileAndFolderAdapter.fileAndFolder.delete()){
+//                            Toast.makeText(MainActivity.this,fileAndFolderAdapter.fileAndFolder.getName()+" file is delete",Toast.LENGTH_SHORT).show();
+//                        }
+                    }
 
-                }
+//                }
 
                 return false;
 //                return true;
@@ -682,7 +691,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.my_file_menu, menu);
-        menu.findItem(R.id.sort).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_wrap_text).color(Color.BLACK));
+        //inflater.inflate(R.menu.multiselect_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -711,8 +720,29 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.show_hidden_folder_files:
                 break;
+            case R.id.multiselect_item_delete:
+                Toast.makeText(MainActivity.this,"file delete",Toast.LENGTH_SHORT).show();
+//                if(fileAndFolderFastAdapter.getSelectedItems().size()>0){
+//                    multiselectDelete();
+//                }
+                break;
+            case R.id.multiselect_item_copy:
+                Toast.makeText(MainActivity.this,"file copy",Toast.LENGTH_SHORT).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void multiselectDelete(){
+
+        for (FileAndFolderAdapter fileAndFolderAdapter:fileAndFolderFastAdapter.getSelectedItems()){
+            if(fileAndFolderAdapter.fileAndFolder.delete()){
+                Toast.makeText(MainActivity.this,fileAndFolderAdapter.fileAndFolder.getName()+" file is delete",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(MainActivity.this,fileAndFolderAdapter.fileAndFolder.getName()+" file is delete",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     void sortingDialogBox(){
@@ -891,7 +921,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
+
+           // Toast.makeText(MainActivity.this,item.getItemId(),Toast.LENGTH_SHORT).show();
+
+            if(item.getTitle().equals(getResources().getString(R.string.multi_select_delete))){
+                for (FileAndFolderAdapter fileAndFolderAdapter :fileAndFolderFastAdapter.getSelectedItems()){
+                    if(fileAndFolderAdapter.fileAndFolder.delete()){
+                        Toast.makeText(MainActivity.this,fileAndFolderAdapter.fileAndFolder.getName()+" item is delete", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
+                Log.d(TAG, "onActionItemClicked: "+item.getTitle());
+            }else{
+                Log.d(TAG, "onActionItemClicked: "+item.getTitle());
+            }
             //as we no longer have a selection so the actionMode can be finished
             mode.finish();
             //we consume the event

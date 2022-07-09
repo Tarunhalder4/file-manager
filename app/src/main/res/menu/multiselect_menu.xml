@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/multiselect_item_delete"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/ic_baseline_delete_24"
         android:title="@string/multi_select_delete"
         android:titleCondensed="Delete"
         app:showAsAction="ifRoom|withText" />
@@ -13,7 +13,7 @@
         android:id="@+id/multiselect_item_copy"
         android:icon="@drawable/copy_24"
         android:title="@string/multi_select_copy"
-        android:titleCondensed="Delete"
+        android:titleCondensed="@string/copy"
         app:showAsAction="ifRoom|withText" />
 
 
