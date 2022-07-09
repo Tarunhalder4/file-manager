@@ -948,6 +948,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            if (getSupportActionBar()!=null){
+                getSupportActionBar().show();
+            }
         }
 
         @Override
