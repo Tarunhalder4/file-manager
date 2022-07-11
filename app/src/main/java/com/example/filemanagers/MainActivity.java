@@ -53,6 +53,9 @@ import com.mikepenz.materialize.util.UIUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -61,7 +64,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -274,8 +279,6 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().hide();
                 Constant.LOG_CLICK_ACTIVATED = true;
                 if (actionMode != null) {
-                    //we want color our CAB
-//                    v.findViewById(R.id.sort_each_row_layout).setBackgroundColor(getResources().getColor(R.color.red));
                     v.findViewById(R.id.each_row_layout).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MainActivity.this, androidx.appcompat.R.attr.color,
                             R.color.red));
                 }
@@ -465,7 +468,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showFileAndFolder(File mainFile, String requiredFile) {
-        //fileAndFolderAdapterFastItemAdapter.clear();
         fileAndFolderItemAdapter.clear();
         showPath(mainFile);
         if (!Constant.checkPermission(MainActivity.this)) {
@@ -919,9 +921,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
-                Log.d(TAG, "onActionItemClicked: "+item.getTitle());
             }else{
-                Log.d(TAG, "onActionItemClicked: "+item.getTitle());
+                if(fileAndFolderFastAdapter.getSelectedItems().size()>0){
+                    ArrayList<FileAndFolderAdapter> fileAndFolderAdapters = new ArrayList<>();
+                    List<String> files = new ArrayList<>();
+                    for (FileAndFolderAdapter fileAndFolderAdapter :fileAndFolderFastAdapter.getSelectedItems()){
+                        fileAndFolderAdapters.add(fileAndFolderAdapter);
+                        files.add(fileAndFolderAdapter.fileAndFolder.getAbsolutePath());
+                    }
+
+                    JSONArray jsonArray = new JSONArray(files);
+
+                    Intent intent = new Intent(MainActivity.this, CopyActivity.class);
+                    intent.putExtra(Constant.PATH,jsonArray.toString());
+                    startActivity(intent);
+                }
+
             }
             //as we no longer have a selection so the actionMode can be finished
             mode.finish();
@@ -936,7 +951,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            Log.d(TAG, "onDestroyActionMode: ");
             if (getSupportActionBar()!=null){
                 getSupportActionBar().show();
             }

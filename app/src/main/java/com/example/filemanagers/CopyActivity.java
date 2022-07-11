@@ -12,9 +12,14 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.filemanagers.databinding.ActivityCopyBinding;
+import com.google.gson.Gson;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +38,6 @@ public class CopyActivity extends AppCompatActivity {
     String path;
     int backCount =0;
     String destinationPath = null;
-    String sourcePath= null;
     String TAG = "tag";
 
     @Override
@@ -48,8 +52,6 @@ public class CopyActivity extends AppCompatActivity {
 
         File file = Environment.getExternalStorageDirectory();
         showFileAndFolder(file,true);
-
-        sourcePath = getIntent().getStringExtra(Constant.PATH);
 
         fastItemAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
             @Override
@@ -70,17 +72,32 @@ public class CopyActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                File sourceFile = new File(sourcePath);
-                File destinationFile = new File(destinationPath);
+                String sourcePath = getIntent().getStringExtra(Constant.PATH);
+                ArrayList<Object> listdata = new ArrayList<Object>();
                 try {
-                    Files.copy(Paths.get(sourcePath), Paths.get(destinationPath+"/"+sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException e) {
+
+                    JSONArray jsonArray = new JSONArray(sourcePath);
+                    for (int i=0;i<jsonArray.length();i++){
+                        listdata.add(jsonArray.get(i));
+                    }
+
+                } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.d(TAG, "onClick: "+e);
                 }
+                File destinationFile = new File(destinationPath);
+                for (Object o : listdata ){
+                    String filePath = o.toString();
+                    File sourceFile = new File(filePath);
+                    try {
+                        Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath+"/"+sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 showFileAndFolder(destinationFile,true);
                 binding.copyToolBarBottom.setVisibility(View.GONE);
-                binding.copyTextView.setText("File Copy");
+
             }
         });
 

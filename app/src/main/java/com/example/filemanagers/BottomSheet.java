@@ -21,8 +21,11 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -69,18 +72,17 @@ public class BottomSheet extends BottomSheetDialogFragment {
             long numberOfFile = files.length;
             noOfItemInItem.setText(String.valueOf(numberOfFile));
         }else {
-            Log.d("tag", "onCreateView: "+file.length());
             noOfItemInItem.setText(Constant.memory(file.length()));
         }
-
-
-
 
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CopyActivity.class);
-                intent.putExtra(Constant.PATH,file.getAbsolutePath());
+                List<String> files = new ArrayList<>();
+                files.add(file.getAbsolutePath());
+                JSONArray jsonArray = new JSONArray(files);
+                intent.putExtra(Constant.PATH,jsonArray.toString());
                 startActivity(intent);
                 dismiss();
             }
