@@ -794,45 +794,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAscendingAndDescendingOrder(int checkedId){
+//        public static final int ID_SORT_NAME = 2131231259;
+//        public static final int ID_SORT_DATE =  2131231260;
+//        public static final int ID_SORT_SIZE = 2131231263;
+//        public static final int ID_SORT_TYPE = 2131231264;
+        Log.d(TAG, "setAscendingAndDescendingOrder: "+checkedId);
+        sharePref.setSortId(checkedId);
         if(Constant.ASCENDING_ORDER){
             switch (checkedId){
                 case Constant.ID_SORT_NAME:
-                    sharePref.setSortId(checkedId);
                     sortingStrategy = Constant.NAME_ASCENDING_ORDER;
-                    //Set the new comparator to the list
                     comparableItemList.withComparator(getComparator());
                     break;
                 case Constant.ID_SORT_DATE:
-                    sharePref.setSortId(checkedId);
                     sortingStrategy = Constant.DATE_ASCENDING_ORDER;
-                    //Set the new comparator to the list
                     comparableItemList.withComparator(getComparator());
                     break;
                 case Constant.ID_SORT_SIZE:
-                    sharePref.setSortId(checkedId);
                     sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
-                    //Set the new comparator to the list
                     comparableItemList.withComparator(getComparator());
                     break;
             }
         }else {
             switch (checkedId){
                 case Constant.ID_SORT_NAME:
-                    sharePref.setSortId(checkedId);
                     sortingStrategy = Constant.NAME_DESCENDING_ORDER;
-                    //Set the new comparator to the list
                     comparableItemList.withComparator(getComparator());
                     break;
                 case Constant.ID_SORT_DATE:
-                    sharePref.setSortId(checkedId);
                     sortingStrategy = Constant.DATE_DESCENDING_ORDER;
-                    //Set the new comparator to the list
                     comparableItemList.withComparator(getComparator());
                     break;
                 case Constant.ID_SORT_SIZE:
-                    sharePref.setSortId(checkedId);
                     sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
-                    //Set the new comparator to the list
                     comparableItemList.withComparator(getComparator());
                     break;
             }

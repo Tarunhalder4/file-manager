@@ -54,10 +54,10 @@ public class Constant {
 
     /////sorting Constant
     public static final String SORT_ID = "sort_id";
-    public static final int ID_SORT_NAME = 2131231259;
-    public static final int ID_SORT_DATE = 2131231258;
-    public static final int ID_SORT_SIZE = 2131231261;
-    public static final int ID_SORT_TYPE = 2131231262;
+    public static final int ID_SORT_NAME = 2131231261;
+    public static final int ID_SORT_DATE = 2131231260;
+    public static final int ID_SORT_SIZE = 2131231263;
+    public static final int ID_SORT_TYPE = 2131231264;
 
     public static boolean ASCENDING_ORDER =false;
     //public static final int DESCENDING_ORDER =1;
