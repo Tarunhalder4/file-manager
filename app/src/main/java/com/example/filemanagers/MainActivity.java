@@ -794,10 +794,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAscendingAndDescendingOrder(int checkedId){
-//        public static final int ID_SORT_NAME = 2131231259;
-//        public static final int ID_SORT_DATE =  2131231260;
-//        public static final int ID_SORT_SIZE = 2131231263;
-//        public static final int ID_SORT_TYPE = 2131231264;
         Log.d(TAG, "setAscendingAndDescendingOrder: "+checkedId);
         sharePref.setSortId(checkedId);
         if(Constant.ASCENDING_ORDER){
