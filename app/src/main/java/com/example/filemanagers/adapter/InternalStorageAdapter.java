@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filemanagers.R;
@@ -21,7 +20,6 @@ public class InternalStorageAdapter extends AbstractItem<InternalStorageAdapter,
     String useOfValue;
     String totalValue;
     String progressValue;
-
     public InternalStorageAdapter(String availableStorage, String useOfValue, String totalValue, String progressValue) {
         this.availableStorage = availableStorage;
         this.useOfValue = useOfValue;
@@ -52,13 +50,8 @@ public class InternalStorageAdapter extends AbstractItem<InternalStorageAdapter,
         holder.availableStorage.setText("Available "+availableStorage+" GB");
         holder.useOf.setText(useOfValue+" GB Used of "+totalValue+" GB");
         holder.progressValue.setText(progressValue);
-     //   holder.progressValueBackground
+        //holder.progressValueBackground
         holder.progressBar.setProgress(Integer.parseInt(progressValue));
-       // ConstraintLayout cl = (ConstraintLayout) findViewById(R.id.activity_constraint);
-//        ConstraintSet cs = new ConstraintSet();
-//        cs.clone(holder.cl);
-//        cs.setHorizontalBias(R.id.progressBar,100);
-//        cs.applyTo(holder.cl);
     }
 
     @Override
@@ -83,7 +76,7 @@ public class InternalStorageAdapter extends AbstractItem<InternalStorageAdapter,
             progressBar = itemView.findViewById(R.id.progressBar);
             progressValueBackground = itemView.findViewById(R.id.view);
 
-          //  cl =  itemView.findViewById(R.id.progressBar);
+            cl =  itemView.findViewById(R.id.internal_storage_card_view_layout);
         }
     }
 }

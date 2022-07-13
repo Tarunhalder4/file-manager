@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -340,6 +342,13 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
             holder.useOf.setText(internalStorageAdapterFastItemAdapter.getAdapterItem(0).useOfValue+" GB Used of "+internalStorageAdapterFastItemAdapter.getAdapterItem(0).totalValue+" GB");
             holder.progressValue.setText(internalStorageAdapterFastItemAdapter.getAdapterItem(0).progressValue+"%");
             holder.progressBar.setProgress(Integer.parseInt(internalStorageAdapterFastItemAdapter.getAdapterItem(0).progressValue));
+            ConstraintSet cs;
+            cs = new ConstraintSet();
+            cs.clone(holder.cl);
+            Log.d("tag", "bindView: "+Float.parseFloat(internalStorageAdapterFastItemAdapter.getAdapterItem(0).progressValue)/100);
+            cs.setHorizontalBias(R.id.view,  Float.parseFloat(internalStorageAdapterFastItemAdapter.getAdapterItem(0).progressValue)/100);
+            cs.applyTo(holder.cl);
+
         }
     }
 
@@ -390,6 +399,7 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
         ///////////////internal storage
         TextView availableStorage,useOf,progressValue;
         ProgressBar progressBar;
+        ConstraintLayout cl;
         //////////////common recycle view and text view
         TextView noFileAvailable;
         RecyclerView recyclerView;
@@ -410,6 +420,7 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
             useOf = itemView.findViewById(R.id.use_of_text_view);
             progressValue = itemView.findViewById(R.id.progress_text_view);
             progressBar = itemView.findViewById(R.id.progressBar);
+            cl =  itemView.findViewById(R.id.card_constraint1);
             ///////////////////common recycle view and text view
             noFileAvailable = itemView.findViewById(R.id.no_file_available);
             recyclerView= itemView.findViewById(R.id.rec);
