@@ -6,12 +6,32 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
+<<<<<<< HEAD
             <type value="SERIAL_NUMBER" />
             <value value="c439e4d90806" />
+=======
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\HP\.android\avd\Pixel_4_API_32.avd" />
+>>>>>>> main
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
+<<<<<<< HEAD
     <timeTargetWasSelectedWithDropDown value="2022-07-13T19:04:03.942091900Z" />
+=======
+    <targetSelectedWithDropDown>
+      <Target>
+        <type value="QUICK_BOOT_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\HP\.android\avd\Pixel_4_API_32.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </targetSelectedWithDropDown>
+    <timeTargetWasSelectedWithDropDown value="2022-07-14T07:01:18.313485800Z" />
+>>>>>>> main
   </component>
 </project>

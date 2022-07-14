@@ -30,13 +30,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+
+import bolts.Task;
 
 public class CopyActivity extends AppCompatActivity {
     ActivityCopyBinding binding;
     private FastItemAdapter<FileAndFolderAdapter> fastItemAdapter;
     ArrayList<File> newFiles;
     String path;
-    int backCount =0;
+    int backCount = 0;
     String destinationPath = null;
     String TAG = "tag";
 
@@ -51,53 +54,28 @@ public class CopyActivity extends AppCompatActivity {
         newFiles = new ArrayList<>();
 
         File file = Environment.getExternalStorageDirectory();
-        showFileAndFolder(file,true);
+        showFileAndFolder(file, true);
 
         fastItemAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
             @Override
             public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
 
-                if(item.fileAndFolder.isDirectory()){
+                if (item.fileAndFolder.isDirectory()) {
                     path = item.fileAndFolder.getPath();
                     File file = new File(path);
                     destinationPath = file.getAbsolutePath();
-                    showFileAndFolder(file,true);
+                    showFileAndFolder(file, true);
                 }
                 return true;
             }
         });
 
         binding.pastImage.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
             @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                String sourcePath = getIntent().getStringExtra(Constant.PATH);
-                ArrayList<Object> listdata = new ArrayList<Object>();
-                try {
-
-                    JSONArray jsonArray = new JSONArray(sourcePath);
-                    for (int i=0;i<jsonArray.length();i++){
-                        listdata.add(jsonArray.get(i));
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                File destinationFile = new File(destinationPath);
-                for (Object o : listdata ){
-                    String filePath = o.toString();
-                    File sourceFile = new File(filePath);
-                    try {
-                        Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath+"/"+sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                showFileAndFolder(destinationFile,true);
-                binding.copyToolBarBottom.setVisibility(View.GONE);
-
+                fileCopy();
             }
         });
 
@@ -109,27 +87,27 @@ public class CopyActivity extends AppCompatActivity {
         });
 
 
-       }
+    }
 
-    private void showFileAndFolder( File mainFile, boolean fileAndFolder){
+    private void showFileAndFolder(File mainFile, boolean fileAndFolder) {
         fastItemAdapter.clear();
         List<File> filesAndFolders = Arrays.asList(Objects.requireNonNull(mainFile.listFiles()));
-        if (filesAndFolders.size() == 0){
+        if (filesAndFolders.size() == 0) {
             binding.noFileAvailable.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             binding.noFileAvailable.setVisibility(View.GONE);
             List<FileAndFolderAdapter> fileAndFolderAdapters = new ArrayList<>();
 
-            for (File file : filesAndFolders){
-                if(file.isDirectory()){
-                    fileAndFolderAdapters.add(new FileAndFolderAdapter(file,CopyActivity.this,null));
+            for (File file : filesAndFolders) {
+                if (file.isDirectory()) {
+                    fileAndFolderAdapters.add(new FileAndFolderAdapter(file, CopyActivity.this, null));
                 }
             }
 
-            if (fileAndFolder){
-                for (File file:filesAndFolders){
-                    if (file.isFile()){
-                        fileAndFolderAdapters.add(new FileAndFolderAdapter(file,CopyActivity.this,null));
+            if (fileAndFolder) {
+                for (File file : filesAndFolders) {
+                    if (file.isFile()) {
+                        fileAndFolderAdapters.add(new FileAndFolderAdapter(file, CopyActivity.this, null));
                     }
                 }
             }
@@ -139,20 +117,49 @@ public class CopyActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void fileCopy() {
+        String sourcePath = getIntent().getStringExtra(Constant.PATH);
+        ArrayList<Object> listdata = new ArrayList<Object>();
+        try {
+            JSONArray jsonArray = new JSONArray(sourcePath);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                listdata.add(jsonArray.get(i));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        File destinationFile = new File(destinationPath);
+        for (Object o : listdata) {
+            String filePath = o.toString();
+            File sourceFile = new File(filePath);
+            try {
+                Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        showFileAndFolder(destinationFile, true);
+        binding.copyToolBarBottom.setVisibility(View.GONE);
+    }
+
     @Override
     public void onBackPressed() {
-        if(backCount==0){
+        if (backCount == 0) {
             destinationPath = path;
         }
 
         File parent = new File(destinationPath);
-        parent=parent.getParentFile();
-        destinationPath=parent.getAbsolutePath();
+        parent = parent.getParentFile();
+        destinationPath = parent.getAbsolutePath();
         fastItemAdapter.clear();
-        showFileAndFolder(parent,true);
-        backCount=1;
+        showFileAndFolder(parent, true);
+        backCount = 1;
 
-        if(destinationPath.equals("/storage/emulated/0")){
+        if (destinationPath.equals("/storage/emulated/0")) {
             super.onBackPressed();
         }
     }
