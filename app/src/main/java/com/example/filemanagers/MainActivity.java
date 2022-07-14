@@ -69,6 +69,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.Callable;
+
+import bolts.Continuation;
+import bolts.Task;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -192,14 +196,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onClick(View v, IAdapter<PhotoGridAdapter> adapter, PhotoGridAdapter item, int position) {
 
-                if(item.file.isDirectory()){
-                    photoGridAdapterFastItemAdapter.clear();
-                    showPhotoInFolder(item.file);
-                }else {
-                    if(item.file.isFile() && item.file.getName().endsWith("jpg") ){
-                        openFile(item.file,Constant.PHOTO_FILE);
-                    }
-                }
+//                Task.callInBackground(new Callable<Object>() {
+//                    @Override
+//                    public Object call() throws Exception {
+
+                        if(item.file.isDirectory()){
+                            photoGridAdapterFastItemAdapter.clear();
+                            showPhotoInFolder(item.file);
+                        }else {
+                            if(item.file.isFile() && item.file.getName().endsWith("jpg") ){
+                                openFile(item.file,Constant.PHOTO_FILE);
+                            }
+                        }
+
+//                        return null;
+//                    }
+//                }).continueWith(new Continuation<Object, Object>() {
+//                    @Override
+//                    public Object then(Task<Object> task) throws Exception {
+//                        if(task.isCancelled()){
+//                            Log.d(TAG, "then: task is cancelled");
+//                        }
+//
+//                        if(task.isCompleted()){
+//                            Log.d(TAG, "then: task is completed");
+//                        }
+//
+//                        return null;
+//                    }
+//                });
+
                 return true;
             }
         });
@@ -480,63 +506,92 @@ public class MainActivity extends AppCompatActivity {
             binding.noFileAvailable.setVisibility(View.VISIBLE);
         } else {
             binding.noFileAvailable.setVisibility(View.GONE);
-            fileAndFolderAdapterList = new ArrayList<>();
 
-            if (requiredFile.equals(Constant.AUDIO_FILE)) {
-                for (File file : filesAndFolders) {
-                    if (file.isDirectory()) {
-                        scanDirectory(file, Constant.AUDIO_FILE);
-                    } else {
-                        fileScanBySuffix(file, Constant.AUDIO_FILE);
+
+            Task.callInBackground(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    Log.d(TAG, "call: "+Thread.currentThread().getName());
+                    fileAndFolderAdapterList = new ArrayList<>();
+
+                    if (requiredFile.equals(Constant.AUDIO_FILE)) {
+                        for (File file : filesAndFolders) {
+                            if (file.isDirectory()) {
+                                scanDirectory(file, Constant.AUDIO_FILE);
+                            } else {
+                                fileScanBySuffix(file, Constant.AUDIO_FILE);
+                            }
+                        }
+                    } else if (requiredFile.equals(Constant.DOCUMENTS_FILE)) {
+                        for (File file : filesAndFolders) {
+                            if (file.isDirectory()) {
+                                scanDirectory(file, Constant.DOCUMENTS_FILE);
+                            } else {
+                                fileScanBySuffix(file, Constant.DOCUMENTS_FILE);
+                            }
+                        }
+                    } else if (requiredFile.equals(Constant.PHOTO_FILE)) {
+
+                        for (File file : filesAndFolders) {
+                            if (file.isDirectory()) {
+                                scanDirectory(file, Constant.PHOTO_FILE);
+                            } else {
+                                fileScanBySuffix(file, Constant.PHOTO_FILE);
+                            }
+                        }
+                    } else if (requiredFile.equals(Constant.VIDEO_FILE)) {
+
+                        for (File file : filesAndFolders) {
+                            if (file.isDirectory()) {
+                                scanDirectory(file, Constant.VIDEO_FILE);
+                            } else {
+                                fileScanBySuffix(file, Constant.VIDEO_FILE);
+                            }
+                        }
+                    } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
+
+                        for (File file : Objects.requireNonNull(mainFile.listFiles())){
+                            if (file.isDirectory()&&!file.getName().startsWith(".")) {
+                                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                            }
+
+                        }
+
+                        for (File file : Objects.requireNonNull(mainFile.listFiles())){
+                            if (file.isFile()&&!file.getName().startsWith(".")) {
+                                fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                            }
+
+                        }
                     }
-                }
-            } else if (requiredFile.equals(Constant.DOCUMENTS_FILE)) {
-                for (File file : filesAndFolders) {
-                    if (file.isDirectory()) {
-                        scanDirectory(file, Constant.DOCUMENTS_FILE);
-                    } else {
-                        fileScanBySuffix(file, Constant.DOCUMENTS_FILE);
-                    }
-                }
-            } else if (requiredFile.equals(Constant.PHOTO_FILE)) {
 
-                for (File file : filesAndFolders) {
-                    if (file.isDirectory()) {
-                        scanDirectory(file, Constant.PHOTO_FILE);
-                    } else {
-                        fileScanBySuffix(file, Constant.PHOTO_FILE);
-                    }
-                }
-            } else if (requiredFile.equals(Constant.VIDEO_FILE)) {
+                    fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
+                    binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    binding.rec.setAdapter(fileAndFolderFastAdapter);
 
-                for (File file : filesAndFolders) {
-                    if (file.isDirectory()) {
-                        scanDirectory(file, Constant.VIDEO_FILE);
-                    } else {
-                        fileScanBySuffix(file, Constant.VIDEO_FILE);
-                    }
-                }
-            } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
 
-                for (File file : Objects.requireNonNull(mainFile.listFiles())){
-                    if (file.isDirectory()) {
-                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    return null;
+                }
+            }).continueWith(new Continuation<Object, Object>() {
+                @Override
+                public Object then(Task<Object> task) throws Exception {
+
+                    if(task.isCompleted()){
+                        Log.d(TAG, "then: task is completed");
                     }
 
-                }
-
-                for (File file : Objects.requireNonNull(mainFile.listFiles())){
-                    if (file.isFile()) {
-                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    if (task.isCancelled()){
+                        Log.d(TAG, "then: task is cancelled");
                     }
 
+                    return null;
                 }
-           }
+            });
 
-            //fileAndFolderAdapterFastItemAdapter.add(fileAndFolderAdapterList);
-            fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
-            binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-            binding.rec.setAdapter(fileAndFolderFastAdapter);
+
+            //Log.d(TAG, "showFileAndFolder: "+isTaskCompleted);
+
+
 
         }
         binding.progressBar.setVisibility(View.GONE);
@@ -658,6 +713,26 @@ public class MainActivity extends AppCompatActivity {
 
     void showPhotoFolder(File file){
         binding.progressBar.setVisibility(View.VISIBLE);
+        Task.callInBackground(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                //separatePhotoFolder(file);
+                return null;
+            }
+        }).continueWith(new Continuation<Object, Object>() {
+            @Override
+            public Object then(Task<Object> task) throws Exception {
+                if(task.isCompleted()){
+                    Log.d(TAG, "then: task is completed");
+                }
+
+                if(task.isCancelled()){
+                    Log.d(TAG, "then: task is cancelled");
+                }
+                return null;
+            }
+        });
+
         separatePhotoFolder(file);
         photoGridAdapterFastItemAdapter.add(photoGridAdapterList);
         binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this,2));

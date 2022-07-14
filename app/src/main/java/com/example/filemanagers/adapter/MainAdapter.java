@@ -345,7 +345,6 @@ public class MainAdapter extends AbstractItem<MainAdapter, MainAdapter.ViewHolde
             ConstraintSet cs;
             cs = new ConstraintSet();
             cs.clone(holder.cl);
-            Log.d("tag", "bindView: "+Float.parseFloat(internalStorageAdapterFastItemAdapter.getAdapterItem(0).progressValue)/100);
             cs.setHorizontalBias(R.id.view,  Float.parseFloat(internalStorageAdapterFastItemAdapter.getAdapterItem(0).progressValue)/100);
             cs.applyTo(holder.cl);
 
