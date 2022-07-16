@@ -508,10 +508,10 @@ public class MainActivity extends AppCompatActivity {
             binding.noFileAvailable.setVisibility(View.GONE);
 
 
-            Task.callInBackground(new Callable<Object>() {
-                @Override
-                public Object call() throws Exception {
-                    Log.d(TAG, "call: "+Thread.currentThread().getName());
+//            Task.callInBackground(new Callable<Object>() {
+//                @Override
+//                public Object call() throws Exception {
+//                    Log.d(TAG, "call: "+Thread.currentThread().getName());
                     fileAndFolderAdapterList = new ArrayList<>();
 
                     if (requiredFile.equals(Constant.AUDIO_FILE)) {
@@ -570,26 +570,23 @@ public class MainActivity extends AppCompatActivity {
                     binding.rec.setAdapter(fileAndFolderFastAdapter);
 
 
-                    return null;
-                }
-            }).continueWith(new Continuation<Object, Object>() {
-                @Override
-                public Object then(Task<Object> task) throws Exception {
-
-                    if(task.isCompleted()){
-                        Log.d(TAG, "then: task is completed");
-                    }
-
-                    if (task.isCancelled()){
-                        Log.d(TAG, "then: task is cancelled");
-                    }
-
-                    return null;
-                }
-            });
-
-
-            //Log.d(TAG, "showFileAndFolder: "+isTaskCompleted);
+//                    return null;
+//                }
+//            }).continueWith(new Continuation<Object, Object>() {
+//                @Override
+//                public Object then(Task<Object> task) throws Exception {
+//
+//                    if(task.isCompleted()){
+//                        Log.d(TAG, "then: task is completed");
+//                    }
+//
+//                    if (task.isCancelled()){
+//                        Log.d(TAG, "then: task is cancelled");
+//                    }
+//
+//                    return null;
+//                }
+//            });
 
 
 

@@ -24,11 +24,16 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/fill_folder_48.xml" value="0.1835" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/flash_background.xml" value="0.1145" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/folder_zip_24.xml" value="0.2" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ftp_server_24.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/green_dot.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/home_24.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.195" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.195" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_edit_note_24.xml" value="0.195" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_perm_device_information_24.xml" value="0.2105" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ic_baseline_picture_as_pdf_24.xml" value="0.195" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/lan_24.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/magenta_dot.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/mobile_48.xml" value="0.1835" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/more_vert_48.xml" value="0.204" />
@@ -41,8 +46,10 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/pink_dot_24.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/red_dot.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/safe_box_24.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/solid_circuler_backgraound.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/title_bottom_sheet.xml" value="0.195" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/trasperent_cancel_24.xml" value="0.195" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/user_12.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/video_24.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/watch_later_24.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/white_dot_24.xml" value="0.204" />
@@ -60,9 +67,13 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bottom_menu_layout.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bottom_sheet_layout.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/contains_internal_storage.xml" value="0.15942028985507245" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/drawable_layout.xml" value="0.19927536231884058" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/drawer_bottom.xml" value="0.22" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/drawer_header.xml" value="0.19927536231884058" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_path.xml" value="0.22" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_photo_row.xml" value="0.5518672199170125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row.xml" value="0.25" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row_of_drawable_bottom_layout.xml" value="0.19927536231884058" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/erch_photo_row.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/fragment_copy.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage.xml" value="0.3440514469453376" />
@@ -71,6 +82,7 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_card_view.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_cardview.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_item.xml" value="0.25" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/simple_item.xml" value="0.9" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/sort_dialog_box.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/tittle_bottom_sheet.xml" value="0.33" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/menu/cab.xml" value="0.203125" />

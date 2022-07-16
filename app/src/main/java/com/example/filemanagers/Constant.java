@@ -75,6 +75,10 @@ public class Constant {
 
     public static boolean LOG_CLICK_ACTIVATED = false;
 
+    ///////////For drawable background
+    public static final int WITH_BACK_GROUND_VIEW =0;
+    public static final int WITHOUT_BACK_GROUND_VIEW =1;
+
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){

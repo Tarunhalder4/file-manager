@@ -50,4 +50,13 @@
     <string name="multi_select_copy">copy</string>
     <string name="multi_select_past">past</string>
 
+<!--    drawer Item name-->
+    <string name="drawer_home">Home</string>
+    <string name="drawer_internal_storage">Internal Storage</string>
+    <string name="drawer_clouds">Clouds</string>
+    <string name="drawer_collections">Collections</string>
+    <string name="drawer_network">network</string>
+    <string name="drawer_more">More</string>
+    <string name="drawer_privacy_policy_terms">Privacy Policy Terms</string>
+
 </resources>
