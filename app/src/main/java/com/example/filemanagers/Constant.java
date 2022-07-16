@@ -79,6 +79,14 @@ public class Constant {
     public static final int WITH_BACK_GROUND_VIEW =0;
     public static final int WITHOUT_BACK_GROUND_VIEW =1;
 
+    public static final String Home ="home";
+    public static final String ADD_CLOUD_STORAGE ="add cloud storage";
+    public static final String FTP_SERVER ="ftp server";
+    public static final String LAN ="lan";
+    public static final String TRASH  ="trash";
+    public static final String CONNECT_WITH_US ="connect with us";
+    public static final String COMPRESS_FOLDER ="compress folder";
+    public static final String APK = "apk";
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){

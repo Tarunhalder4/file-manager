@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -16,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
 
 import com.example.filemanagers.adapter.BookmarkAdapter;
 import com.example.filemanagers.adapter.DrawableItemAdapter;
@@ -25,8 +23,7 @@ import com.example.filemanagers.adapter.InternalStorageAdapter;
 import com.example.filemanagers.adapter.MainAdapter;
 import com.example.filemanagers.adapter.PieAdapter;
 import com.example.filemanagers.databinding.ActivityLufickFileManagerBinding;
-import com.mikepenz.aboutlibraries.Libs;
-import com.mikepenz.aboutlibraries.LibsBuilder;
+
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -35,23 +32,14 @@ import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialize.holder.StringHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-
-import bolts.Continuation;
-import bolts.Task;
 
 public class LufickFileManager extends AppCompatActivity {
 
@@ -71,7 +59,7 @@ public class LufickFileManager extends AppCompatActivity {
     private Drawer drawer = null;
     private RecyclerView drawerRec = null;
 
-    private FastItemAdapter<IItem> fastItemAdapter;
+    private FastItemAdapter<IItem> drawerFastItemAdapter;
     private ExpandableExtension<IItem> expandableExtension;
 
 
@@ -90,8 +78,6 @@ public class LufickFileManager extends AppCompatActivity {
 
         drawerRec = myLayout.findViewById(R.id.drawer_rec);
 
-
-
         drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withHasStableIds(true)
@@ -101,65 +87,6 @@ public class LufickFileManager extends AppCompatActivity {
                 .withSliderBackgroundColorRes(R.color.black)
                 .withHeader(R.layout.drawable_layout)
                 .withCustomView(myLayout)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-                        if (drawerItem != null) {
-                            Intent intent = null;
-                            if (drawerItem.getIdentifier() == 1) {
-                                //intent = new Intent(LufickFileManager.this, LufickFileManager.class);
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            }else if (drawerItem.getIdentifier() == 2){
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            }else if (drawerItem.getIdentifier() == 3){
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            }else if (drawerItem.getIdentifier() == 4){
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            }else if (drawerItem.getIdentifier() == 5){
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            }else if (drawerItem.getIdentifier() == 6){
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            }else if (drawerItem.getIdentifier() == 7){
-                                Log.d(TAG, "onItemClick: "+drawerItem.getIdentifier());
-                                if(drawer.isDrawerOpen()){
-                                    drawer.closeDrawer();
-                                }
-                            } else if (drawerItem.getIdentifier() == 100) {
-                                intent = new LibsBuilder()
-                                        .withFields(R.string.class.getFields())
-                                        .withActivityTitle(getString(R.string.drawer_home))
-                                        .withActivityStyle(Libs.ActivityStyle.LIGHT)
-                                        .withAboutIconShown(true)
-                                        .withVersionShown(true)
-                                        .withAboutVersionShown(true)
-                                        .intent(LufickFileManager.this);
-                            }
-                            if (intent != null) {
-                                LufickFileManager.this.startActivity(intent);
-                            }
-                        }
-                        return false;
-                    }
-                })
                 .build();
 
         Window window = getWindow();
@@ -171,59 +98,120 @@ public class LufickFileManager extends AppCompatActivity {
         containsInternalFastItemAdapter = new FastItemAdapter<>();
         internalStorageAdapterFastItemAdapter = new FastItemAdapter<>();
 
-        fastItemAdapter = new FastItemAdapter<>();
-        fastItemAdapter.withSelectable(true);
+        drawerFastItemAdapter = new FastItemAdapter<>();
+        drawerFastItemAdapter.withSelectable(true);
         expandableExtension = new ExpandableExtension<>();
-        fastItemAdapter.addExtension(expandableExtension);
+        drawerFastItemAdapter.addExtension(expandableExtension);
+
+        drawerFastItemAdapter.withOnClickListener(new OnClickListener<IItem>() {
+            @Override
+            public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
+
+                if(adapter.getAdapterItem(position).getTag()==Constant.Home){
+                    Log.d(TAG, "onClick: "+Constant.Home);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.INTERNAL_STORAGE_FILE_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.ADD_CLOUD_STORAGE){
+                    Log.d(TAG, "onClick: "+Constant.ADD_CLOUD_STORAGE);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.FTP_SERVER){
+                    Log.d(TAG, "onClick: "+Constant.FTP_SERVER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.LAN){
+                    Log.d(TAG, "onClick: "+Constant.LAN);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.TRASH){
+                    Log.d(TAG, "onClick: "+Constant.TRASH);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.SAFE_BOX_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.SAFE_BOX_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.CONNECT_WITH_US){
+                    Log.d(TAG, "onClick: "+Constant.CONNECT_WITH_US);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.APP_MANAGER_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.APP_MANAGER_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.PHOTO_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.PHOTO_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.VIDEO_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.VIDEO_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.AUDIO_FILE){
+                    Log.d(TAG, "onClick: "+Constant.AUDIO_FILE);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.DOCUMENTS_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.DOCUMENTS_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.APK){
+                    Log.d(TAG, "onClick: "+Constant.APK);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.COMPRESS_FOLDER){
+                    Log.d(TAG, "onClick: "+Constant.COMPRESS_FOLDER);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.AAD_TO_QUICK_ACCESS){
+                    Log.d(TAG, "onClick: "+Constant.AAD_TO_QUICK_ACCESS);
+                    drawer.closeDrawer();
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.RECENT_FILE){
+                    Log.d(TAG, "onClick: "+Constant.RECENT_FILE);
+                    drawer.closeDrawer();
+                }
+
+                return false;
+            }
+        });
 
         Constant.requestPermission(LufickFileManager.this);
 
         drawerRec.setLayoutManager(new LinearLayoutManager(this));
         //binding.rec.setItemAnimator(new SlideDownAlphaAnimator());
-        drawerRec.setAdapter(fastItemAdapter);
+        drawerRec.setAdapter(drawerFastItemAdapter);
 
 
         List<IItem> items = new ArrayList<>();
-        items.add(new DrawerExpendableAdapter(new StringHolder("Home"),R.drawable.home_24));
-        items.add(new DrawerExpendableAdapter(new StringHolder("Internal Stroage"),R.drawable.mobile12));
+        items.add(new DrawerExpendableAdapter(new StringHolder("Home"),R.drawable.home_24).withTag(Constant.Home));
+        items.add(new DrawerExpendableAdapter(new StringHolder("Internal Stroage"),R.drawable.mobile12).withTag(Constant.INTERNAL_STORAGE_FILE_FOLDER));
 
         DrawerExpendableAdapter cloud = new DrawerExpendableAdapter(new StringHolder("Clouds"),R.drawable.cloud_12);
         List<IItem> subClouds = new ArrayList<>();
-        subClouds.add(new DrawableItemAdapter(new StringHolder("Add cloud Storage"),R.drawable.cloud_12));
+        subClouds.add(new DrawableItemAdapter(new StringHolder("Add cloud Storage"),R.drawable.cloud_12).withTag(Constant.ADD_CLOUD_STORAGE));
         cloud.withSubItems(subClouds);
         items.add(cloud);
 
         DrawerExpendableAdapter collection = new DrawerExpendableAdapter(new StringHolder("Collections"),R.drawable.api_12);
         List<IItem> collections = new ArrayList<>();
-        collections.add(new DrawableItemAdapter(new StringHolder("images"),R.drawable.camera_24));
-        collections.add(new DrawableItemAdapter(new StringHolder("Videos"),R.drawable.video_24));
-        collections.add(new DrawableItemAdapter(new StringHolder("Audio"),R.drawable.music_24));
-        collections.add(new DrawableItemAdapter(new StringHolder("Documents"),R.drawable.file_24));
-        collections.add(new DrawableItemAdapter(new StringHolder("Apks"),R.drawable.android_8));
-        collections.add(new DrawableItemAdapter(new StringHolder("Compressed"),R.drawable.folder_zip_24));
-        collections.add(new DrawableItemAdapter(new StringHolder("Quick Access"),R.drawable.add_box_24));
-        collections.add(new DrawableItemAdapter(new StringHolder("Recent Files"),R.drawable.watch_later_24));
+        collections.add(new DrawableItemAdapter(new StringHolder("images"),R.drawable.camera_24).withTag(Constant.PHOTO_FOLDER));
+        collections.add(new DrawableItemAdapter(new StringHolder("Videos"),R.drawable.video_24).withTag(Constant.VIDEO_FOLDER));
+        collections.add(new DrawableItemAdapter(new StringHolder("Audio"),R.drawable.music_24).withTag(Constant.AUDIO_FILE));
+        collections.add(new DrawableItemAdapter(new StringHolder("Documents"),R.drawable.file_24).withTag(Constant.DOCUMENTS_FOLDER));
+        collections.add(new DrawableItemAdapter(new StringHolder("Apks"),R.drawable.android_8).withTag(Constant.APK));
+        collections.add(new DrawableItemAdapter(new StringHolder("Compressed"),R.drawable.folder_zip_24).withTag(Constant.COMPRESS_FOLDER));
+        collections.add(new DrawableItemAdapter(new StringHolder("Quick Access"),R.drawable.add_box_24).withTag(Constant.AAD_TO_QUICK_ACCESS));
+        collections.add(new DrawableItemAdapter(new StringHolder("Recent Files"),R.drawable.watch_later_24).withTag(Constant.RECENT_FILE));
         collection.withSubItems(collections);
 
         DrawerExpendableAdapter network = new DrawerExpendableAdapter(new StringHolder("Network"),R.drawable.network_12);
         List<IItem> networks = new ArrayList<>();
-        networks.add(new DrawableItemAdapter(new StringHolder("FTP Server"),R.drawable.ftp_server_24));
-        networks.add(new DrawableItemAdapter(new StringHolder("Lan(SMB 2.0)"),R.drawable.lan_24));
+        networks.add(new DrawableItemAdapter(new StringHolder("FTP Server"),R.drawable.ftp_server_24).withTag(Constant.FTP_SERVER));
+        networks.add(new DrawableItemAdapter(new StringHolder("Lan(SMB 2.0)"),R.drawable.lan_24).withTag(Constant.LAN));
         network.withSubItems(networks);
         items.add(network);
 
         DrawerExpendableAdapter more = new DrawerExpendableAdapter(new StringHolder("More"),R.drawable.more_12);
         List<IItem> mores = new ArrayList<>();
-        mores.add(new DrawableItemAdapter(new StringHolder("Trash"),R.drawable.ic_baseline_delete_24));
-        mores.add(new DrawableItemAdapter(new StringHolder("Safe box"),R.drawable.safe_box_24));
-        mores.add(new DrawableItemAdapter(new StringHolder("Connect with us"),R.drawable.user_12));
-        mores.add(new DrawableItemAdapter(new StringHolder("App Manager"),R.drawable.app_24));
+        mores.add(new DrawableItemAdapter(new StringHolder("Trash"),R.drawable.ic_baseline_delete_24).withTag(Constant.TRASH));
+        mores.add(new DrawableItemAdapter(new StringHolder("Safe box"),R.drawable.safe_box_24).withTag(Constant.SAFE_BOX_FOLDER));
+        mores.add(new DrawableItemAdapter(new StringHolder("Connect with us"),R.drawable.user_12).withTag(Constant.CONNECT_WITH_US));
+        mores.add(new DrawableItemAdapter(new StringHolder("App Manager"),R.drawable.app_24).withTag(Constant.APP_MANAGER_FOLDER));
         more.withSubItems(mores);
         items.add(more);
 
         items.add(collection);
 
-        fastItemAdapter.add(items);
+        drawerFastItemAdapter.add(items);
 
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.red_dot, "Audio", "1"));
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.magenta_dot, "Image", "2"));
