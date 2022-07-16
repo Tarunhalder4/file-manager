@@ -101,14 +101,6 @@ public class LufickFileManager extends AppCompatActivity {
                 .withSliderBackgroundColorRes(R.color.black)
                 .withHeader(R.layout.drawable_layout)
                 .withCustomView(myLayout)
-//                .addDrawerItems(new PrimaryDrawerItem().withName(R.string.drawer_home).withTextColor(R.color.white).withDescription(R.string.dashboard_title).withSelectable(false).withIdentifier(1).withIcon(MaterialDesignIconic.Icon.gmi_home),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_internal_storage).withTextColor(R.color.white).withDescription(R.string.dashboard_title).withSelectable(false).withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_smartphone),
-//                        new PrimaryDrawerItem().withIsExpanded(true).withName(R.string.drawer_clouds).withTextColor(R.color.white).withDescription(R.string.dashboard_title).withSelectable(false).withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_cloud),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_collections).withTextColor(R.color.white).withDescription(R.string.dashboard_title).withSelectable(false).withIdentifier(4).withIcon(MaterialDesignIconic.Icon.gmi_collection_item),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_network).withTextColor(R.color.white).withDescription(R.string.dashboard_title).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_network),
-//                        new PrimaryDrawerItem().withName(R.string.more).withTextColor(R.color.white).withDescription(R.string.dashboard_title).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_more),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_privacy_policy_terms).withTextColor(R.color.white).withDescription(R.string.drawer_network).withSelectable(false).withIdentifier(7).withIcon(MaterialDesignIconic.Icon.gmi_folder_person),
-//                        new DividerDrawerItem())
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -232,12 +224,7 @@ public class LufickFileManager extends AppCompatActivity {
 
         items.add(collection);
 
-
-
-
         fastItemAdapter.add(items);
-
-
 
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.red_dot, "Audio", "1"));
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.magenta_dot, "Image", "2"));

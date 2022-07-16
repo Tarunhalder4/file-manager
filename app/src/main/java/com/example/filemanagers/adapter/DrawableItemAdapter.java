@@ -93,7 +93,7 @@ public class DrawableItemAdapter<Parent extends IItem & IExpandable & ISubItem &
 
         //set the background for the item
         viewHolder.itemView.clearAnimation();
-        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
+        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, Color.GRAY, true));
         //set the text for the name
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide
