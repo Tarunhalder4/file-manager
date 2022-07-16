@@ -59,44 +59,24 @@ public class DrawableItemAdapter<Parent extends IItem & IExpandable & ISubItem &
         return this;
     }
 
-    /**
-     * defines the type defining this item. must be unique. preferably an id
-     *
-     * @return the type
-     */
     @Override
     public int getType() {
         return R.id.simple_item;
     }
 
-    /**
-     * defines the layout which will be used for this item in the list
-     *
-     * @return the layout for this item
-     */
     @Override
     public int getLayoutRes() {
         return R.layout.simple_item;
     }
 
-    /**
-     * binds the data of this item onto the viewHolder
-     *
-     * @param viewHolder the viewHolder of this item
-     */
     @Override
     public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
-        //get the context
         Context ctx = viewHolder.itemView.getContext();
-
-        //set the background for the item
         viewHolder.itemView.clearAnimation();
         ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, Color.GRAY, true));
-        //set the text for the name
         StringHolder.applyTo(name, viewHolder.name);
-        //set the text for the description or hide
         viewHolder.icon.setImageResource(icon);
     }
 
@@ -112,9 +92,6 @@ public class DrawableItemAdapter<Parent extends IItem & IExpandable & ISubItem &
         return new ViewHolder(v);
     }
 
-    /**
-     * our ViewHolder
-     */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         ImageView icon;
