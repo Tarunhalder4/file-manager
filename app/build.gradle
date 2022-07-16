@@ -68,4 +68,10 @@ dependencies {
 
     implementation 'com.parse.bolts:bolts-tasks:1.4.0'
     implementation 'com.parse.bolts:bolts-applinks:1.4.0'
+
+
+    implementation('com.mikepenz:aboutlibraries:6.2.0') {
+        transitive = true
+        exclude group: "com.mikepenz"
+    }
 }

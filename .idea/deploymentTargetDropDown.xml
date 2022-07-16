@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
+<<<<<<< HEAD
     <runningDeviceTargetSelectedWithDropDown>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
@@ -20,6 +21,8 @@
 <<<<<<< HEAD
     <timeTargetWasSelectedWithDropDown value="2022-07-13T19:04:03.942091900Z" />
 =======
+=======
+>>>>>>> main
     <targetSelectedWithDropDown>
       <Target>
         <type value="QUICK_BOOT_TARGET" />
@@ -31,7 +34,11 @@
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
+<<<<<<< HEAD
     <timeTargetWasSelectedWithDropDown value="2022-07-14T07:01:18.313485800Z" />
+>>>>>>> main
+=======
+    <timeTargetWasSelectedWithDropDown value="2022-07-15T07:34:02.333989800Z" />
 >>>>>>> main
   </component>
 </project>

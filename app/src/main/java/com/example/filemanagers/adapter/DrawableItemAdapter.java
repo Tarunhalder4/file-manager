@@ -1,0 +1,127 @@
+package com.example.filemanagers.adapter;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.filemanagers.Constant;
+import com.example.filemanagers.R;
+import com.mikepenz.fastadapter.IClickable;
+import com.mikepenz.fastadapter.IExpandable;
+import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
+import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter_extensions.drag.IDraggable;
+import com.mikepenz.materialize.holder.StringHolder;
+
+import java.util.List;
+
+public class DrawableItemAdapter<Parent extends IItem & IExpandable & ISubItem & IClickable> extends AbstractExpandableItem<Parent, DrawableItemAdapter.ViewHolder, DrawableItemAdapter<Parent>> implements IDraggable<DrawableItemAdapter, IItem> {
+
+    public DrawableItemAdapter(StringHolder name, int icon) {
+        this.name = name;
+        this.icon = icon;
+    }
+
+    public StringHolder name;
+    public int icon;
+
+    private boolean mIsDraggable = true;
+
+
+    public DrawableItemAdapter<Parent> withName(String Name) {
+        this.name = new StringHolder(Name);
+        return this;
+    }
+
+    public DrawableItemAdapter<Parent> withName(@StringRes int NameRes) {
+        this.name = new StringHolder(NameRes);
+        return this;
+    }
+
+    @Override
+    public boolean isDraggable() {
+        return mIsDraggable;
+    }
+
+    @Override
+    public DrawableItemAdapter withIsDraggable(boolean draggable) {
+        this.mIsDraggable = draggable;
+        return this;
+    }
+
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
+    @Override
+    public int getType() {
+        return R.id.simple_item;
+    }
+
+    /**
+     * defines the layout which will be used for this item in the list
+     *
+     * @return the layout for this item
+     */
+    @Override
+    public int getLayoutRes() {
+        return R.layout.simple_item;
+    }
+
+    /**
+     * binds the data of this item onto the viewHolder
+     *
+     * @param viewHolder the viewHolder of this item
+     */
+    @Override
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+        super.bindView(viewHolder, payloads);
+
+        //get the context
+        Context ctx = viewHolder.itemView.getContext();
+
+        //set the background for the item
+        viewHolder.itemView.clearAnimation();
+        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
+        //set the text for the name
+        StringHolder.applyTo(name, viewHolder.name);
+        //set the text for the description or hide
+        viewHolder.icon.setImageResource(icon);
+    }
+
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.icon.setImageResource(0);
+    }
+
+    @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
+    }
+
+    /**
+     * our ViewHolder
+     */
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView name;
+        ImageView icon;
+        public ViewHolder(View view) {
+            super(view);
+            name = view.findViewById(R.id.drawable_item_name);
+            icon = view.findViewById(R.id.drawable_item_icon);
+        }
+    }
+}
