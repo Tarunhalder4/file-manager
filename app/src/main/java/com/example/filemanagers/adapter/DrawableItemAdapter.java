@@ -2,11 +2,13 @@ package com.example.filemanagers.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,13 +71,14 @@ public class DrawableItemAdapter<Parent extends IItem & IExpandable & ISubItem &
         return R.layout.simple_item;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         Context ctx = viewHolder.itemView.getContext();
         viewHolder.itemView.clearAnimation();
-        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
+        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, ctx.getColor(R.color.gray1), true));
         StringHolder.applyTo(name, viewHolder.name);
         viewHolder.icon.setImageResource(icon);
     }

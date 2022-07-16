@@ -2,11 +2,13 @@ package com.example.filemanagers.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,11 +73,6 @@ public class  DrawerExpendableAdapter <Parent extends IItem & IExpandable, SubIt
         }
     };
 
-    /**
-     * we overwrite the item specific click listener so we can automatically animate within the item
-     *
-     * @return
-     */
     @Override
     public OnClickListener<DrawerExpendableAdapter<Parent, SubItem>> getOnItemClickListener() {
         return onClickListener;
@@ -87,44 +84,28 @@ public class  DrawerExpendableAdapter <Parent extends IItem & IExpandable, SubIt
         return getSubItems() == null;
     }
 
-    /**
-     * defines the type defining this item. must be unique. preferably an id
-     *
-     * @return the type
-     */
+
     @Override
     public int getType() {
         return R.id.drawable_bottom_layout;
     }
 
-    /**
-     * defines the layout which will be used for this item in the list
-     *
-     * @return the layout for this item
-     */
     @Override
     public int getLayoutRes() {
         return R.layout.each_row_of_drawable_bottom_layout;
     }
 
-    /**
-     * binds the data of this item onto the viewHolder
-     *
-     * @param viewHolder the viewHolder of this item
-     */
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
-        //get the context
         Context ctx = viewHolder.itemView.getContext();
 
-        //set the background for the item
         viewHolder.itemView.clearAnimation();
-        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
-        //set the text for the name
+        ViewCompat.setBackground(viewHolder.itemView, FastAdapterUIUtils.getSelectableBackground(ctx, ctx.getColor(R.color.gray1), true));
         StringHolder.applyTo(name, viewHolder.name);
-        //set the text for the description or hide
         viewHolder.icon.setImageResource(icon);
 
         if (getSubItems() == null || getSubItems().size() == 0) {
@@ -153,9 +134,6 @@ public class  DrawerExpendableAdapter <Parent extends IItem & IExpandable, SubIt
         return new ViewHolder(v);
     }
 
-    /**
-     * our ViewHolder
-     */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
