@@ -158,7 +158,10 @@ public class LufickFileManager extends AppCompatActivity {
                 }else if(adapter.getAdapterItem(position).getTag()==Constant.RECENT_FILE){
                     Log.d(TAG, "onClick: "+Constant.RECENT_FILE);
                     drawer.closeDrawer();
-                }
+                }else if(adapter.getAdapterItem(position).getTag()==Constant.INFORMATION){
+                Log.d(TAG, "onClick: "+Constant.INFORMATION);
+                drawer.closeDrawer();
+            }
 
                 return false;
             }
@@ -192,6 +195,7 @@ public class LufickFileManager extends AppCompatActivity {
         collections.add(new DrawableItemAdapter(new StringHolder("Quick Access"),R.drawable.add_box_24).withTag(Constant.AAD_TO_QUICK_ACCESS));
         collections.add(new DrawableItemAdapter(new StringHolder("Recent Files"),R.drawable.watch_later_24).withTag(Constant.RECENT_FILE));
         collection.withSubItems(collections);
+        items.add(collection);
 
         DrawerExpendableAdapter network = new DrawerExpendableAdapter(new StringHolder("Network"),R.drawable.network_12);
         List<IItem> networks = new ArrayList<>();
@@ -209,7 +213,8 @@ public class LufickFileManager extends AppCompatActivity {
         more.withSubItems(mores);
         items.add(more);
 
-        items.add(collection);
+        items.add(new DrawerExpendableAdapter(new StringHolder("Information"),R.drawable.information_whight_24).withTag(Constant.INFORMATION));
+
         drawerFastItemAdapter.add(items);
 
         pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.red_dot, "Audio", "1"));

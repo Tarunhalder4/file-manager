@@ -73,11 +73,6 @@ public class  DrawerExpendableAdapter <Parent extends IItem & IExpandable, SubIt
         }
     };
 
-    /**
-     * we overwrite the item specific click listener so we can automatically animate within the item
-     *
-     * @return
-     */
     @Override
     public OnClickListener<DrawerExpendableAdapter<Parent, SubItem>> getOnItemClickListener() {
         return onClickListener;
@@ -136,7 +131,6 @@ public class  DrawerExpendableAdapter <Parent extends IItem & IExpandable, SubIt
     public ViewHolder getViewHolder(View v) {
         return new ViewHolder(v);
     }
-
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {
 
