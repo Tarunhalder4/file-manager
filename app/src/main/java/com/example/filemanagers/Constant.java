@@ -87,7 +87,7 @@ public class Constant {
     public static final String CONNECT_WITH_US ="connect with us";
     public static final String COMPRESS_FOLDER ="compress folder";
     public static final String APK = "apk";
-    public static final String INFORMATION ="information";
+     public static final String INFORMATION ="information";
 
     public static void requestPermission(Activity activity){
         if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
