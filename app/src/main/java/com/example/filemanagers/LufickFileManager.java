@@ -40,6 +40,10 @@ import com.mikepenz.materialize.holder.StringHolder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+
+import bolts.Continuation;
+import bolts.Task;
 
 public class LufickFileManager extends AppCompatActivity {
 
@@ -173,7 +177,6 @@ public class LufickFileManager extends AppCompatActivity {
         //binding.rec.setItemAnimator(new SlideDownAlphaAnimator());
         drawerRec.setAdapter(drawerFastItemAdapter);
 
-
         List<IItem> items = new ArrayList<>();
         items.add(new DrawerExpendableAdapter(new StringHolder("Home"),R.drawable.home_24).withTag(Constant.Home));
         items.add(new DrawerExpendableAdapter(new StringHolder("Internal Stroage"),R.drawable.mobile12).withTag(Constant.INTERNAL_STORAGE_FILE_FOLDER));
@@ -217,51 +220,60 @@ public class LufickFileManager extends AppCompatActivity {
 
         drawerFastItemAdapter.add(items);
 
-        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.red_dot, "Audio", "1"));
-        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.magenta_dot, "Image", "2"));
-        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.blue_dot, "APK", "3"));
-        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.pink_dot_24, "video", "4"));
-        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.green_dot, "Apps", "5"));
-        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.yellow_dot, "Doc", "6"));
 
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.camera_24, Constant.PHOTO_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.download_24, Constant.DOWNLOAD_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.safe_box_24, Constant.SAFE_BOX_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.music_24, Constant.MUSIC_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.watch_later_24, Constant.RECENT_FILE, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.file_24, Constant.DOCUMENTS_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.app_24, Constant.APP_MANAGER_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.video_24, Constant.VIDEO_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
-        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.add_box_24, "Add to quick\naccess", Constant.CONTAINS_INTERNAL_STORAGE));
+        mainAdapterFastItemAdapter = new FastItemAdapter<>();
+        pieAdapterFastItemAdapter = new FastItemAdapter<>();
+        bookmarkAdapterFastItemAdapter = new FastItemAdapter<>();
+        containsInternalFastItemAdapter = new FastItemAdapter<>();
+        internalStorageAdapterFastItemAdapter = new FastItemAdapter<>();
 
-        getMemoryInformation();
-        internalStorageAdapterFastItemAdapter.add(new InternalStorageAdapter(availableMemory, useOfMemory, totalMemory, present));
-
-        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.fill_folder_48, Constant.DOWNLOAD_FOLDER, Constant.BOOKMARK));
-        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.dcim_camera_24, Constant.DCIM_FOLDER, Constant.BOOKMARK));
-        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.movies_24, Constant.MOVIES_FOLDER, Constant.BOOKMARK));
-        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.pictures_24, Constant.PICTURES_FOLDER, Constant.BOOKMARK));
-
-        mainAdapterFastItemAdapter.add(new MainAdapter(pieAdapterFastItemAdapter, Constant.PIE_CHAT, LufickFileManager.this));
-        mainAdapterFastItemAdapter.add(new MainAdapter(containsInternalFastItemAdapter, LufickFileManager.this, Constant.CONTAINS_INTERNAL_STORAGE));
-        mainAdapterFastItemAdapter.add(new MainAdapter(internalStorageAdapterFastItemAdapter, Constant.INTERNAL_STORAGE));
-        mainAdapterFastItemAdapter.add(new MainAdapter(bookmarkAdapterFastItemAdapter, LufickFileManager.this, Constant.BOOKMARK));
-
-
-        binding.rec.setLayoutManager(new LinearLayoutManager(LufickFileManager.this));
-        binding.rec.setAdapter(mainAdapterFastItemAdapter);
-
-        mainAdapterFastItemAdapter.getAdapterItem(2).withSelectable(true);
-
-        mainAdapterFastItemAdapter.getAdapterItem(2).withOnItemClickListener(new OnClickListener<MainAdapter>() {
+        Task.callInBackground(new Callable<Object>() {
             @Override
-            public boolean onClick(View v, IAdapter<MainAdapter> adapter, MainAdapter item, int position) {
-                Intent intent = new Intent(LufickFileManager.this, MainActivity.class);
-                intent.putExtra(Constant.PATH, Constant.INTERNAL_STORAGE_PATH);
-                startActivity(intent);
-                return true;
+            public Object call() throws Exception {
+                Log.e(TAG, "call: " +Thread.currentThread().getName() );
+
+                setItemInPieAdapter();
+                setBookmarkAdapter();
+                setItemInContainsInternalAdapter();
+                getMemoryInformation();
+                setInternalMemoryInformation();
+                setMainAdapter();
+                binding.rec.setLayoutManager(new LinearLayoutManager(LufickFileManager.this));
+                binding.rec.setAdapter(mainAdapterFastItemAdapter);
+
+
+                mainAdapterFastItemAdapter.getAdapterItem(2).withSelectable(true);
+
+                mainAdapterFastItemAdapter.getAdapterItem(2).withOnItemClickListener(new OnClickListener<MainAdapter>() {
+                    @Override
+                    public boolean onClick(View v, IAdapter<MainAdapter> adapter, MainAdapter item, int position) {
+                        Intent intent = new Intent(LufickFileManager.this, MainActivity.class);
+                        intent.putExtra(Constant.PATH, Constant.INTERNAL_STORAGE_PATH);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+
+
+                Log.e(TAG, "call: " );
+                return null;
             }
-        });
+        }).continueWith(new Continuation<Object, Object>() {
+            @Override
+            public Object then(Task<Object> task) throws Exception {
+                Log.e(TAG, "then: " + Thread.currentThread().getName());
+                if (task.isCompleted()){
+                    Log.e(TAG, "then: "+ task + "is finish");
+                }
+
+                if(task.isCancelled()){
+                    Log.e(TAG, "then: " + task +"cancel ");
+                }
+                return null;
+            }
+        },Task.UI_THREAD_EXECUTOR);
+
+
 
         simpleDragCallback = new SimpleDragCallback(new ItemTouchCallback() {
             @Override
@@ -309,4 +321,45 @@ public class LufickFileManager extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    void setItemInPieAdapter(){
+        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.red_dot, "Audio", "1"));
+        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.magenta_dot, "Image", "2"));
+        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.blue_dot, "APK", "3"));
+        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.pink_dot_24, "video", "4"));
+        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.green_dot, "Apps", "5"));
+        pieAdapterFastItemAdapter.add(new PieAdapter(R.drawable.yellow_dot, "Doc", "6"));
+    }
+
+    void setItemInContainsInternalAdapter(){
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.camera_24, Constant.PHOTO_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.download_24, Constant.DOWNLOAD_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.safe_box_24, Constant.SAFE_BOX_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.music_24, Constant.MUSIC_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.watch_later_24, Constant.RECENT_FILE, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.file_24, Constant.DOCUMENTS_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.app_24, Constant.APP_MANAGER_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.video_24, Constant.VIDEO_FOLDER, Constant.CONTAINS_INTERNAL_STORAGE));
+        containsInternalFastItemAdapter.add(new BookmarkAdapter(R.drawable.add_box_24, "Add to quick\naccess", Constant.CONTAINS_INTERNAL_STORAGE));
+    }
+
+    void setBookmarkAdapter(){
+        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.fill_folder_48, Constant.DOWNLOAD_FOLDER, Constant.BOOKMARK));
+        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.dcim_camera_24, Constant.DCIM_FOLDER, Constant.BOOKMARK));
+        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.movies_24, Constant.MOVIES_FOLDER, Constant.BOOKMARK));
+        bookmarkAdapterFastItemAdapter.add(new BookmarkAdapter(R.drawable.pictures_24, Constant.PICTURES_FOLDER, Constant.BOOKMARK));
+    }
+
+    void setInternalMemoryInformation(){
+        internalStorageAdapterFastItemAdapter.add(new InternalStorageAdapter(availableMemory, useOfMemory, totalMemory, present));
+    }
+
+    void setMainAdapter(){
+        internalStorageAdapterFastItemAdapter.add(new InternalStorageAdapter(availableMemory, useOfMemory, totalMemory, present));
+        mainAdapterFastItemAdapter.add(new MainAdapter(pieAdapterFastItemAdapter, Constant.PIE_CHAT, LufickFileManager.this));
+        mainAdapterFastItemAdapter.add(new MainAdapter(containsInternalFastItemAdapter, LufickFileManager.this, Constant.CONTAINS_INTERNAL_STORAGE));
+        mainAdapterFastItemAdapter.add(new MainAdapter(internalStorageAdapterFastItemAdapter, Constant.INTERNAL_STORAGE));
+        mainAdapterFastItemAdapter.add(new MainAdapter(bookmarkAdapterFastItemAdapter, LufickFileManager.this, Constant.BOOKMARK));
+    }
+
 }
