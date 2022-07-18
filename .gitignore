@@ -13,8 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-<<<<<<< HEAD
 *.idea/deploymentTargetDropDown.xml
-=======
 *.idea
->>>>>>> main
