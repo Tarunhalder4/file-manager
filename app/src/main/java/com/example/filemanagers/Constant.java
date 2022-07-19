@@ -1,9 +1,18 @@
 package com.example.filemanagers;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +28,8 @@ public class Constant {
     public static final int BOOKMARK=4;
 
     public static final int SPLASH_SCREEN_TIME_OUT=2000;
+
+    public static final int REQUEST_CODE = 111;
 
     public static final String PHOTO_FOLDER = "Photo";
     public static final String DOWNLOAD_FOLDER = "Download";
@@ -87,25 +98,19 @@ public class Constant {
     public static final String CONNECT_WITH_US ="connect with us";
     public static final String COMPRESS_FOLDER ="compress folder";
     public static final String APK = "apk";
-     public static final String INFORMATION ="information";
-
-    public static void requestPermission(Activity activity){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-            Toast.makeText(activity, "Storage permission are required", Toast.LENGTH_SHORT).show();
-        }
-        ActivityCompat.requestPermissions(activity, new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE},
-                111);
+    public static final String INFORMATION ="information";
 
 
+    public static boolean checkPermission(Context context) {
+            int write = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE);
+            return write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static boolean checkPermission(Context context){
-        int writePermission = ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int readPermission = ContextCompat.checkSelfPermission(context,Manifest.permission.READ_EXTERNAL_STORAGE);
-        return writePermission == PackageManager.PERMISSION_GRANTED && readPermission == PackageManager.PERMISSION_GRANTED;
+    public static void requestPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity, new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, 333);
     }
+
 
     public static String memory(long memory){
         if (memory<=100000){

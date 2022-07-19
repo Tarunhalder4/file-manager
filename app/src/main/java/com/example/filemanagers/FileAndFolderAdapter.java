@@ -124,10 +124,10 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
                 }
 
                 fileAndFolderImage.setImageResource(R.drawable.folder_open_24);
-                List<File> files = Arrays.asList(Objects.requireNonNull(item.fileAndFolder.listFiles()));
-                if (files.size()!=0) {
-                    fileSize.setText(String.valueOf(files.size()));
-                }
+//                List<File> files = Arrays.asList(Objects.requireNonNull(item.fileAndFolder.listFiles()));
+//                if (files.size()!=0) {
+//                    fileSize.setText(String.valueOf(files.size()));
+//                }
             }else{
                 if (item.fileAndFolder.getName().endsWith("txt")){
                     fileAndFolderBackGround.setCardBackgroundColor(item.context.getResources().getColor(R.color.gray1));

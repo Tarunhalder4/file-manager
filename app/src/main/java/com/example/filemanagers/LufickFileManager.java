@@ -1,5 +1,8 @@
 package com.example.filemanagers;
 
+import static android.os.Build.VERSION.SDK_INT;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -8,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -15,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.example.filemanagers.adapter.BookmarkAdapter;
 import com.example.filemanagers.adapter.DrawableItemAdapter;
@@ -361,5 +367,26 @@ public class LufickFileManager extends AppCompatActivity {
         mainAdapterFastItemAdapter.add(new MainAdapter(internalStorageAdapterFastItemAdapter, Constant.INTERNAL_STORAGE));
         mainAdapterFastItemAdapter.add(new MainAdapter(bookmarkAdapterFastItemAdapter, LufickFileManager.this, Constant.BOOKMARK));
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        if (requestCode== Constant.REQUEST_CODE){
+            if (grantResults.length > 0) {
+                boolean WRITE_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                boolean READ_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
+
+                    Toast.makeText(this, "All permissions granted", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+
 
 }
