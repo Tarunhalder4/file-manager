@@ -650,8 +650,10 @@ public class MainActivity extends AppCompatActivity {
 
             showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER);
 
-            if (destinationPath.equals("/storage/emulated/0")) {
+            if (destinationPath.equals("/storage/emulated")) {
+                binding.noFileAvailable.setVisibility(View.GONE);
                 backCount = 1;
+                super.onBackPressed();
             } else {
                 backCount = 0;
             }
