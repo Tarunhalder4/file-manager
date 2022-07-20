@@ -11,6 +11,8 @@
     <string name="dashboard_title">Dashboard</string>
     <string name="my_files">My Files</string>
     <string name="my_photos">My Photos</string>
+    <string name="file_copying">file copying..........</string>
+    <string name="file_copy">file copied</string>
 
     <!--    menu title-->
     <string name="more">More</string>

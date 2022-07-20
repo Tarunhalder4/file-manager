@@ -12,14 +12,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.filemanagers.databinding.ActivityCopyBinding;
-import com.google.gson.Gson;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
+import bolts.Continuation;
 import bolts.Task;
 
 public class CopyActivity extends AppCompatActivity {
@@ -48,6 +47,9 @@ public class CopyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCopyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolBar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.file_copying));
 
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
@@ -135,15 +137,45 @@ public class CopyActivity extends AppCompatActivity {
         for (Object o : listdata) {
             String filePath = o.toString();
             File sourceFile = new File(filePath);
-            try {
-                Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Task.callInBackground(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    Log.e(TAG, "call: file copy" );
+                    try {
+                        Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }).continueWith(new Continuation<Object, Object>() {
+                @Override
+                public Object then(Task<Object> task) throws Exception {
+
+                    if(task.isCompleted()){
+                        getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
+                        Log.e(TAG, "then: file copy" );
+
+                        showFileAndFolder(destinationFile, true);
+                        binding.copyToolBarBottom.setVisibility(View.GONE);
+
+                       // if(getSupportActionBar()!=null){
+
+                       // }
+                    }
+
+                    if (task.isCancelled()){
+                        Log.e(TAG, "then: task cancel" );
+                    }
+
+
+                    return null;
+                }
+            },Task.UI_THREAD_EXECUTOR);
+
         }
 
-        showFileAndFolder(destinationFile, true);
-        binding.copyToolBarBottom.setVisibility(View.GONE);
+
     }
 
     @Override
