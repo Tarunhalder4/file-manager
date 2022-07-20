@@ -52,14 +52,14 @@ public class PhotoGridAdapter extends AbstractItem<PhotoGridAdapter,PhotoGridAda
             assert files != null;
             boolean fileHave = true;
             for (File file: files){
-                if(fileHave&&file.getName().endsWith(".jpg")){
+                if(fileHave&&file.getName().endsWith(".jpg")||file.getName().endsWith(".png")){
                     Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
                     holder.mainFolderImage.setImageBitmap(bitmap);
                     fileHave = false;
                 }
             }
         }else {
-            if (file.getName().endsWith(".jpg")){
+            if (file.getName().endsWith(".jpg")||file.getName().endsWith(".png")){
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
                 holder.mainFolderImage.setImageBitmap(bitmap);
             }

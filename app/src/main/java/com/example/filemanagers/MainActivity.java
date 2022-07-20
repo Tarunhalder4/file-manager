@@ -190,35 +190,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onClick(View v, IAdapter<PhotoGridAdapter> adapter, PhotoGridAdapter item, int position) {
 
-//                Task.callInBackground(new Callable<Object>() {
-//                    @Override
-//                    public Object call() throws Exception {
-
                 if (item.file.isDirectory()) {
                     photoGridAdapterFastItemAdapter.clear();
                     showPhotoInFolder(item.file);
                 } else {
-                    if (item.file.isFile() && item.file.getName().endsWith("jpg")) {
+                    if (item.file.isFile() && item.file.getName().endsWith("jpg")||item.file.getName().endsWith(".png")) {
                         openFile(item.file, Constant.PHOTO_FILE);
                     }
                 }
-
-//                        return null;
-//                    }
-//                }).continueWith(new Continuation<Object, Object>() {
-//                    @Override
-//                    public Object then(Task<Object> task) throws Exception {
-//                        if(task.isCancelled()){
-//                            Log.d(TAG, "then: task is cancelled");
-//                        }
-//
-//                        if(task.isCompleted()){
-//                            Log.d(TAG, "then: task is completed");
-//                        }
-//
-//                        return null;
-//                    }
-//                });
 
                 return true;
             }
@@ -409,6 +388,13 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PHOTO_FILE)) {
             File file = Environment.getExternalStorageDirectory();
             showPath(file);
+//            Task.callInBackground(new Callable<Object>() {
+//                @Override
+//                public Object call() throws Exception {
+//                    showPhotoFolder(file);
+//                    return null;
+//                }
+//            });
             showPhotoFolder(file);
             backCount = -1;
         }
@@ -690,15 +676,19 @@ public class MainActivity extends AppCompatActivity {
     void separatePhotoFolder(File file) {
         boolean havefile = false;
         File[] mfiles = file.listFiles();
-        for (File file1 : mfiles) {
-            if (!havefile && file1.getName().endsWith(".jpg") && file1.isFile()) {
-                photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this, file));
-                havefile = true;
-            } else {
-                if (!file1.getName().startsWith(".") && file1.isDirectory()) {
-                    separatePhotoFolder(file1);
-                }
+        if(mfiles !=null && mfiles.length >0){
+            for (File file1 : mfiles) {
+                if (!havefile && file1.isFile()) {
+                    if(file1.getName().endsWith(".jpg") || file1.getName().endsWith(".png")){
+                        photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this, file));
+                        havefile = true;
+                    }
+                } else {
+                    if (!file1.getName().startsWith(".") && file1.isDirectory()) {
+                        separatePhotoFolder(file1);
+                    }
 
+                }
             }
         }
 
@@ -710,28 +700,23 @@ public class MainActivity extends AppCompatActivity {
         Task.callInBackground(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                //separatePhotoFolder(file);
-                return null;
-            }
-        }).continueWith(new Continuation<Object, Object>() {
-            @Override
-            public Object then(Task<Object> task) throws Exception {
-                if (task.isCompleted()) {
-                    Log.d(TAG, "then: task is completed");
+                Log.e(TAG, "call:123 " );
+                separatePhotoFolder(file);
+                photoGridAdapterFastItemAdapter.add(photoGridAdapterList);
+                binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+                binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
+                binding.pathRec.setVisibility(View.GONE);
+
+                if(getSupportActionBar()!=null){
+                    getSupportActionBar().setTitle(getResources().getString(R.string.my_photos));
                 }
 
-                if (task.isCancelled()) {
-                    Log.d(TAG, "then: task is cancelled");
-                }
                 return null;
             }
         });
 
-        separatePhotoFolder(file);
-        photoGridAdapterFastItemAdapter.add(photoGridAdapterList);
-        binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
         binding.progressBar.setVisibility(View.GONE);
+
     }
 
     void showPhotoInFolder(File file) {
@@ -739,7 +724,7 @@ public class MainActivity extends AppCompatActivity {
         File[] files = file.listFiles();
         assert files != null;
         for (File file1 : files) {
-            if (file1.getName().endsWith(".jpg")) {
+            if (file1.getName().endsWith(".jpg")||file1.getName().endsWith(".png")) {
                 photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this, file1));
             }
         }
