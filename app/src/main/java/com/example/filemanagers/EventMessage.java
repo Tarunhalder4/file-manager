@@ -1,22 +1,33 @@
 package com.example.filemanagers;
 
 public class EventMessage {
-    private boolean delete = false;
-    private String deleteFilePath = null;
+    private boolean fileDelete = false;
+    private String FilePath = null;
+    private boolean fileRename = false;
 
-    public String getDeleteFilePath() {
-        return deleteFilePath;
+    public boolean isFileDelete() {
+        return fileDelete;
     }
 
-    public void setDeleteFilePath(String deleteFilePath) {
-        this.deleteFilePath = deleteFilePath;
+    public void setFileDelete(boolean fileDelete) {
+        this.fileDelete = fileDelete;
     }
 
-    public boolean isDelete() {
-        return delete;
+    public String getFilePath() {
+        return FilePath;
     }
 
-    public void setDelete(boolean delete) {
-        this.delete = delete;
+    public void setFilePath(String filePath) {
+        FilePath = filePath;
     }
+
+    public boolean isFileRename() {
+        return fileRename;
+    }
+
+    public void setFileRename(boolean fileRename) {
+        this.fileRename = fileRename;
+    }
+
+
 }

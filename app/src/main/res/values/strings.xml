@@ -48,6 +48,11 @@
     <string name="sort_type">Type</string>
     <string name="sort_only_this_folder">Only this Folder</string>
 
+<!--    rename dialog box-->
+    <string name="rename_save">Save</string>
+    <string name="rename_cancel">Cancel</string>
+    <string name="rename_title">Rename</string>
+
 <!--    multiselect tool bar item string -->
     <string name="multi_select_delete">delete</string>
     <string name="multi_select_copy">copy</string>

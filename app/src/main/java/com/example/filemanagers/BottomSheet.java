@@ -1,6 +1,8 @@
 package com.example.filemanagers;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,12 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -96,13 +100,30 @@ public class BottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if(file.delete()){
-                    String deleteFilePath=file.getParent();
+                    String FilePath=file.getParent();
                     EventMessage eventMessage = new EventMessage();
-                    eventMessage.setDelete(true);
-                    eventMessage.setDeleteFilePath(deleteFilePath);
+                    eventMessage.setFileDelete(true);
+                    eventMessage.setFilePath(FilePath);
                     EventBus.getDefault().post(eventMessage);
                     Toast.makeText(getActivity(), "file is Delete", Toast.LENGTH_SHORT).show();
                 }
+                dismiss();
+            }
+        });
+
+        move.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
+
+
+        rename.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRename(getContext());
                 dismiss();
             }
         });
@@ -130,4 +151,65 @@ public class BottomSheet extends BottomSheetDialogFragment {
             background.setCircleBackgroundColor(getResources().getColor(R.color.pink));
         }
     }
+
+
+    private void setRename(Context context){
+        EditText fileName;
+        TextView save ,cancel;
+
+        AlertDialog.Builder builder
+                = new AlertDialog.Builder(context);
+        final View customLayout
+                = getLayoutInflater()
+                .inflate(R.layout.rename_dialog_box, null);
+        builder.setView(customLayout);
+
+        fileName = customLayout.findViewById(R.id.rename_edit_box);
+        save = customLayout.findViewById(R.id.rename_save);
+        cancel = customLayout.findViewById(R.id.rename_cancel);
+
+        fileName.setText(file.getName());
+
+        AlertDialog dialog = builder.create();
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                File destination;
+                String newName = fileName.getText().toString().trim();
+                if (!file.isDirectory()) {
+                    String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+                    destination = new File(file.getAbsolutePath().replace(file.getName(), newName) + extension);
+                } else {
+                    destination = new File(file.getAbsolutePath().replace(file.getName(), newName));
+                }
+                File current = new File(file.getAbsolutePath());
+                if (current.renameTo(destination)) {
+                    String FilePath=current.getParent();
+                    EventMessage eventMessage = new EventMessage();
+                    eventMessage.setFileRename(true);
+                    eventMessage.setFilePath(FilePath);
+                    EventBus.getDefault().post(eventMessage);
+                    Toast.makeText(context, "Renamed!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Couldn't Rename!", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+    }
+
+
 }

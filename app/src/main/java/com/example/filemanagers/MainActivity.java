@@ -652,11 +652,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventMessage event) {
-        if (event.isDelete()) {
-            String deletePath = event.getDeleteFilePath();
-            File file = new File(deletePath);
+        if (event.isFileDelete()) {
+            String Path = event.getFilePath();
+            File file = new File(Path);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+        }else if(event.isFileRename()){
+            String Path = event.getFilePath();
+            File file = new File(Path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
         }
+
     }
 
 

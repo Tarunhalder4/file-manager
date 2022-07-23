@@ -24,6 +24,7 @@
     <color name="light_gray">#B7908787</color>
     
     <color name="semi_transparency">#80444141</color>
+    <color name="full_transparency">#0D000000</color>
 
 <!--    flash background color-->
     <color name="flash_gradient_start_color">#81BCF8</color>

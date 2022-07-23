@@ -63,7 +63,7 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks_cardview.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/botom_sheet_layout.xml" value="0.5" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bottom_icon_layout.xml" value="0.2" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bottom_icon_layout.xml" value="0.5" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bottom_menu_layout.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bottom_sheet_layout.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/contains_internal_storage.xml" value="0.15942028985507245" />
@@ -82,6 +82,7 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_card_view.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_cardview.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_item.xml" value="0.25" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/rename_dialog_box.xml" value="0.19927536231884058" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/simple_item.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/sort_dialog_box.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/tittle_bottom_sheet.xml" value="0.33" />
