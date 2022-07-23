@@ -31,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BottomSheet extends BottomSheetDialogFragment {
 
-    private View copy,delete;
+    private View copy,delete,move,rename;
     private File file;
     private CircleImageView background;
     private TextView itemName;
@@ -51,6 +51,9 @@ public class BottomSheet extends BottomSheetDialogFragment {
 
         copy = view.findViewById(R.id.copy_view3);
         delete = view.findViewById(R.id.delete_view24);
+        move = view.findViewById(R.id.cut_view2);
+        rename = view.findViewById(R.id.rename_view22);
+
 
         background = view.findViewById(R.id.profile_image);
         itemName=view.findViewById(R.id.folder_tittle);

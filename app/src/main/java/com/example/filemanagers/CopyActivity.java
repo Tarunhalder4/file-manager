@@ -20,6 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -77,7 +80,7 @@ public class CopyActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                fileCopy();
+                multipleFileCopy();
             }
         });
 
@@ -120,7 +123,7 @@ public class CopyActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void fileCopy() {
+    void multipleFileCopy() {
         String sourcePath = getIntent().getStringExtra(Constant.PATH);
         ArrayList<Object> listdata = new ArrayList<Object>();
         try {
@@ -137,15 +140,13 @@ public class CopyActivity extends AppCompatActivity {
         for (Object o : listdata) {
             String filePath = o.toString();
             File sourceFile = new File(filePath);
-            Task.callInBackground(new Callable<Object>() {
+        Task.callInBackground(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
                     Log.e(TAG, "call: file copy" );
-                    try {
-                        Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    //Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    //singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+                    Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
                     return null;
                 }
             }).continueWith(new Continuation<Object, Object>() {
@@ -175,6 +176,45 @@ public class CopyActivity extends AppCompatActivity {
 
         }
 
+
+    }
+
+
+    private void singleFileCopy(String sourcePath, String destinationPath) throws IOException {
+
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+
+        Log.e(TAG, "singleFileCopy: 12" );
+
+        try {
+
+            File file = new File(sourcePath);
+            int totalFileSize = (int) file.length();
+            fis = new FileInputStream(sourcePath);
+            fos = new FileOutputStream(destinationPath);
+            int availableByte = fis.available();
+
+            int percentByte = (availableByte*100)/totalFileSize;
+            Log.e(TAG, "singleFileCopy:" +percentByte );
+
+            int c;
+            while ((c = fis.read()) != -1) {
+                fos.write(c);
+            }
+
+            Log.e(TAG, " copied the file successfully " );
+
+        }catch (Exception e){
+            Log.e(TAG, "singleFileCopy: ",e);
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+            if (fos != null) {
+                fos.close();
+            }
+        }
 
     }
 
