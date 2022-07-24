@@ -201,10 +201,22 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
 
         @Override
         public void unbindView(FileAndFolderAdapter item) {
-            fileAndFolderName.setText(null);
+
+//            ImageView fileAndFolderImage;
+//            TextView fileAndFolderName, date, fileSize;
+//            CardView folderIdentifierCardView, fileAndFolderBackGround;
+//            ImageView folderIdentifierImage, photo, moreImage;
+
+
             fileAndFolderImage.setImageResource(0);
+            fileAndFolderName.setText(null);
+            fileAndFolderBackGround.setCardBackgroundColor(null);
             date.setText(null);
             fileSize.setText(null);
+            photo.setImageResource(0);
+            folderIdentifierCardView.setVisibility(View.GONE);
+
+
         }
 
     }

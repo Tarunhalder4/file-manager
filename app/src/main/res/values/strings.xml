@@ -53,6 +53,10 @@
     <string name="rename_cancel">Cancel</string>
     <string name="rename_title">Rename</string>
 
+<!--    make directory String -->
+    <string name="make_directory_title">Create Folder</string>
+    <string name="empty_string"> </string>
+
 <!--    multiselect tool bar item string -->
     <string name="multi_select_delete">delete</string>
     <string name="multi_select_copy">copy</string>

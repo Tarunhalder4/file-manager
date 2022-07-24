@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     photoGridAdapterFastItemAdapter.clear();
                     showPhotoInFolder(item.file);
                 } else {
-                    if (item.file.isFile() && item.file.getName().endsWith("jpg")||item.file.getName().endsWith(".png")) {
+                    if (item.file.isFile() && item.file.getName().endsWith("jpg") || item.file.getName().endsWith(".png")) {
                         openFile(item.file, Constant.PHOTO_FILE);
                     }
                 }
@@ -478,87 +479,87 @@ public class MainActivity extends AppCompatActivity {
 //            @Override
 //            public Object call() throws Exception {
 
-                fileAndFolderItemAdapter.clear();
-                showPath(mainFile);
-                if (!Constant.checkPermission(MainActivity.this)) {
-                    binding.noFileAvailable.setText("Permission required for display file");
-                    binding.noFileAvailable.setVisibility(View.VISIBLE);
-                    binding.pathRec.setVisibility(View.GONE);
-                }
+        fileAndFolderItemAdapter.clear();
+        showPath(mainFile);
+        if (!Constant.checkPermission(MainActivity.this)) {
+            binding.noFileAvailable.setText("Permission required for display file");
+            binding.noFileAvailable.setVisibility(View.VISIBLE);
+            binding.pathRec.setVisibility(View.GONE);
+        }
 
-                List<File> filesAndFolders =null;
-                if(mainFile.listFiles()!=null){
-                    filesAndFolders = Arrays.asList(Objects.requireNonNull(mainFile.listFiles()));
-                }
+        List<File> filesAndFolders = null;
+        if (mainFile.listFiles() != null) {
+            filesAndFolders = Arrays.asList(Objects.requireNonNull(mainFile.listFiles()));
+        }
 
 
-        if (filesAndFolders!=null && filesAndFolders.size() > 0) {
+        if (filesAndFolders != null && filesAndFolders.size() > 0) {
 
-                binding.noFileAvailable.setVisibility(View.GONE);
+            binding.noFileAvailable.setVisibility(View.GONE);
 
-                Log.d(TAG, "call: " + Thread.currentThread().getName());
-                fileAndFolderAdapterList = new ArrayList<>();
+            Log.d(TAG, "call: " + Thread.currentThread().getName());
+            fileAndFolderAdapterList = new ArrayList<>();
 
-                if (requiredFile.equals(Constant.AUDIO_FILE)) {
-                    for (File file : filesAndFolders) {
-                        if (file.isDirectory()) {
-                            scanDirectory(file, Constant.AUDIO_FILE);
-                        } else {
-                            fileScanBySuffix(file, Constant.AUDIO_FILE);
-                        }
-                    }
-                } else if (requiredFile.equals(Constant.DOCUMENTS_FILE)) {
-                    for (File file : filesAndFolders) {
-                        if (file.isDirectory()) {
-                            scanDirectory(file, Constant.DOCUMENTS_FILE);
-                        } else {
-                            fileScanBySuffix(file, Constant.DOCUMENTS_FILE);
-                        }
-                    }
-                } else if (requiredFile.equals(Constant.PHOTO_FILE)) {
-
-                    for (File file : filesAndFolders) {
-                        if (file.isDirectory()) {
-                            scanDirectory(file, Constant.PHOTO_FILE);
-                        } else {
-                            fileScanBySuffix(file, Constant.PHOTO_FILE);
-                        }
-                    }
-                } else if (requiredFile.equals(Constant.VIDEO_FILE)) {
-
-                    for (File file : filesAndFolders) {
-                        if (file.isDirectory()) {
-                            scanDirectory(file, Constant.VIDEO_FILE);
-                        } else {
-                            fileScanBySuffix(file, Constant.VIDEO_FILE);
-                        }
-                    }
-                } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
-
-                    for (File file : Objects.requireNonNull(mainFile.listFiles())) {
-                        if (file.isDirectory() && !file.getName().startsWith(".")) {
-                            fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
-                        }
-
-                    }
-
-                    for (File file : Objects.requireNonNull(mainFile.listFiles())) {
-                        if (file.isFile() && !file.getName().startsWith(".")) {
-                            fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
-                        }
-
+            if (requiredFile.equals(Constant.AUDIO_FILE)) {
+                for (File file : filesAndFolders) {
+                    if (file.isDirectory()) {
+                        scanDirectory(file, Constant.AUDIO_FILE);
+                    } else {
+                        fileScanBySuffix(file, Constant.AUDIO_FILE);
                     }
                 }
+            } else if (requiredFile.equals(Constant.DOCUMENTS_FILE)) {
+                for (File file : filesAndFolders) {
+                    if (file.isDirectory()) {
+                        scanDirectory(file, Constant.DOCUMENTS_FILE);
+                    } else {
+                        fileScanBySuffix(file, Constant.DOCUMENTS_FILE);
+                    }
+                }
+            } else if (requiredFile.equals(Constant.PHOTO_FILE)) {
 
-                fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
-                binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                binding.rec.setAdapter(fileAndFolderFastAdapter);
+                for (File file : filesAndFolders) {
+                    if (file.isDirectory()) {
+                        scanDirectory(file, Constant.PHOTO_FILE);
+                    } else {
+                        fileScanBySuffix(file, Constant.PHOTO_FILE);
+                    }
+                }
+            } else if (requiredFile.equals(Constant.VIDEO_FILE)) {
+
+                for (File file : filesAndFolders) {
+                    if (file.isDirectory()) {
+                        scanDirectory(file, Constant.VIDEO_FILE);
+                    } else {
+                        fileScanBySuffix(file, Constant.VIDEO_FILE);
+                    }
+                }
+            } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
+
+                for (File file : Objects.requireNonNull(mainFile.listFiles())) {
+                    if (file.isDirectory() && !file.getName().startsWith(".")) {
+                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    }
+
+                }
+
+                for (File file : Objects.requireNonNull(mainFile.listFiles())) {
+                    if (file.isFile() && !file.getName().startsWith(".")) {
+                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    }
+
+                }
+            }
+
+            fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
+            binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+            binding.rec.setAdapter(fileAndFolderFastAdapter);
 
 
-            }else{
+        } else {
             binding.noFileAvailable.setVisibility(View.VISIBLE);
         }
-                binding.progressBar.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
 
 
 //                return null;
@@ -656,7 +657,7 @@ public class MainActivity extends AppCompatActivity {
             String Path = event.getFilePath();
             File file = new File(Path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
-        }else if(event.isFileRename()){
+        } else if (event.isFileRename()) {
             String Path = event.getFilePath();
             File file = new File(Path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
@@ -681,10 +682,10 @@ public class MainActivity extends AppCompatActivity {
     void separatePhotoFolder(File file) {
         boolean havefile = false;
         File[] mfiles = file.listFiles();
-        if(mfiles !=null && mfiles.length >0){
+        if (mfiles != null && mfiles.length > 0) {
             for (File file1 : mfiles) {
                 if (!havefile && file1.isFile()) {
-                    if(file1.getName().endsWith(".jpg") || file1.getName().endsWith(".png")){
+                    if (file1.getName().endsWith(".jpg") || file1.getName().endsWith(".png")) {
                         photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this, file));
                         havefile = true;
                     }
@@ -705,14 +706,14 @@ public class MainActivity extends AppCompatActivity {
         Task.callInBackground(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                Log.e(TAG, "call:123 " );
+                Log.e(TAG, "call:123 ");
                 separatePhotoFolder(file);
                 photoGridAdapterFastItemAdapter.add(photoGridAdapterList);
                 binding.rec.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
                 binding.rec.setAdapter(photoGridAdapterFastItemAdapter);
                 binding.pathRec.setVisibility(View.GONE);
 
-                if(getSupportActionBar()!=null){
+                if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle(getResources().getString(R.string.my_photos));
                 }
 
@@ -729,7 +730,7 @@ public class MainActivity extends AppCompatActivity {
         File[] files = file.listFiles();
         assert files != null;
         for (File file1 : files) {
-            if (file1.getName().endsWith(".jpg")||file1.getName().endsWith(".png")) {
+            if (file1.getName().endsWith(".jpg") || file1.getName().endsWith(".png")) {
                 photoGridAdapterList.add(new PhotoGridAdapter(MainActivity.this, file1));
             }
         }
@@ -756,8 +757,10 @@ public class MainActivity extends AppCompatActivity {
                 sortingDialogBox();
                 break;
             case R.id.create_file:
+
                 break;
             case R.id.create_folder:
+               // createFolder(path);
                 break;
             case R.id.view_option:
                 break;
@@ -782,6 +785,94 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void createFolder(String path) {
+
+        EditText fileName;
+        TextView save ,cancel, title;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final View customLayout = getLayoutInflater().inflate(R.layout.rename_dialog_box, null);
+        builder.setView(customLayout);
+
+        fileName = customLayout.findViewById(R.id.rename_edit_box);
+        save = customLayout.findViewById(R.id.rename_save);
+        cancel = customLayout.findViewById(R.id.rename_cancel);
+        title = customLayout.findViewById(R.id.rename_title);
+
+        fileName.setHint("");
+        title.setText(getResources().getString(R.string.make_directory_title));
+
+        AlertDialog dialog = builder.create();
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!fileName.getText().toString().trim().equals("")){
+                    File destination;
+                    String folderName = fileName.getText().toString().trim();
+                    Log.e(TAG, "onClick: "+ path );
+                    File file = new File(path);
+                    //Creating a folder using mkdir() method
+                    boolean bool = file.mkdir();
+                    File current = new File(file.getAbsolutePath()+folderName);
+                    if (bool) {
+
+//                        EventMessage eventMessage = new EventMessage();
+//                        eventMessage.setFileRename(true);
+//                        eventMessage.setFilePath(FilePath);
+//                        EventBus.getDefault().post(eventMessage);
+
+                        String filePath=current.getParent();
+                        if(filePath != null){
+                            File currentFile = new File(filePath);
+                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                            Toast.makeText(MainActivity.this, "Folder created", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Folder not created", Toast.LENGTH_SHORT).show();
+                    }
+                    dialog.dismiss();
+
+                }else{
+                    Toast.makeText(MainActivity.this,"Please entry folder name",Toast.LENGTH_SHORT).show();
+                }
+
+
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+    }
+
+
+
+//        File file = new File(path);
+//        //Creating a folder using mkdir() method
+//        boolean bool = file.mkdir();
+//        if (bool) {
+//            showFileAndFolder(file.getParentFile(), Constant.INTERNAL_STORAGE_FILE_FOLDER);
+//            Toast.makeText(MainActivity.this, "Folder create successfully", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(MainActivity.this, "Folder not create successfully", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+
+    private void createFile() {
+
     }
 
 
