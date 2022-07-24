@@ -144,9 +144,9 @@ public class CopyActivity extends AppCompatActivity {
                 @Override
                 public Object call() throws Exception {
                     Log.e(TAG, "call: file copy" );
-                    //Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
                     //singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
-                    Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
+                   // Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
                     return null;
                 }
             }).continueWith(new Continuation<Object, Object>() {
@@ -163,6 +163,10 @@ public class CopyActivity extends AppCompatActivity {
                        // if(getSupportActionBar()!=null){
 
                        // }
+                    }
+
+                    if(task.isFaulted()){
+                        Log.e(TAG, "then: faulted" );
                     }
 
                     if (task.isCancelled()){
