@@ -43,6 +43,7 @@ public class CopyActivity extends AppCompatActivity {
     String path;
     int backCount = 0;
     String destinationPath = null;
+    File destinationFile = null;
     String TAG = "tag";
 
     @Override
@@ -80,7 +81,51 @@ public class CopyActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                multipleFileCopy();
+                Task.callInBackground(new Callable<Object>() {
+
+                    @Override
+                    public Object call() throws Exception {
+
+                        try {
+                            multipleFileCopy();
+                        } catch (IOException e) {
+                            Log.e(TAG, "onClick: ",e);
+                        }
+
+                        return null;
+                    }
+                }).continueWith(new Continuation<Object, Object>() {
+                    @Override
+                    public Object then(Task<Object> task) throws Exception {
+
+                        if(task.isCompleted()){
+                            Log.e(TAG, "then: task is complted" );
+
+                        }
+
+                       task.onSuccess(new Continuation<Object, Object>() {
+                           @Override
+                           public Object then(Task<Object> task) throws Exception {
+                               binding.copyToolBarBottom.setVisibility(View.GONE);
+                               showFileAndFolder(destinationFile, true);
+                               if(getSupportActionBar()!=null){
+                                   getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
+                               }
+                               return null;
+                           }
+                       });
+
+                        if(task.isFaulted()){
+                            Log.e(TAG, "then: ",task.getError() );
+                        }
+
+
+
+                        return null;
+                    }
+                },Task.UI_THREAD_EXECUTOR);
+
+
             }
         });
 
@@ -122,8 +167,9 @@ public class CopyActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void multipleFileCopy() {
+    void multipleFileCopy() throws IOException {
         String sourcePath = getIntent().getStringExtra(Constant.PATH);
         ArrayList<Object> listdata = new ArrayList<Object>();
         try {
@@ -136,56 +182,32 @@ public class CopyActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        File destinationFile = new File(destinationPath);
+        destinationFile = new File(destinationPath);
+
+        int copedFile = 0;
         for (Object o : listdata) {
+
             String filePath = o.toString();
             File sourceFile = new File(filePath);
 
-//          // AsyncTaskRunner runner = new AsyncTaskRunner();
-//            //String sleepTime = time.getText().toString();
-//            String[] strings = new String[2];
-//            strings[0] = sourceFile.getAbsolutePath();
-//            strings[1] = destinationPath + "/" + sourceFile.getName();
-//            runner.execute(strings);
-//            //runner.onPostExecute();
+            int totalFile = listdata.size();
+            copedFile = copedFile+1;
 
-            Task.callInBackground(new Callable<Object>() {
+            int finalCopedFile = copedFile;
+            runOnUiThread(new Runnable() {
                 @Override
-                public Object call() throws Exception {
-                    Log.e(TAG, "call: file copy" );
-                    //Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
-                    //Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
-                    return null;
+                public void run() {
+                    binding.fileName.setVisibility(View.VISIBLE);
+                    binding.fileName.setText(sourceFile.getName());
+                    binding.numberOfItem.setVisibility(View.VISIBLE);
+                    binding.numberOfItem.setText(finalCopedFile +"/"+totalFile);
                 }
-            }).continueWith(new Continuation<Object, Object>() {
-                @Override
-                public Object then(Task<Object> task) throws Exception {
+            });
+             Log.e(TAG, "call: file copy" );
 
-                    if(task.isCompleted()){
-                        getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
-                        Log.e(TAG, "then: file copy" );
-
-                        showFileAndFolder(destinationFile, true);
-                        binding.copyToolBarBottom.setVisibility(View.GONE);
-
-                       // if(getSupportActionBar()!=null){
-
-                       // }
-                    }
-
-                    if(task.isFaulted()){
-                        Log.e(TAG, "then: faulted" );
-                    }
-
-                    if (task.isCancelled()){
-                        Log.e(TAG, "then: task cancel" );
-                    }
-
-
-                    return null;
-                }
-            },Task.UI_THREAD_EXECUTOR);
+            //Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+            singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+            //Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
 
         }
 
@@ -198,22 +220,43 @@ public class CopyActivity extends AppCompatActivity {
         FileInputStream fis = null;
         FileOutputStream fos = null;
 
-        Log.e(TAG, "singleFileCopy: 12" );
+        Log.e(TAG, "singleFileCopy: "+sourcePath );
+        Log.e(TAG, "singleFileCopy: "+destinationPath);
+
+        Log.e(TAG, Thread.currentThread().getName() );
 
         try {
-
+            Log.e(TAG, "singleFileCopy: 123" );
             File file = new File(sourcePath);
-            int totalFileSize = (int) file.length();
+            long totalFileSize = file.length();
             fis = new FileInputStream(sourcePath);
+            Log.e(TAG, "singleFileCopy: "+destinationPath );
             fos = new FileOutputStream(destinationPath);
-            int availableByte = fis.available();
-
-            int percentByte = (availableByte*100)/totalFileSize;
-            Log.e(TAG, "singleFileCopy:" +percentByte );
 
             int c;
-            while ((c = fis.read()) != -1) {
-                fos.write(c);
+            byte[] buffer = new byte[1024];
+
+            while ((c = fis.read(buffer)) != -1) {
+                Log.e(TAG, "singleFileCoping.........: " );
+                long copyByte = totalFileSize-fis.available();
+                Log.e(TAG, "percentByte : "+ (copyByte*100)/totalFileSize);
+                Log.e(TAG, "totalFileSize : "+totalFileSize );
+                long percentByte = ((copyByte*100)/totalFileSize);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.copyProgressbar.setVisibility(View.VISIBLE);
+                        binding.pastImage.setVisibility(View.GONE);
+                        binding.past.setVisibility(View.GONE);
+                        binding.cancelImage.setVisibility(View.GONE);
+                        binding.cancel.setVisibility(View.GONE);
+                        binding.copyProgressbar.setProgress((int) percentByte);
+                    }
+                });
+
+                fos.write(buffer, 0,c);
+               // fos.write(c);
             }
 
             Log.e(TAG, " copied the file successfully " );
@@ -227,6 +270,7 @@ public class CopyActivity extends AppCompatActivity {
             if (fos != null) {
                 fos.close();
             }
+
         }
 
     }

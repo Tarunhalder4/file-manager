@@ -10,57 +10,30 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/folderBackground"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:titleTextColor="@color/white"
             app:layout_scrollFlags="scroll|enterAlways"
-            />
+            app:titleTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:id="@+id/tool_bar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@color/gray1"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/copy_text_view"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="15dp"-->
-<!--                android:textStyle="bold"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--    </androidx.appcompat.widget.Toolbar>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/copy_rec_activity"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/copy_tool_bar_bottom"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar" />
@@ -82,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/gray1"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -90,45 +64,105 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <View
+                android:id="@+id/past_background"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </View>
+
             <ImageView
                 android:id="@+id/past_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
                 android:src="@drawable/copy_24"
-                app:layout_constraintBottom_toTopOf="@+id/textView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/past_background"
+                app:layout_constraintStart_toStartOf="@+id/past_background"
+                app:layout_constraintTop_toTopOf="@+id/past_background" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/past"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="2dp"
                 android:text="Past"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="@+id/past_image"
+                app:layout_constraintStart_toStartOf="@+id/past_image" />
+
+            <View
+                android:id="@+id/cancel_background"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            </View>
 
             <ImageView
                 android:id="@+id/cancel_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
                 android:src="@drawable/ic_baseline_cancel_24"
-                app:layout_constraintBottom_toTopOf="@+id/cancel"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/cancel_background"
+                app:layout_constraintStart_toStartOf="@+id/cancel_background"
+                app:layout_constraintTop_toTopOf="@+id/cancel_background" />
 
             <TextView
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="8dp"
-                android:text="cancel"
+                android:text="@string/rename_cancel"
+                android:layout_marginBottom="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cancel_background"
+                app:layout_constraintEnd_toEndOf="@+id/cancel_background"
+                app:layout_constraintStart_toStartOf="@+id/cancel_background" />
+
+            <TextView
+                android:id="@+id/file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="100dp"
+                android:ellipsize="end"
+                android:textColor="@color/white"
+                android:textSize="11dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/numberOfItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/copy_progressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="0.2dp"
+                android:maxHeight="1dp"
+                android:progressBackgroundTint="@color/white"
+                android:progressTint="@color/neon_blue"
+                android:visibility="gone"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
