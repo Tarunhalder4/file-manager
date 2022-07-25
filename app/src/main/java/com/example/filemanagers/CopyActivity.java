@@ -140,13 +140,22 @@ public class CopyActivity extends AppCompatActivity {
         for (Object o : listdata) {
             String filePath = o.toString();
             File sourceFile = new File(filePath);
-        Task.callInBackground(new Callable<Object>() {
+
+//          // AsyncTaskRunner runner = new AsyncTaskRunner();
+//            //String sleepTime = time.getText().toString();
+//            String[] strings = new String[2];
+//            strings[0] = sourceFile.getAbsolutePath();
+//            strings[1] = destinationPath + "/" + sourceFile.getName();
+//            runner.execute(strings);
+//            //runner.onPostExecute();
+
+            Task.callInBackground(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
                     Log.e(TAG, "call: file copy" );
-                    Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    //singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
-                   // Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
+                    //Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+                    //Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
                     return null;
                 }
             }).continueWith(new Continuation<Object, Object>() {

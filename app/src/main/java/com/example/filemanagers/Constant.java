@@ -28,6 +28,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 
 public class Constant {
+
+    public static final String TAG ="tag";
     public static String PATH ="path";
 
     public static final int PIE_CHAT=1;
