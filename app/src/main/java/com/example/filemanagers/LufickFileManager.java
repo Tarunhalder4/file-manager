@@ -236,7 +236,6 @@ public class LufickFileManager extends AppCompatActivity {
         Task.callInBackground(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                Log.e(TAG, "call: " +Thread.currentThread().getName() );
 
                 setItemInPieAdapter();
                 setBookmarkAdapter();
@@ -260,26 +259,9 @@ public class LufickFileManager extends AppCompatActivity {
                     }
                 });
 
-
-                Log.e(TAG, "call: " );
                 return null;
             }
-        }).continueWith(new Continuation<Object, Object>() {
-            @Override
-            public Object then(Task<Object> task) throws Exception {
-                Log.e(TAG, "then: " + Thread.currentThread().getName());
-                if (task.isCompleted()){
-                    Log.e(TAG, "then: "+ task + "is finish");
-                }
-
-                if(task.isCancelled()){
-                    Log.e(TAG, "then: " + task +"cancel ");
-                }
-                return null;
-            }
-        },Task.UI_THREAD_EXECUTOR);
-
-
+        });
 
         simpleDragCallback = new SimpleDragCallback(new ItemTouchCallback() {
             @Override

@@ -144,8 +144,8 @@ public class CopyActivity extends AppCompatActivity {
                 @Override
                 public Object call() throws Exception {
                     Log.e(TAG, "call: file copy" );
-                    Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    //singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+                   // Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
                    // Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
                     return null;
                 }
@@ -160,9 +160,6 @@ public class CopyActivity extends AppCompatActivity {
                         showFileAndFolder(destinationFile, true);
                         binding.copyToolBarBottom.setVisibility(View.GONE);
 
-                       // if(getSupportActionBar()!=null){
-
-                       // }
                     }
 
                     if(task.isFaulted()){
@@ -192,19 +189,36 @@ public class CopyActivity extends AppCompatActivity {
         Log.e(TAG, "singleFileCopy: 12" );
 
         try {
-
+            Log.e(TAG, "singleFileCopy: 123" );
             File file = new File(sourcePath);
             int totalFileSize = (int) file.length();
             fis = new FileInputStream(sourcePath);
             fos = new FileOutputStream(destinationPath);
-            int availableByte = fis.available();
-
-            int percentByte = (availableByte*100)/totalFileSize;
-            Log.e(TAG, "singleFileCopy:" +percentByte );
 
             int c;
-            while ((c = fis.read()) != -1) {
-                fos.write(c);
+            byte[] buffer = new byte[1024];
+
+            while ((c = fis.read(buffer)) != -1) {
+                Log.e(TAG, "singleFileCoping.........: " );
+                int copyByte = totalFileSize-fis.available();
+                Log.e(TAG, "percentByte : "+ (copyByte*100)/totalFileSize);
+                Log.e(TAG, "totalFileSize : "+totalFileSize );
+                int percentByte = ((copyByte*100)/totalFileSize);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.copyProgressbar.setVisibility(View.VISIBLE);
+                        binding.pastImage.setVisibility(View.GONE);
+                        binding.past.setVisibility(View.GONE);
+                        binding.cancelImage.setVisibility(View.GONE);
+                        binding.cancel.setVisibility(View.GONE);
+                        binding.copyProgressbar.setProgress(percentByte);
+                    }
+                });
+
+                fos.write(buffer, 0,c);
+               // fos.write(c);
             }
 
             Log.e(TAG, " copied the file successfully " );
