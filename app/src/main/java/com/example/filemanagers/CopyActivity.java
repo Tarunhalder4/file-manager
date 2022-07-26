@@ -87,7 +87,11 @@ public class CopyActivity extends AppCompatActivity {
                     public Object call() throws Exception {
 
                         try {
-                            multipleFileCopy();
+                            if(Constant.MOVE){
+                                multipleFileMove();
+                            }else {
+                                multipleFileCopy();
+                            }
                         } catch (IOException e) {
                             Log.e(TAG, "onClick: ",e);
                         }
@@ -109,7 +113,11 @@ public class CopyActivity extends AppCompatActivity {
                                binding.copyToolBarBottom.setVisibility(View.GONE);
                                showFileAndFolder(destinationFile, true);
                                if(getSupportActionBar()!=null){
-                                   getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
+                                   if(Constant.MOVE){
+                                       getSupportActionBar().setTitle(getResources().getString(R.string.file_move));
+                                   }else {
+                                       getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
+                                   }
                                }
                                return null;
                            }
@@ -260,6 +268,119 @@ public class CopyActivity extends AppCompatActivity {
                 fos.write(buffer, 0,c);
                // fos.write(c);
             }
+
+            Log.e(TAG, " copied the file successfully " );
+
+        }catch (Exception e){
+            Log.e(TAG, "singleFileCopy: ",e);
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+            if (fos != null) {
+                fos.close();
+            }
+
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void multipleFileMove() throws IOException {
+        String sourcePath = getIntent().getStringExtra(Constant.PATH);
+        ArrayList<Object> listdata = new ArrayList<Object>();
+        try {
+            JSONArray jsonArray = new JSONArray(sourcePath);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                listdata.add(jsonArray.get(i));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        destinationFile = new File(destinationPath);
+
+        int copedFile = 0;
+        for (Object o : listdata) {
+
+            String filePath = o.toString();
+            File sourceFile = new File(filePath);
+
+            int totalFile = listdata.size();
+            copedFile = copedFile+1;
+
+            int finalCopedFile = copedFile;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    binding.fileName.setVisibility(View.VISIBLE);
+                    binding.fileName.setText(sourceFile.getName());
+                    binding.numberOfItem.setVisibility(View.VISIBLE);
+                    binding.numberOfItem.setText(finalCopedFile +"/"+totalFile);
+                }
+            });
+            Log.e(TAG, "call: file copy" );
+
+
+            //Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+            singleFileMove(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+            //Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
+            // Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+            // String fileName = String.valueOf(System.currentTimeMillis());
+            //singleFileCopy(sourceFile.getAbsolutePath(), destinationPath+"/tt_1A.mp4" );
+
+        }
+
+
+    }
+
+    private void singleFileMove(String sourcePath, String destinationPath) throws IOException {
+
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+
+        Log.e(TAG, "singleFileCopy: "+sourcePath );
+        Log.e(TAG, "singleFileCopy: "+destinationPath);
+
+        Log.e(TAG, Thread.currentThread().getName() );
+
+        try {
+            Log.e(TAG, "singleFileCopy: 123" );
+            File file = new File(sourcePath);
+            long totalFileSize = file.length();
+            fis = new FileInputStream(sourcePath);
+            Log.e(TAG, "singleFileCopy: "+destinationPath );
+            fos = new FileOutputStream(destinationPath);
+
+            int c;
+            byte[] buffer = new byte[512];
+
+            while ((c = fis.read(buffer)) != -1) {
+                Log.e(TAG, "singleFileCoping.........: " );
+                long copyByte = totalFileSize-fis.available();
+                Log.e(TAG, "percentByte : "+ (copyByte*100)/totalFileSize);
+                Log.e(TAG, "totalFileSize : "+totalFileSize );
+                long percentByte = ((copyByte*100)/totalFileSize);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.copyProgressbar.setVisibility(View.VISIBLE);
+                        binding.pastImage.setVisibility(View.GONE);
+                        binding.past.setVisibility(View.GONE);
+                        binding.cancelImage.setVisibility(View.GONE);
+                        binding.cancel.setVisibility(View.GONE);
+                        binding.copyProgressbar.setProgress((int) percentByte);
+                    }
+                });
+
+                fos.write(buffer, 0,c);
+                // fos.write(c);
+            }
+
+            new File(sourcePath).delete();
 
             Log.e(TAG, " copied the file successfully " );
 

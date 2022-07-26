@@ -95,6 +95,7 @@ public class Constant {
     public static int checkedId = 0;
 
     public static boolean LOG_CLICK_ACTIVATED = false;
+    public static boolean MOVE = false;
 
     ///////////For drawable background
     public static final int WITH_BACK_GROUND_VIEW =0;

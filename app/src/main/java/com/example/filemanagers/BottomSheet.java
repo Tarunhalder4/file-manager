@@ -91,6 +91,7 @@ public class BottomSheet extends BottomSheetDialogFragment {
                 JSONArray jsonArray = new JSONArray(files);
                 intent.putExtra(Constant.PATH,jsonArray.toString());
                 startActivity(intent);
+                Constant.MOVE = false;
                 dismiss();
             }
         });
@@ -114,7 +115,13 @@ public class BottomSheet extends BottomSheetDialogFragment {
         move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), CopyActivity.class);
+                List<String> files = new ArrayList<>();
+                files.add(file.getAbsolutePath());
+                JSONArray jsonArray = new JSONArray(files);
+                intent.putExtra(Constant.PATH,jsonArray.toString());
+                startActivity(intent);
+                Constant.MOVE = true;
                 dismiss();
             }
         });

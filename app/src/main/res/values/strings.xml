@@ -13,6 +13,7 @@
     <string name="my_photos">My Photos</string>
     <string name="file_copying">file copying..........</string>
     <string name="file_copy">file copied</string>
+    <string name="file_move">file moved</string>
 
     <!--    menu title-->
     <string name="more">More</string>
