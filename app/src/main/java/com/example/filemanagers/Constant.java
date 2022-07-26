@@ -112,13 +112,32 @@ public class Constant {
 
 
     public static boolean checkPermission(Context context) {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
             int write = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE);
             int read = ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE);
             return write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED;
+        }
     }
 
     public static void requestPermission(Activity activity) {
-        ActivityCompat.requestPermissions(activity, new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, 333);
+
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s", activity.getApplicationContext().getPackageName())));
+                activity.startActivityForResult(intent, REQUEST_CODE);
+            } catch (Exception e) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                activity.startActivityForResult(intent, REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(activity, new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+        }
+
     }
 
 
