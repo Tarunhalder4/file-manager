@@ -119,8 +119,6 @@ public class CopyActivity extends AppCompatActivity {
                             Log.e(TAG, "then: ",task.getError() );
                         }
 
-
-
                         return null;
                     }
                 },Task.UI_THREAD_EXECUTOR);
@@ -204,51 +202,12 @@ public class CopyActivity extends AppCompatActivity {
                 }
             });
 
-
-//        Task.callInBackground(new Callable<Object>() {
-//                @Override
-//                public Object call() throws Exception {
-                    Log.e(TAG, "call: file copy" );
-                   // Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
-
+            // Files.copy(Paths.get(sourceFile.getAbsolutePath()), Paths.get(destinationPath + "/" + sourceFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+            singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
            // String fileName = String.valueOf(System.currentTimeMillis());
-
-             //       singleFileCopy(sourceFile.getAbsolutePath(), destinationPath+"/"+fileName+sourceFile.getName() );
-              //      showFileAndFolder(destinationFile, true);
+            // singleFileCopy(sourceFile.getAbsolutePath(), destinationPath+"/"+fileName+sourceFile.getName() );
+            //showFileAndFolder(destinationFile, true);
             //singleFileCopy(sourceFile.getAbsolutePath(), destinationPath+"/tt_1A.mp4" );
-//                    binding.copyToolBarBottom.setVisibility(View.GONE);
-//                    if(getSupportActionBar()!=null){
-//                        getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
-//                    }
-                    // Constant.copyFile(sourcePath,sourceFile.getName(),destinationPath);
-//                    return null;
-//                }
-//            }).continueWith(new Continuation<Object, Object>() {
-//                @Override
-//                public Object then(Task<Object> task) throws Exception {
-//
-//                    if(task.isCompleted()){
-//                        getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));
-//                        Log.e(TAG, "then: file copy" );
-//
-//                        showFileAndFolder(destinationFile, true);
-//                        binding.copyToolBarBottom.setVisibility(View.GONE);
-//
-//                    }
-//
-//                    if(task.isFaulted()){
-//                        Log.e(TAG, "then: faulted" );
-//                    }
-//
-//                    if (task.isCancelled()){
-//                        Log.e(TAG, "then: task cancel" );
-//                    }
-//
-//
-//                    return null;
-//                }
-//            },Task.UI_THREAD_EXECUTOR);
 
         }
 
@@ -275,7 +234,7 @@ public class CopyActivity extends AppCompatActivity {
             fos = new FileOutputStream(destinationPath);
 
             int c;
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[512];
 
             while ((c = fis.read(buffer)) != -1) {
                 Log.e(TAG, "singleFileCoping.........: " );
