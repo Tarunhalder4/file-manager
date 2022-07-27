@@ -4,6 +4,7 @@
     <string name="contains_internal_storage_and_sd_card">Contains internal storage and SD card</string>
     <string name="bookmark">Bookmarks</string>
     <string name="hide">Hide</string>
+    <string name="un_hide">Unhide</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

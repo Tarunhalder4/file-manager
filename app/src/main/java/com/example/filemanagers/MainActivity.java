@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.my_files);
         sharePref = SharePref.getInstance(MainActivity.this);
 
-
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.folder_background_dark));
 
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
 
-                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
                 }
                 return false;
             }
@@ -231,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         binding.noFileAvailable.setVisibility(View.GONE);
                         path = item.fileAndFolder.getPath();
                         peekPath = true;
-                        showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                        showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
                     } else {
                         if (item.fileAndFolder.getName().endsWith(".pdf")) {
                             openFile(item.fileAndFolder, Constant.PDF_FILE);
@@ -250,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (item.fileAndFolder.isDirectory()) {
-                            showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                            showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
                         }
 
                     }
@@ -402,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
             backCount = -1;
         }
 
@@ -412,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MUSIC_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.AUDIO_FILE);
+            showFileAndFolder(file, Constant.AUDIO_FILE ,Constant.HIDE);
             backCount = -1;
         }
 
@@ -422,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOCUMENTS_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.DOCUMENTS_FILE);
+            showFileAndFolder(file, Constant.DOCUMENTS_FILE ,Constant.HIDE);
             backCount = -1;
         }
 
@@ -432,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.VIDEO_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.VIDEO_FILE);
+            showFileAndFolder(file, Constant.VIDEO_FILE,Constant.HIDE);
             backCount = -1;
         }
 
@@ -441,43 +440,40 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.INTERNAL_STORAGE_PATH)) {
-            String path = Environment.getExternalStorageDirectory().toString();
+            path = Environment.getExternalStorageDirectory().toString();
             File file = new File(path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
             backCount = 1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.FOLDER_PATH)) {
             String path = getIntent().getStringExtra(Constant.FOLDER_PATH);
             File file = new File(path);
-            showFileAndFolder(file, "all");
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DCIM_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PICTURES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MOVIES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
             backCount = -1;
         }
     }
 
 
-    private void showFileAndFolder(File mainFile, String requiredFile) {
-//        Task.callInBackground(new Callable<Object>() {
-//            @Override
-//            public Object call() throws Exception {
+    private void showFileAndFolder(File mainFile, String requiredFile, boolean hide ) {
 
         fileAndFolderItemAdapter.clear();
         showPath(mainFile);
@@ -537,14 +533,18 @@ public class MainActivity extends AppCompatActivity {
             } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())) {
-                    if (file.isDirectory() && !file.getName().startsWith(".")) {
+                    if (file.isDirectory() && !file.getName().startsWith(".") && hide) {
+                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    }else if(file.isDirectory() && !hide){
                         fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
 
                 }
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())) {
-                    if (file.isFile() && !file.getName().startsWith(".")) {
+                    if (file.isFile() && !file.getName().startsWith(".") && hide) {
+                        fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
+                    }else if(file.isFile() && !hide){
                         fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }
 
@@ -560,24 +560,6 @@ public class MainActivity extends AppCompatActivity {
             binding.noFileAvailable.setVisibility(View.VISIBLE);
         }
         binding.progressBar.setVisibility(View.GONE);
-
-
-//                return null;
-//            }
-//        }).continueWith(new Continuation<Object, Object>() {
-//            @Override
-//            public Object then(Task<Object> task) throws Exception {
-//                if (task.isCompleted()){
-//                    Log.e(TAG, "then: finish" );
-//                }
-//
-//                if (task.isCancelled()){
-//                    Log.e(TAG, "then: canceled" );
-//                }
-//
-//                return null;
-//            }
-//        });
 
     }
 
@@ -635,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
             //fileAndFolderAdapterFastItemAdapter.clear();
             fileAndFolderItemAdapter.clear();
 
-            showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
 
             if (destinationPath.equals("/storage/emulated")) {
                 binding.noFileAvailable.setVisibility(View.GONE);
@@ -654,13 +636,21 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventMessage event) {
         if (event.isFileDelete()) {
+            Log.e(TAG, "onMessageEvent1: " );
+           // pathAdapterList.clear();
+           // pathAdapterArrayDeque.clear();
+           // pathAdapterFastItemAdapter.clear();
             String Path = event.getFilePath();
             File file = new File(Path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
         } else if (event.isFileRename()) {
+            Log.e(TAG, "onMessageEvent2: " );
+           // pathAdapterList.clear();
+           // pathAdapterArrayDeque.clear();
+            //pathAdapterFastItemAdapter.clear();
             String Path = event.getFilePath();
             File file = new File(Path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
         }
 
     }
@@ -748,6 +738,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+//    @Override
+//    public void onOptionsMenuClosed(Menu menu) {
+//        super.onOptionsMenuClosed(menu);
+//        Log.e(TAG, "onOptionsMenuClosed: " );
+//        MenuItem item = menu.findItem(R.id.show_hidden_folder_files);
+//
+//    }
+
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        Log.e(TAG, "onPrepareOptionsMenu: " );
+//        return super.onPrepareOptionsMenu(menu);
+//    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        Log.e(TAG, "onMenuOpened: " );
+        MenuItem item = menu.findItem(R.id.show_hidden_folder_files);
+        item.setChecked(sharePref.getShowHiddenFileAndFolder());
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    boolean itemClick = true;
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -765,6 +779,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.view_option:
                 break;
             case R.id.close:
+                Intent intent = new Intent(MainActivity.this,LufickFileManager.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.show_file_size:
                 break;
@@ -773,6 +790,28 @@ public class MainActivity extends AppCompatActivity {
             case R.id.show_full_name_of_files:
                 break;
             case R.id.show_hidden_folder_files:
+                if(item.isCheckable()) {
+                    if (itemClick) {
+                        Log.e(TAG, "onOptionsItemSelected1: " + item.isCheckable());
+                        sharePref.setShowHiddenFileAndFolder(item.isCheckable());
+                        item.setChecked(true);
+                        itemClick = false;
+
+                        Log.e(TAG, "onOptionsItemSelected: "+path );
+                        File file = new File(path);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,false);
+                    } else {
+                        Log.e(TAG, "onOptionsItemSelected: "+path );
+                        Log.e(TAG, "onOptionsItemSelected2: " + item.isCheckable());
+                        sharePref.setShowHiddenFileAndFolder(!item.isCheckable());
+                        item.setChecked(false);
+                        itemClick = true;
+
+                        File file = new File(path);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,true);
+                    }
+
+                }
                 break;
             case R.id.multiselect_item_delete:
                 Toast.makeText(MainActivity.this, "file delete", Toast.LENGTH_SHORT).show();
@@ -828,7 +867,7 @@ public class MainActivity extends AppCompatActivity {
                         String filePath=current.getParent();
                         if(filePath != null){
                             File currentFile = new File(filePath);
-                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER);
+                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
                             Toast.makeText(MainActivity.this, "Folder created", Toast.LENGTH_SHORT).show();
                         }
 

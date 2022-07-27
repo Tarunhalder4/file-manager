@@ -33,4 +33,40 @@ public class SharePref {
         return sharedPreferences.getInt(Constant.SORT_ID,0);
     }
 
+    public void setShowFileSize(boolean booleans){
+        editor.putBoolean(Constant.SHOW_FILE_SIZE,booleans);
+        editor.commit();
+    }
+
+    public boolean getShowFileSize(){
+        return sharedPreferences.getBoolean(Constant.SHOW_FILE_SIZE,false);
+    }
+
+    public void setShowFolderSize(boolean booleans){
+        editor.putBoolean(Constant.SHOW_FOLDER_SIZE,booleans);
+        editor.commit();
+    }
+
+    public boolean getShowFolderSize(){
+        return sharedPreferences.getBoolean(Constant.SHOW_FOLDER_SIZE,false);
+    }
+
+    public void setShowFullNameOfFile(boolean booleans){
+        editor.putBoolean(Constant.SHOW_FULL_NAME_OF_FILE,booleans);
+        editor.commit();
+    }
+
+    public boolean getShowFullNameOfFile(){
+        return sharedPreferences.getBoolean(Constant.SHOW_FULL_NAME_OF_FILE,false);
+    }
+
+    public void setShowHiddenFileAndFolder(boolean booleans){
+        editor.putBoolean(Constant.SHOW_HIDDEN_FILE_AND_FOLDER,booleans);
+        editor.commit();
+    }
+
+    public boolean getShowHiddenFileAndFolder(){
+        return sharedPreferences.getBoolean(Constant.SHOW_HIDDEN_FILE_AND_FOLDER,false);
+    }
+
 }

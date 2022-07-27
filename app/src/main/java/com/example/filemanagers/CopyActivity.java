@@ -113,7 +113,7 @@ public class CopyActivity extends AppCompatActivity {
                                binding.copyToolBarBottom.setVisibility(View.GONE);
                                showFileAndFolder(destinationFile, true);
                                if(getSupportActionBar()!=null){
-                                   if(Constant.MOVE){
+                                   if(Constant.MOVE ){
                                        getSupportActionBar().setTitle(getResources().getString(R.string.file_move));
                                    }else {
                                        getSupportActionBar().setTitle(getResources().getString(R.string.file_copy));

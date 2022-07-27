@@ -68,10 +68,10 @@ public class Constant {
 
     public static final String MY_SHARE_PREF = "my_share_pref";
 
-    public static boolean SHOW_FILE_SIZE = false;
-    public static boolean SHOW_FOLDER_SIZE = false;
-    public static boolean SHOW_FULL_NAME_OF_FILE = false;
-    public static boolean SHOW_HIDDEN_FILE_AND_FOLDER = false;
+    public static String SHOW_FILE_SIZE = "show_file_size";
+    public static String SHOW_FOLDER_SIZE = "show_folder_size";
+    public static String SHOW_FULL_NAME_OF_FILE = "show_full_name_of_file";
+    public static String SHOW_HIDDEN_FILE_AND_FOLDER = "show_hidden_file_folder";
 
     /////sorting Constant
     public static final String SORT_ID = "sort_id";
@@ -96,6 +96,8 @@ public class Constant {
 
     public static boolean LOG_CLICK_ACTIVATED = false;
     public static boolean MOVE = false;
+    public static boolean HIDE = true;
+   // public static String ONE_ITEM_HIDE = "one_item_hide";
 
     ///////////For drawable background
     public static final int WITH_BACK_GROUND_VIEW =0;

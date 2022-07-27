@@ -2,7 +2,6 @@ package com.example.filemanagers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,12 +34,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BottomSheet extends BottomSheetDialogFragment {
 
-    private View copy,delete,move,rename;
     private File file;
     private CircleImageView background;
     private TextView itemName;
     private TextView noOfItemInItem;
     private ImageView folderImageView;
+
+    private View copy,delete,move,rename;
 
     public BottomSheet(File file) {
         this.file = file;
@@ -53,16 +53,29 @@ public class BottomSheet extends BottomSheetDialogFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.bottom_sheet_layout,container,false);
 
+        background = view.findViewById(R.id.profile_image);
+        itemName=view.findViewById(R.id.folder_tittle);
+        noOfItemInItem= view.findViewById(R.id.folder_number_of_item);
+        folderImageView = view.findViewById(R.id.bottom_tittle_icon);
+
         copy = view.findViewById(R.id.copy_view3);
         delete = view.findViewById(R.id.delete_view24);
         move = view.findViewById(R.id.cut_view2);
         rename = view.findViewById(R.id.rename_view22);
 
+        TextView openWith = view.findViewById(R.id.bottom_sheet_open_with);
+        TextView share = view.findViewById(R.id.bottom_sheet_share);
+        TextView encrypt = view.findViewById(R.id.bottom_sheet_encrypt);
+        TextView hide = view.findViewById(R.id.bottom_sheet_hide);
+        TextView addToBookmark = view.findViewById(R.id.bottom_sheet_add_to_bookmark);
+        TextView addShortcut = view.findViewById(R.id.bottom_sheet_add_shortcut);
+        TextView details = view.findViewById(R.id.bottom_sheet_details);
 
-        background = view.findViewById(R.id.profile_image);
-        itemName=view.findViewById(R.id.folder_tittle);
-        noOfItemInItem= view.findViewById(R.id.folder_number_of_item);
-        folderImageView = view.findViewById(R.id.bottom_tittle_icon);
+        if(!file.isHidden()){
+            hide.setText(R.string.hide);
+        }else {
+            hide.setText(R.string.un_hide);
+        }
 
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         if (bitmap!=null){
@@ -95,7 +108,6 @@ public class BottomSheet extends BottomSheetDialogFragment {
                 dismiss();
             }
         });
-
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +144,20 @@ public class BottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 setRename(getContext());
                 dismiss();
+            }
+        });
+
+        hide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!file.isHidden()){
+                    hideItem(true);
+                    hide.setText(R.string.un_hide);
+                }else {
+                    hideItem(false);
+                    hide.setText(R.string.hide);
+                }
+
             }
         });
 
@@ -216,6 +242,43 @@ public class BottomSheet extends BottomSheetDialogFragment {
 
 
         dialog.show();
+    }
+
+    private void hideItem(boolean hide){
+        File destination;
+        if (!file.isDirectory()) {
+            String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+            if(hide){
+                destination = new File(file.getAbsolutePath().replace(file.getName(), "."+file.getName()) + extension);
+            }else {
+               if(file.getName().startsWith(".")){
+                    destination = new File(file.getAbsolutePath().replace(file.getName(), file.getName().substring(1)) + extension);
+                }else {
+                   destination = new File(file.getAbsolutePath().replace(file.getName(), file.getName()) + extension);
+               }
+            }
+        } else {
+            if(hide){
+                destination = new File(file.getAbsolutePath().replace(file.getName(), "."+file.getName()));
+            }else{
+                if(file.getName().startsWith(".")){
+                    destination = new File(file.getAbsolutePath().replace(file.getName(), file.getName().substring(1)));
+                }else {
+                    destination = new File(file.getAbsolutePath().replace(file.getName(), file.getName()));
+                }
+            }
+        }
+
+        File current = new File(file.getAbsolutePath());
+        if (current.renameTo(destination)) {
+            String FilePath=current.getParent();
+            EventMessage eventMessage = new EventMessage();
+            eventMessage.setFileRename(true);
+            eventMessage.setFilePath(FilePath);
+            EventBus.getDefault().post(eventMessage);
+        } else {
+            Log.e(Constant.TAG, "hideItem: not file rename");
+        }
     }
 
 
