@@ -221,6 +221,7 @@ public class BottomSheet extends BottomSheetDialogFragment {
                 }
                 File current = new File(file.getAbsolutePath());
                 if (current.renameTo(destination)) {
+                    Constant.HIDE_UN_HIDE_RENAME = true;
                     String FilePath=current.getParent();
                     EventMessage eventMessage = new EventMessage();
                     eventMessage.setFileRename(true);
