@@ -151,9 +151,11 @@ public class BottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if(!file.isHidden()){
+                    Constant.HIDE_UN_HIDE_RENAME = true;
                     hideItem(true);
                     hide.setText(R.string.un_hide);
                 }else {
+                    Constant.HIDE_UN_HIDE_RENAME = true;
                     hideItem(false);
                     hide.setText(R.string.hide);
                 }

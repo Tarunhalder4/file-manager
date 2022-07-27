@@ -570,6 +570,10 @@ public class MainActivity extends AppCompatActivity {
             pathAdapterList.clear();
             pathAdapterArrayDeque.pollLast();
             backPress = false;
+        }else if(Constant.HIDE_UN_HIDE_RENAME){
+            pathAdapterFastItemAdapter.clear();
+            pathAdapterList.clear();
+            Constant.HIDE_UN_HIDE_RENAME = false;
         } else {
             pathAdapterFastItemAdapter.clear();
             pathAdapterList.clear();
@@ -792,6 +796,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.show_hidden_folder_files:
                 if(item.isCheckable()) {
                     if (itemClick) {
+                        Constant.HIDE_UN_HIDE_RENAME = true;
                         Log.e(TAG, "onOptionsItemSelected1: " + item.isCheckable());
                         sharePref.setShowHiddenFileAndFolder(item.isCheckable());
                         item.setChecked(true);
@@ -801,6 +806,7 @@ public class MainActivity extends AppCompatActivity {
                         File file = new File(path);
                         showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,false);
                     } else {
+                        Constant.HIDE_UN_HIDE_RENAME = true;
                         Log.e(TAG, "onOptionsItemSelected: "+path );
                         Log.e(TAG, "onOptionsItemSelected2: " + item.isCheckable());
                         sharePref.setShowHiddenFileAndFolder(!item.isCheckable());

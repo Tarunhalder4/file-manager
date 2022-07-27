@@ -97,7 +97,7 @@ public class Constant {
     public static boolean LOG_CLICK_ACTIVATED = false;
     public static boolean MOVE = false;
     public static boolean HIDE = true;
-   // public static String ONE_ITEM_HIDE = "one_item_hide";
+    public static boolean HIDE_UN_HIDE_RENAME = false;
 
     ///////////For drawable background
     public static final int WITH_BACK_GROUND_VIEW =0;
