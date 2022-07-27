@@ -159,7 +159,7 @@ public class BottomSheet extends BottomSheetDialogFragment {
                     hideItem(false);
                     hide.setText(R.string.hide);
                 }
-
+                dismiss();
             }
         });
 

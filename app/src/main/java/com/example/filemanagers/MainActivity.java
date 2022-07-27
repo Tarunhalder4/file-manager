@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
 
-                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder());
                 }
                 return false;
             }
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         binding.noFileAvailable.setVisibility(View.GONE);
                         path = item.fileAndFolder.getPath();
                         peekPath = true;
-                        showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+                        showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder());
                     } else {
                         if (item.fileAndFolder.getName().endsWith(".pdf")) {
                             openFile(item.fileAndFolder, Constant.PDF_FILE);
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (item.fileAndFolder.isDirectory()) {
-                            showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+                            showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder());
                         }
 
                     }
@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
@@ -411,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MUSIC_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.AUDIO_FILE ,Constant.HIDE);
+            showFileAndFolder(file, Constant.AUDIO_FILE ,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
@@ -421,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOCUMENTS_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.DOCUMENTS_FILE ,Constant.HIDE);
+            showFileAndFolder(file, Constant.DOCUMENTS_FILE ,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
@@ -431,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.VIDEO_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.VIDEO_FILE,Constant.HIDE);
+            showFileAndFolder(file, Constant.VIDEO_FILE,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
@@ -442,32 +442,32 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.INTERNAL_STORAGE_PATH)) {
             path = Environment.getExternalStorageDirectory().toString();
             File file = new File(path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
             backCount = 1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.FOLDER_PATH)) {
             String path = getIntent().getStringExtra(Constant.FOLDER_PATH);
             File file = new File(path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DCIM_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PICTURES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MOVIES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
             backCount = -1;
         }
     }
@@ -640,18 +640,10 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventMessage event) {
         if (event.isFileDelete()) {
-            Log.e(TAG, "onMessageEvent1: " );
-           // pathAdapterList.clear();
-           // pathAdapterArrayDeque.clear();
-           // pathAdapterFastItemAdapter.clear();
             String Path = event.getFilePath();
             File file = new File(Path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
         } else if (event.isFileRename()) {
-            Log.e(TAG, "onMessageEvent2: " );
-           // pathAdapterList.clear();
-           // pathAdapterArrayDeque.clear();
-            //pathAdapterFastItemAdapter.clear();
             String Path = event.getFilePath();
             File file = new File(Path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
@@ -798,23 +790,21 @@ public class MainActivity extends AppCompatActivity {
                     if (itemClick) {
                         Constant.HIDE_UN_HIDE_RENAME = true;
                         Log.e(TAG, "onOptionsItemSelected1: " + item.isCheckable());
-                        sharePref.setShowHiddenFileAndFolder(item.isCheckable());
+                        sharePref.setShowHiddenFileAndFolder(true);
                         item.setChecked(true);
-                        itemClick = false;
-
                         Log.e(TAG, "onOptionsItemSelected: "+path );
                         File file = new File(path);
                         showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,false);
+                        itemClick = false;
                     } else {
                         Constant.HIDE_UN_HIDE_RENAME = true;
                         Log.e(TAG, "onOptionsItemSelected: "+path );
                         Log.e(TAG, "onOptionsItemSelected2: " + item.isCheckable());
-                        sharePref.setShowHiddenFileAndFolder(!item.isCheckable());
+                        sharePref.setShowHiddenFileAndFolder(false);
                         item.setChecked(false);
-                        itemClick = true;
-
                         File file = new File(path);
                         showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,true);
+                        itemClick = true;
                     }
 
                 }
@@ -873,7 +863,7 @@ public class MainActivity extends AppCompatActivity {
                         String filePath=current.getParent();
                         if(filePath != null){
                             File currentFile = new File(filePath);
-                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
                             Toast.makeText(MainActivity.this, "Folder created", Toast.LENGTH_SHORT).show();
                         }
 
