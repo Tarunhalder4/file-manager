@@ -621,7 +621,7 @@ public class MainActivity extends AppCompatActivity {
             //fileAndFolderAdapterFastItemAdapter.clear();
             fileAndFolderItemAdapter.clear();
 
-            showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+            showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
 
             if (destinationPath.equals("/storage/emulated")) {
                 binding.noFileAvailable.setVisibility(View.GONE);
@@ -756,7 +756,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onMenuOpened(featureId, menu);
     }
 
-    boolean itemClick = true;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -775,36 +774,60 @@ public class MainActivity extends AppCompatActivity {
             case R.id.view_option:
                 break;
             case R.id.close:
-                Intent intent = new Intent(MainActivity.this,LufickFileManager.class);
-                startActivity(intent);
                 finish();
                 break;
             case R.id.show_file_size:
+                if(item.isCheckable()) {
+                    if (!sharePref.getShowFileSize()) {
+                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        sharePref.setShowFileSize(true);
+                        item.setChecked(true);
+                        File file = new File(path);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                    } else {
+                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        sharePref.setShowFileSize(false);
+                        item.setChecked(false);
+                        File file = new File(path);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                    }
+
+                }
                 break;
             case R.id.show_folder_size:
+                if(item.isCheckable()) {
+                    if (!sharePref.getShowFolderSize()) {
+                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        sharePref.setShowFolderSize(true);
+                        item.setChecked(true);
+                        File file = new File(path);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                    } else {
+                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        sharePref.setShowFolderSize(false);
+                        item.setChecked(false);
+                        File file = new File(path);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                    }
+
+                }
                 break;
             case R.id.show_full_name_of_files:
                 break;
             case R.id.show_hidden_folder_files:
                 if(item.isCheckable()) {
-                    if (itemClick) {
+                    if (!sharePref.getShowHiddenFileAndFolder()) {
                         Constant.HIDE_UN_HIDE_RENAME = true;
-                        Log.e(TAG, "onOptionsItemSelected1: " + item.isCheckable());
                         sharePref.setShowHiddenFileAndFolder(true);
                         item.setChecked(true);
-                        Log.e(TAG, "onOptionsItemSelected: "+path );
                         File file = new File(path);
                         showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,false);
-                        itemClick = false;
                     } else {
                         Constant.HIDE_UN_HIDE_RENAME = true;
-                        Log.e(TAG, "onOptionsItemSelected: "+path );
-                        Log.e(TAG, "onOptionsItemSelected2: " + item.isCheckable());
                         sharePref.setShowHiddenFileAndFolder(false);
                         item.setChecked(false);
                         File file = new File(path);
                         showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,true);
-                        itemClick = true;
                     }
 
                 }

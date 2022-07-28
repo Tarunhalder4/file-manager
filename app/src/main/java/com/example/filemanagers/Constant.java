@@ -145,17 +145,33 @@ public class Constant {
 
 
     public static String memory(long memory){
-        if (memory<=100000){
+        if (memory<=1000000){
             memory = memory/1000;
             return String.valueOf(memory)+" KB";
-        }else if(memory<=100000000){
-            memory = memory/1000000;
-            return String.valueOf(memory)+" MB";
-        }else if(memory<=1000000000){
-            memory = memory/1000000000;
+        }else if(memory<=1000000000) {
+            memory = memory / 1000000;
+            return String.valueOf(memory) + " MB";
+        } else if(memory<=10000000000.0){
+            memory = memory/100000000;
             return String.valueOf(memory)+" GB";
         }
         return "";
+    }
+
+    public static long getDirectoryMemorySize(File dir) {
+
+        long length = 0;
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile())
+                    length += file.length();
+                else
+                    length += getDirectoryMemorySize(file);
+            }
+        }
+        return length;
+
     }
 
 

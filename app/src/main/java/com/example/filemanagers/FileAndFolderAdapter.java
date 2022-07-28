@@ -9,7 +9,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,10 +37,13 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
     public String TAG = "tag";
     public Context context;
     public MainActivity mainActivity;
+    private SharePref sharePref;
+
     public FileAndFolderAdapter(File fileAndFolder, Context context,MainActivity mainActivity) {
         this.fileAndFolder = fileAndFolder;
         this.context = context;
         this.mainActivity = mainActivity;
+        sharePref = SharePref.getInstance(context);
     }
 
     @NonNull
@@ -64,18 +69,22 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
         ImageView folderIdentifierImage, photo, moreImage;
         public ViewHolder(View itemView) {
             super(itemView);
+
             fileAndFolderImage = itemView.findViewById(R.id.file_and_folder_image);
             fileAndFolderName = itemView.findViewById(R.id.file_and_folder_name);
             date = itemView.findViewById(R.id.date);
             fileSize = itemView.findViewById(R.id.size);
+
             folderIdentifierImage =itemView.findViewById(R.id.folder_identifier_image);
             folderIdentifierCardView= itemView.findViewById(R.id.folder_identifier_cardView);
             fileAndFolderBackGround = itemView.findViewById(R.id.file_and_folder_back_ground);
             photo = itemView.findViewById(R.id.photos);
             moreImage = itemView.findViewById(R.id.more_image);
+
         }
 
 
+        @SuppressLint({"UsableSpace", "SetTextI18n"})
         @Override
         public void bindView(FileAndFolderAdapter item, List<Object> payloads) {
             UIUtils.setBackground(itemView, FastAdapterUIUtils.getSelectableBackground(item.context, Color.RED, true));
@@ -206,10 +215,27 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
             long lastModifiedDate = item.fileAndFolder.lastModified();
             Date modifiedDate = new Date(lastModifiedDate);
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             date.setText(sdf.format(modifiedDate));
 
             fileAndFolderName.setText(item.fileAndFolder.getName());
+
+            if(item.sharePref.getShowFolderSize() && item.fileAndFolder.isDirectory()){
+                File[] files = item.fileAndFolder.listFiles();
+                assert files != null;
+                long numberOfFile = files.length;
+
+                fileSize.setVisibility(View.VISIBLE);
+                fileSize.setText(String.valueOf(numberOfFile+" items"));
+
+                fileSize.setText(String.valueOf(Constant.memory(Constant.getDirectoryMemorySize(item.fileAndFolder)))+"   "+numberOfFile+" items"  );
+
+            }else if(item.sharePref.getShowFileSize() && item.fileAndFolder.isFile()){
+                fileSize.setVisibility(View.VISIBLE);
+                fileSize.setText(Constant.memory(item.fileAndFolder.length()));
+            }
+
+
 
         }
 
