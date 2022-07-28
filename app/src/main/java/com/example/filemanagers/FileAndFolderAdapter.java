@@ -215,7 +215,7 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
             long lastModifiedDate = item.fileAndFolder.lastModified();
             Date modifiedDate = new Date(lastModifiedDate);
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             date.setText(sdf.format(modifiedDate));
 
             fileAndFolderName.setText(item.fileAndFolder.getName());

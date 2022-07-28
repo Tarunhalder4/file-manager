@@ -27,7 +27,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -163,6 +165,14 @@ public class BottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+        details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDetail(getContext());
+                dismiss();
+            }
+        });
+
         return view;
     }
 
@@ -245,6 +255,68 @@ public class BottomSheet extends BottomSheetDialogFragment {
 
 
         dialog.show();
+    }
+
+
+    private void showDetail(Context context){
+        TextView name, path, type, lastModified, size, fileCountTitle,fileCount, close;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final View customLayout
+                = getLayoutInflater()
+                .inflate(R.layout.details_layout, null);
+        builder.setView(customLayout);
+
+        name = customLayout.findViewById(R.id.properties_name);
+        path = customLayout.findViewById(R.id.properties_path);
+        type = customLayout.findViewById(R.id.properties_type);
+        lastModified = customLayout.findViewById(R.id.properties_last_modified);
+        size = customLayout.findViewById(R.id.properties_size);
+        fileCountTitle = customLayout.findViewById(R.id.file_count);
+        fileCount = customLayout.findViewById(R.id.properties_file_count);
+        close = customLayout.findViewById(R.id.properties_close);
+
+        name.setText(file.getName());
+        path.setText(file.getAbsolutePath());
+
+        if(file.isDirectory()){
+
+            fileCount.setVisibility(View.VISIBLE);
+            fileCountTitle.setVisibility(View.VISIBLE);
+
+            type.setText(context.getResources().getString(R.string.directory));
+
+            File[] files = file.listFiles();
+            assert files != null;
+            fileCount.setText(String.valueOf(files.length));
+
+            size.setText(Constant.memory(Constant.getDirectoryMemorySize(file)));
+
+        }else {
+            type.setText(context.getResources().getString(R.string.file));
+
+            size.setText(Constant.memory(file.length()));
+        }
+
+        long lastModifiedDate = file.lastModified();
+        Date modifiedDate = new Date(lastModifiedDate);
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        lastModified.setText(sdf.format(modifiedDate));
+        //lastModified.setText(file.lastModified());
+
+        AlertDialog dialog = builder.create();
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+
     }
 
     private void hideItem(boolean hide){

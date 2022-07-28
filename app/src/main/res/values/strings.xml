@@ -55,6 +55,16 @@
     <string name="rename_cancel">Cancel</string>
     <string name="rename_title">Rename</string>
 
+<!--    properties dialog box-->
+    <string name="properties">Properties</string>
+    <string name="name">Name</string>
+    <string name="path">Path</string>
+    <string name="type">Type</string>
+    <string name="last_modified">Last Modified</string>
+    <string name="size">Size</string>
+    <string name="file_count">File Count</string>
+    <string name="directory">Directory</string>
+    <string name="file">File</string>
 <!--    make directory String -->
     <string name="make_directory_title">Create Folder</string>
     <string name="empty_string"> </string>
