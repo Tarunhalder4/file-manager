@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 
 import android.content.ActivityNotFoundException;
@@ -766,7 +767,11 @@ public class MainActivity extends AppCompatActivity {
                 sortingDialogBox();
                 break;
             case R.id.create_file:
-
+                try {
+                    createFile(path);
+                } catch (IOException e) {
+                    Log.e(TAG, "onOptionsItemSelected: ",e);
+                }
                 break;
             case R.id.create_folder:
                 createFolder(path);
@@ -872,10 +877,8 @@ public class MainActivity extends AppCompatActivity {
                     String folderName = fileName.getText().toString().trim();
                     Log.e(TAG, "onClick: "+ path );
                     File file = new File(path+"/"+folderName);
-                    boolean bool = file.mkdir();
 
-                    if (bool) {
-
+                    if (file.mkdir()) {
                         String filePath=file.getParent();
                         if(filePath != null){
                             File currentFile = new File(filePath);
@@ -907,7 +910,67 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void createFile() {
+    private void createFile(String path) throws IOException {
+
+        EditText fileName;
+        TextView save ,cancel, title;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final View customLayout = getLayoutInflater().inflate(R.layout.rename_dialog_box, null);
+        builder.setView(customLayout);
+
+        fileName = customLayout.findViewById(R.id.rename_edit_box);
+        save = customLayout.findViewById(R.id.rename_save);
+        cancel = customLayout.findViewById(R.id.rename_cancel);
+        title = customLayout.findViewById(R.id.rename_title);
+
+        fileName.setHint("");
+        title.setText(getResources().getString(R.string.make_file_title));
+
+        AlertDialog dialog = builder.create();
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!fileName.getText().toString().trim().equals("")){
+                    String newFileName = fileName.getText().toString().trim();
+                    Log.e(TAG, "onClick: "+ path );
+                    File file = new File(path+"/"+newFileName);
+
+                    try {
+                        if (file.createNewFile()) {
+                            String filePath=file.getParent();
+                            if(filePath != null){
+                                File currentFile = new File(filePath);
+                                Constant.HIDE_UN_HIDE_RENAME = true;
+                                showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
+                                Toast.makeText(MainActivity.this, "File created", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "File not created", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "onClick: ",e);
+                    }
+                    dialog.dismiss();
+
+                }else{
+                    Toast.makeText(MainActivity.this,"Please entry file name",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
 
     }
 

@@ -69,6 +69,9 @@
     <string name="make_directory_title">Create Folder</string>
     <string name="empty_string"> </string>
 
+<!--    make file String -->
+    <string name="make_file_title">Create File</string>
+
 <!--    multiselect tool bar item string -->
     <string name="multi_select_delete">delete</string>
     <string name="multi_select_copy">copy</string>
