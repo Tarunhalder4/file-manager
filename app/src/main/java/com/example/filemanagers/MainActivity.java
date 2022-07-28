@@ -769,7 +769,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.create_folder:
-               // createFolder(path);
+                createFolder(path);
                 break;
             case R.id.view_option:
                 break;
@@ -869,23 +869,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!fileName.getText().toString().trim().equals("")){
-                    File destination;
                     String folderName = fileName.getText().toString().trim();
                     Log.e(TAG, "onClick: "+ path );
-                    File file = new File(path);
-                    //Creating a folder using mkdir() method
+                    File file = new File(path+"/"+folderName);
                     boolean bool = file.mkdir();
-                    File current = new File(file.getAbsolutePath()+folderName);
+
                     if (bool) {
 
-//                        EventMessage eventMessage = new EventMessage();
-//                        eventMessage.setFileRename(true);
-//                        eventMessage.setFilePath(FilePath);
-//                        EventBus.getDefault().post(eventMessage);
-
-                        String filePath=current.getParent();
+                        String filePath=file.getParent();
                         if(filePath != null){
                             File currentFile = new File(filePath);
+                            Constant.HIDE_UN_HIDE_RENAME = true;
                             showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
                             Toast.makeText(MainActivity.this, "Folder created", Toast.LENGTH_SHORT).show();
                         }
@@ -898,8 +892,6 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(MainActivity.this,"Please entry folder name",Toast.LENGTH_SHORT).show();
                 }
-
-
 
             }
         });
@@ -914,20 +906,6 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
-
-
-//        File file = new File(path);
-//        //Creating a folder using mkdir() method
-//        boolean bool = file.mkdir();
-//        if (bool) {
-//            showFileAndFolder(file.getParentFile(), Constant.INTERNAL_STORAGE_FILE_FOLDER);
-//            Toast.makeText(MainActivity.this, "Folder create successfully", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(MainActivity.this, "Folder not create successfully", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
 
     private void createFile() {
 
