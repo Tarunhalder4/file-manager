@@ -106,15 +106,15 @@ public class MainActivity extends AppCompatActivity {
 
     private List<File> selectableFile;
 
-    private ComparableItemListImpl<AbstractItem> comparableItemList;
+    private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
 
-    private ActionModeHelper<FileAndFolderAdapter> mActionModeHelper;
+    private ActionModeHelper<AbstractItem> mActionModeHelper;
     private UndoHelper mUndoHelper;
 
     ArrayList<File> newFiles = null;
 
-//    @SortingStrategy
-//    private int sortingStrategy;
+    @SortingStrategy
+    private int sortingStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.folder_background_dark));
 
-        //comparableItemList = new ComparableItemListImpl<File>(getComparator());
+        comparableItemList = new ComparableItemListImpl<>(getComparator());
 
         fileAndFolderItemAdapter = new ItemAdapter<>();
         fileAndFolderFastAdapter = FastAdapter.with(fileAndFolderItemAdapter);
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         photoGridAdapterFastItemAdapter.withSelectable(true);
         pathAdapterFastItemAdapter.withSelectable(true);
 
-       // mActionModeHelper = new ActionModeHelper<>(fileAndFolderFastAdapter, R.menu.multiselect_menu, new ActionBarCallBack());
+        mActionModeHelper = new ActionModeHelper<>(fileAndFolderFastAdapter, R.menu.multiselect_menu, new ActionBarCallBack());
 
         photoGridAdapterList = new ArrayList<>();
         pathAdapterArrayDeque = new ArrayDeque<>();
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSelectionChanged(AbstractItem item, boolean selected) {
                 Log.i("FastAdapter", "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size());
-                // Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
+                 Set<AbstractItem> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
             }
         });
 
@@ -304,19 +304,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    @SortingStrategy
-//    int toSortingStrategy(int val) {
-//        return val;
-//    }
+    @SortingStrategy
+    int toSortingStrategy(int val) {
+        return val;
+    }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        //add the values which need to be saved from the adapter to the bundle
-//        outState = fileAndFolderFastAdapter.saveInstanceState(outState);
-//        //We need to persist our sorting strategy between orientation changes
-//        outState.putInt("sorting_strategy", sortingStrategy);
-//        super.onSaveInstanceState(outState);
-//    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //add the values which need to be saved from the adapter to the bundle
+        outState = fileAndFolderFastAdapter.saveInstanceState(outState);
+        //We need to persist our sorting strategy between orientation changes
+        outState.putInt("sorting_strategy", sortingStrategy);
+        super.onSaveInstanceState(outState);
+    }
 
     void openFile(File file, String type) {
         Intent intent = new Intent();
@@ -1010,23 +1010,23 @@ public class MainActivity extends AppCompatActivity {
         nameSort = view.findViewById(R.id.sort_name);
 
 
-//        ascendingOrder.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Constant.ASCENDING_ORDER = true;
-//                setAscendingAndDescendingOrder(sharePref.getSortId());
-//                Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        descendingOrder.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Constant.ASCENDING_ORDER = false;
-//                setAscendingAndDescendingOrder(sharePref.getSortId());
-//                Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        ascendingOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constant.ASCENDING_ORDER = true;
+                setAscendingAndDescendingOrder(sharePref.getSortId());
+                Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        descendingOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constant.ASCENDING_ORDER = false;
+                setAscendingAndDescendingOrder(sharePref.getSortId());
+                Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         int sortingId = sharePref.getSortId();
@@ -1034,180 +1034,182 @@ public class MainActivity extends AppCompatActivity {
             radioGroup.check(sortingId);
         }
 
-//        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                Log.d(TAG, "onCheckedChanged: " + checkedId);
-//                Constant.checkedId = checkedId;
-//                setAscendingAndDescendingOrder(checkedId);
-//                dialog.dismiss();
-//            }
-//        });
+
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                setAscendingAndDescendingOrder(checkedId);
+                dialog.dismiss();
+            }
+        });
 
     }
 
-//    private void setAscendingAndDescendingOrder(int checkedId) {
-//        Log.d(TAG, "setAscendingAndDescendingOrder: " + checkedId);
-//        sharePref.setSortId(checkedId);
-//        if (Constant.ASCENDING_ORDER) {
-//            switch (checkedId) {
-//                case Constant.ID_SORT_NAME:
-//                    sortingStrategy = Constant.NAME_ASCENDING_ORDER;
-//                    comparableItemList.withComparator(getComparator());
-//                    break;
-//                case Constant.ID_SORT_DATE:
-//                    sortingStrategy = Constant.DATE_ASCENDING_ORDER;
-//                    comparableItemList.withComparator(getComparator());
-//                    break;
-//                case Constant.ID_SORT_SIZE:
-//                    sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
-//                    comparableItemList.withComparator(getComparator());
-//                    break;
-//            }
-//        } else {
-//            switch (checkedId) {
-//                case Constant.ID_SORT_NAME:
-//                    sortingStrategy = Constant.NAME_DESCENDING_ORDER;
-//                    comparableItemList.withComparator(getComparator());
-//                    break;
-//                case Constant.ID_SORT_DATE:
-//                    sortingStrategy = Constant.DATE_DESCENDING_ORDER;
-//                    comparableItemList.withComparator(getComparator());
-//                    break;
-//                case Constant.ID_SORT_SIZE:
-//                    sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
-//                    comparableItemList.withComparator(getComparator());
-//                    break;
-//            }
-//        }
-//    }
-//
-//    @NonNull
-//    private Comparator<AbstractItem> getComparator() {
-//        switch (sortingStrategy) {
-//            case Constant.NAME_ASCENDING_ORDER:
-//                return new NameAscending();
-//            case Constant.NAME_DESCENDING_ORDER:
-//                return new NameDescending();
-//            case Constant.SIZE_ASCENDING_ORDER:
-//                return new SizeAscending();
-//            case Constant.SIZE_DESCENDING_ORDER:
-//                return new SizeDescending();
-//            case Constant.DATE_ASCENDING_ORDER:
-//                return new DateAscending();
-//            case Constant.DATE_DESCENDING_ORDER:
-//                return new DateDescending();
-//        }
-//
-//        throw new RuntimeException("This sortingStrategy is not supported.");
-//    }
-//
-//    @Retention(RetentionPolicy.SOURCE)
-//    @IntDef({Constant.NAME_ASCENDING_ORDER, Constant.NAME_DESCENDING_ORDER,
-//            Constant.DATE_ASCENDING_ORDER, Constant.DATE_DESCENDING_ORDER,
-//            Constant.SIZE_ASCENDING_ORDER, Constant.SIZE_DESCENDING_ORDER})
-//    public @interface SortingStrategy {
-//    }
-//
-//
-//    private class NameAscending implements Comparator<AbstractItem>, Serializable {
-//        @Override
-//        public int compare(AbstractItem o1, FileAndFolderAdapter o2) {
-//            return o1.fileAndFolder.getName().compareTo(o2.fileAndFolder.getName());
-//        }
-//
-//        @Override
-//        public int compare(AbstractItem o1, AbstractItem o2) {
-//            return ;
-//        }
-//    }
-//
-//    private class NameDescending implements Comparator<FileAndFolderAdapter>, Serializable {
-//        @Override
-//        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-//            return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
-//        }
-//    }
-//
-//    private class DateAscending implements Comparator<FileAndFolderAdapter>, Serializable {
-//        @Override
-//        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-//            return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
-//        }
-//    }
-//
-//    private class DateDescending implements Comparator<FileAndFolderAdapter>, Serializable {
-//        @Override
-//        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-//            return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
-//        }
-//    }
-//
-//    private class SizeAscending implements Comparator<FileAndFolderAdapter>, Serializable {
-//        @Override
-//        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-//            return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
-//        }
-//    }
-//
-//    private class SizeDescending implements Comparator<FileAndFolderAdapter>, Serializable {
-//        @Override
-//        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-//            return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
-//        }
-//    }
-//
-//    class ActionBarCallBack implements ActionMode.Callback {
-//
-//        @Override
-//        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//
-//            if (item.getTitle().equals(getResources().getString(R.string.multi_select_delete))) {
-//                for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
-//                    if (fileAndFolderAdapter.fileAndFolder.delete()) {
-//                        Toast.makeText(MainActivity.this, fileAndFolderAdapter.fileAndFolder.getName() + " item is delete", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
-//            } else {
-//                if (fileAndFolderFastAdapter.getSelectedItems().size() > 0) {
-//                    ArrayList<FileAndFolderAdapter> fileAndFolderAdapters = new ArrayList<>();
-//                    List<String> files = new ArrayList<>();
-//                    for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
-//                        fileAndFolderAdapters.add(fileAndFolderAdapter);
-//                        files.add(fileAndFolderAdapter.fileAndFolder.getAbsolutePath());
-//                    }
-//
-//                    JSONArray jsonArray = new JSONArray(files);
-//
-//                    Intent intent = new Intent(MainActivity.this, CopyActivity.class);
-//                    intent.putExtra(Constant.PATH, jsonArray.toString());
-//                    startActivity(intent);
-//                }
-//
-//            }
-//            //as we no longer have a selection so the actionMode can be finished
-//            mode.finish();
-//            //we consume the event
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//            return true;
-//        }
-//
-//        @Override
-//        public void onDestroyActionMode(ActionMode mode) {
-//            if (getSupportActionBar() != null) {
-//                getSupportActionBar().show();
-//            }
-//        }
-//
-//        @Override
-//        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//            return false;
-//        }
-//    }
+    @SuppressLint("NonConstantResourceId")
+    private void setAscendingAndDescendingOrder(int checkedId) {
+        sharePref.setSortId(checkedId);
+        if (Constant.ASCENDING_ORDER) {
+            switch (checkedId) {
+                case R.id.sort_name:
+                    sortingStrategy = Constant.NAME_ASCENDING_ORDER;
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case R.id.sort_last_modified_date:
+                    sortingStrategy = Constant.DATE_ASCENDING_ORDER;
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case R.id.sort_size:
+                    sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
+                    comparableItemList.withComparator(getComparator());
+                    break;
+            }
+        } else {
+            switch (checkedId) {
+                case R.id.sort_name:
+                    sortingStrategy = Constant.NAME_DESCENDING_ORDER;
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case R.id.sort_last_modified_date:
+                    sortingStrategy = Constant.DATE_DESCENDING_ORDER;
+                    comparableItemList.withComparator(getComparator());
+                    break;
+                case R.id.sort_size:
+                    sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
+                    comparableItemList.withComparator(getComparator());
+                    break;
+            }
+        }
+    }
+
+    @NonNull
+    private Comparator<FileAndFolderAdapter> getComparator() {
+        switch (sortingStrategy) {
+            case Constant.NAME_ASCENDING_ORDER:
+                return new NameAscending();
+            case Constant.NAME_DESCENDING_ORDER:
+                return new NameDescending();
+            case Constant.SIZE_ASCENDING_ORDER:
+                return new SizeAscending();
+            case Constant.SIZE_DESCENDING_ORDER:
+                return new SizeDescending();
+            case Constant.DATE_ASCENDING_ORDER:
+                return new DateAscending();
+            case Constant.DATE_DESCENDING_ORDER:
+                return new DateDescending();
+        }
+
+        throw new RuntimeException("This sortingStrategy is not supported.");
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({Constant.NAME_ASCENDING_ORDER, Constant.NAME_DESCENDING_ORDER,
+            Constant.DATE_ASCENDING_ORDER, Constant.DATE_DESCENDING_ORDER,
+            Constant.SIZE_ASCENDING_ORDER, Constant.SIZE_DESCENDING_ORDER})
+    public @interface SortingStrategy {
+    }
+
+
+    private class NameAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return o1.fileAndFolder.getName().compareTo(o2.fileAndFolder.getName());
+        }
+
+    }
+
+    private class NameDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
+        }
+    }
+
+    private class DateAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
+        }
+    }
+
+    private class DateDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
+        }
+    }
+
+    private class SizeAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
+        }
+    }
+
+    private class SizeDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+        @Override
+        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
+            return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+        }
+    }
+
+    class ActionBarCallBack implements ActionMode.Callback {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+            if (item.getTitle().equals(getResources().getString(R.string.multi_select_delete))) {
+                for (AbstractItem item1 : fileAndFolderFastAdapter.getSelectedItems()) {
+                    if(item1 instanceof FileAndFolderAdapter){
+                        if (((FileAndFolderAdapter)item1).fileAndFolder.delete()) {
+                            Toast.makeText(MainActivity.this, ((FileAndFolderAdapter)item1).fileAndFolder.getName() + " item is delete", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+                mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
+            } else {
+                if (fileAndFolderFastAdapter.getSelectedItems().size() > 0) {
+                    ArrayList<FileAndFolderAdapter> fileAndFolderAdapters = new ArrayList<>();
+                    List<String> files = new ArrayList<>();
+
+                    for (AbstractItem item1 : fileAndFolderFastAdapter.getSelectedItems()) {
+                        if(item1 instanceof FileAndFolderAdapter){
+                            fileAndFolderAdapters.add(((FileAndFolderAdapter)item1));
+                            files.add(((FileAndFolderAdapter)item1).fileAndFolder.getAbsolutePath());
+                        }
+                    }
+
+                    JSONArray jsonArray = new JSONArray(files);
+
+                    Intent intent = new Intent(MainActivity.this, CopyActivity.class);
+                    intent.putExtra(Constant.PATH, jsonArray.toString());
+                    startActivity(intent);
+                }
+
+            }
+            //as we no longer have a selection so the actionMode can be finished
+            mode.finish();
+            //we consume the event
+            return true;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+            }
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+    }
 
 }
