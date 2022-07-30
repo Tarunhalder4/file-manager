@@ -92,12 +92,14 @@ public class Constant {
     public static final int TYPE_ASCENDING_ORDER =6;
     public static final int TYPE_DESCENDING_ORDER =7;
 
+    public static final String COMPARE_TYPE = "compare_type";
+
     public static int checkedId = 0;
 
     public static boolean LOG_CLICK_ACTIVATED = false;
     public static boolean MOVE = false;
     public static boolean HIDE = true;
-    public static boolean HIDE_UN_HIDE_RENAME = false;
+    public static boolean SAME_PATH = false;
 
     ///////////For drawable background
     public static final int WITH_BACK_GROUND_VIEW =0;

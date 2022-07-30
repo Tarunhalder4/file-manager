@@ -69,4 +69,11 @@ public class SharePref {
         return sharedPreferences.getBoolean(Constant.SHOW_HIDDEN_FILE_AND_FOLDER,false);
     }
 
+    public void setCompareType(int compareType){
+        editor.putInt(Constant.COMPARE_TYPE,compareType);
+    }
+
+    public int getCompareType(){
+        return sharedPreferences.getInt(Constant.COMPARE_TYPE,-1);
+    }
 }

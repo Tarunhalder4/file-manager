@@ -35,14 +35,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.filemanagers.adapter.HeaderItem;
 import com.example.filemanagers.adapter.PathAdapter;
 import com.example.filemanagers.adapter.PhotoGridAdapter;
 import com.example.filemanagers.databinding.ActivityMainBinding;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
@@ -67,6 +70,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -90,27 +94,24 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private SharePref sharePref;
 
-    private FastAdapter<FileAndFolderAdapter> fileAndFolderFastAdapter;
+    private FastAdapter<AbstractItem> fileAndFolderFastAdapter;
+    private ItemAdapter<AbstractItem> fileAndFolderItemAdapter;
+    private List<AbstractItem> fileAndFolderAdapterList;
+
     private FastItemAdapter<PhotoGridAdapter> photoGridAdapterFastItemAdapter;
     private FastItemAdapter<PathAdapter> pathAdapterFastItemAdapter;
 
-    private ItemAdapter<FileAndFolderAdapter> fileAndFolderItemAdapter;
 
-    private List<FileAndFolderAdapter> fileAndFolderAdapterList;
     private List<PhotoGridAdapter> photoGridAdapterList;
     private ArrayDeque<PathAdapter> pathAdapterArrayDeque;
     private List<PathAdapter> pathAdapterList;
     private List<File> selectableFile;
 
-  //  private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
 
-    private ActionModeHelper<FileAndFolderAdapter> mActionModeHelper;
+    private ActionModeHelper<AbstractItem> mActionModeHelper;
     private UndoHelper mUndoHelper;
 
     ArrayList<File> newFiles = null;
-
-//    @SortingStrategy
-//    private int sortingStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,9 +126,7 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.folder_background_dark));
 
-//        comparableItemList = new ComparableItemListImpl<>(getComparator());
 
-  //      fileAndFolderItemAdapter = new ItemAdapter<>(comparableItemList);
         fileAndFolderItemAdapter = new ItemAdapter<>();
         fileAndFolderFastAdapter = FastAdapter.with(fileAndFolderItemAdapter);
 
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
 
-                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder());
+                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                 }
                 return false;
             }
@@ -206,76 +205,79 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        fileAndFolderFastAdapter.withSelectionListener(new ISelectionListener<FileAndFolderAdapter>() {
+        fileAndFolderFastAdapter.withSelectionListener(new ISelectionListener<AbstractItem>() {
             @Override
-            public void onSelectionChanged(FileAndFolderAdapter item, boolean selected) {
+            public void onSelectionChanged(AbstractItem item, boolean selected) {
                 Log.i("FastAdapter", "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size());
                 // Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
             }
         });
 
-        fileAndFolderFastAdapter.withOnPreClickListener(new OnClickListener<FileAndFolderAdapter>() {
+        fileAndFolderFastAdapter.withOnPreClickListener(new OnClickListener<AbstractItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, @NonNull FileAndFolderAdapter item, int position) {
+            public boolean onClick(View v, IAdapter<AbstractItem> adapter, @NonNull AbstractItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
             }
         });
 
-        fileAndFolderFastAdapter.withOnClickListener(new OnClickListener<FileAndFolderAdapter>() {
+        fileAndFolderFastAdapter.withOnClickListener(new OnClickListener<AbstractItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
-                if (!Constant.LOG_CLICK_ACTIVATED) {
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                    if (item.fileAndFolder.isDirectory()) {
-                        binding.noFileAvailable.setVisibility(View.GONE);
-                        path = item.fileAndFolder.getPath();
-                        peekPath = true;
-                        showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder());
+            public boolean onClick(View v, IAdapter<AbstractItem> adapter, AbstractItem item, int position) {
+                if(item instanceof FileAndFolderAdapter){
+                    if (!Constant.LOG_CLICK_ACTIVATED) {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        if (((FileAndFolderAdapter)item).fileAndFolder.isDirectory()) {
+                            binding.noFileAvailable.setVisibility(View.GONE);
+                            path = ((FileAndFolderAdapter)item).fileAndFolder.getPath();
+                            peekPath = true;
+                            showFileAndFolder(((FileAndFolderAdapter)item).fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                        } else {
+                            if (((FileAndFolderAdapter)item).fileAndFolder.getName().endsWith(".pdf")) {
+                                openFile(((FileAndFolderAdapter)item).fileAndFolder, Constant.PDF_FILE);
+                            }
+
+                            if (((FileAndFolderAdapter)item).fileAndFolder.getName().endsWith(".jpg") || ((FileAndFolderAdapter)item).fileAndFolder.getName().endsWith(".png")) {
+                                openFile(((FileAndFolderAdapter)item).fileAndFolder, Constant.PHOTO_FILE);
+                            }
+
+                            if (((FileAndFolderAdapter)item).fileAndFolder.getName().endsWith(".mp3")) {
+                                openFile(((FileAndFolderAdapter)item).fileAndFolder, Constant.AUDIO_FILE);
+                            }
+
+                            if (((FileAndFolderAdapter)item).fileAndFolder.getName().endsWith(".mp4")) {
+                                openFile(((FileAndFolderAdapter)item).fileAndFolder, Constant.VIDEO_FILE);
+                            }
+
+                            if (((FileAndFolderAdapter)item).fileAndFolder.isDirectory()) {
+                                showFileAndFolder(((FileAndFolderAdapter)item).fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                            }
+
+                        }
                     } else {
-                        if (item.fileAndFolder.getName().endsWith(".pdf")) {
-                            openFile(item.fileAndFolder, Constant.PDF_FILE);
+                        if (fileAndFolderFastAdapter.getSelectedItems().size() == 0) {
+                            Constant.LOG_CLICK_ACTIVATED = false;
                         }
-
-                        if (item.fileAndFolder.getName().endsWith(".jpg") || item.fileAndFolder.getName().endsWith(".png")) {
-                            openFile(item.fileAndFolder, Constant.PHOTO_FILE);
-                        }
-
-                        if (item.fileAndFolder.getName().endsWith(".mp3")) {
-                            openFile(item.fileAndFolder, Constant.AUDIO_FILE);
-                        }
-
-                        if (item.fileAndFolder.getName().endsWith(".mp4")) {
-                            openFile(item.fileAndFolder, Constant.VIDEO_FILE);
-                        }
-
-                        if (item.fileAndFolder.isDirectory()) {
-                            showFileAndFolder(item.fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder());
-                        }
-
+                        Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
+                        Set<AbstractItem> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
                     }
-                } else {
-                    if (fileAndFolderFastAdapter.getSelectedItems().size() == 0) {
-                        Constant.LOG_CLICK_ACTIVATED = false;
-                    }
-                    Toast.makeText(v.getContext(), "SelectedCount: " + fileAndFolderFastAdapter.getSelections().size() + " ItemsCount: " + fileAndFolderFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
-                    Set<FileAndFolderAdapter> fileAndFolderAdapters = fileAndFolderFastAdapter.getSelectedItems();
                 }
+
                 return false;
             }
         });
 
-        mUndoHelper = new UndoHelper<>(fileAndFolderFastAdapter, new UndoHelper.UndoListener<FileAndFolderAdapter>() {
+        mUndoHelper = new UndoHelper<>(fileAndFolderFastAdapter, new UndoHelper.UndoListener<AbstractItem>() {
             @Override
-            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<FileAndFolderAdapter>> removed) {
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<AbstractItem>> removed) {
                 Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
             }
         });
 
-        fileAndFolderFastAdapter.withOnPreLongClickListener(new OnLongClickListener<FileAndFolderAdapter>() {
+        fileAndFolderFastAdapter.withOnPreLongClickListener(new OnLongClickListener<AbstractItem>() {
             @Override
-            public boolean onLongClick(View v, IAdapter<FileAndFolderAdapter> adapter, FileAndFolderAdapter item, int position) {
+            public boolean onLongClick(View v, IAdapter<AbstractItem> adapter, AbstractItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(MainActivity.this, position);
                 getSupportActionBar().hide();
                 Constant.LOG_CLICK_ACTIVATED = true;
@@ -291,10 +293,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @SortingStrategy
-    int toSortingStrategy(int val) {
-        return val;
-    }
+//    @SortingStrategy
+//    int toSortingStrategy(int val) {
+//        return val;
+//    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -403,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
@@ -413,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MUSIC_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.AUDIO_FILE ,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.AUDIO_FILE ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
@@ -423,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOCUMENTS_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.DOCUMENTS_FILE ,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.DOCUMENTS_FILE ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
@@ -433,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.VIDEO_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
-            showFileAndFolder(file, Constant.VIDEO_FILE,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.VIDEO_FILE,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
@@ -444,38 +446,38 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.INTERNAL_STORAGE_PATH)) {
             path = Environment.getExternalStorageDirectory().toString();
             File file = new File(path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = 1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.FOLDER_PATH)) {
             String path = getIntent().getStringExtra(Constant.FOLDER_PATH);
             File file = new File(path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DCIM_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PICTURES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
 
         if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MOVIES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             backCount = -1;
         }
     }
 
 
-    private void showFileAndFolder(File mainFile, String requiredFile, boolean hide ) {
+    private void showFileAndFolder(File mainFile, String requiredFile, boolean hide , int compareType ) {
 
         fileAndFolderItemAdapter.clear();
         showPath(mainFile);
@@ -534,7 +536,44 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else if (requiredFile.equals(Constant.INTERNAL_STORAGE_FILE_FOLDER)) {
 
-                for (File file : Objects.requireNonNull(mainFile.listFiles())) {
+                File[] files = Objects.requireNonNull(mainFile.listFiles());
+                List<File> fileList = new ArrayList<>(Arrays.asList(files));
+
+//                Collections.sort(fileList, new Comparator<File>() {
+//                    @Override
+//                    public int compare(File o1, File o2) {
+//                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+//                    }
+//                });
+
+                compare(fileList,compareType);
+
+                Log.d(TAG, "showFileAndFolder: " + fileList);
+
+                List<File> files1 = new ArrayList<>();
+                for(File file : fileList){
+                    if(file.isDirectory()){
+                        files1.add(file);
+                    }
+                }
+
+                for(File file : fileList){
+                    if(file.isFile()){
+                        files1.add(file);
+                    }
+                }
+
+                Log.d(TAG, "showFileAndFolder: " + files1);
+
+
+                for (File file : files1){
+                    if(file.isDirectory()){
+                        fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
+                        break;
+                    }
+                }
+
+                for (File file : files1) {
                     if (file.isDirectory() && !file.getName().startsWith(".") && hide) {
                         fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }else if(file.isDirectory() && !hide){
@@ -543,7 +582,14 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                for (File file : Objects.requireNonNull(mainFile.listFiles())) {
+                for (File file : files1){
+                    if(file.isFile()){
+                        fileAndFolderAdapterList.add(new HeaderItem("List of File"));
+                        break;
+                    }
+                }
+
+                for (File file : files1) {
                     if (file.isFile() && !file.getName().startsWith(".") && hide) {
                         fileAndFolderAdapterList.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }else if(file.isFile() && !hide){
@@ -565,6 +611,67 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void compare(List<File> files , int compareType){
+        if(compareType==Constant.NAME_ASCENDING_ORDER){
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                }
+            });
+        }else if(compareType == Constant.NAME_DESCENDING_ORDER){
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return o2.getName().toLowerCase().compareTo(o1.getName().toLowerCase());
+                }
+            });
+        }else if(compareType == Constant.DATE_ASCENDING_ORDER){
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+//                    Log.e(TAG, "compare: " +o2.lastModified());
+//                    Log.e(TAG, "compare: " +o1.lastModified() );
+                    Log.e(TAG, "compare: " +(int) (o1.lastModified()/1000 - o2.lastModified()/1000));
+
+                    return (int) (o1.lastModified()/1000 - o2.lastModified()/1000);
+                }
+            });
+        }else if(compareType == Constant.DATE_DESCENDING_ORDER){
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    Log.e(TAG, "compare: " +(int) (o1.lastModified()/1000 - o2.lastModified()/1000));
+                    return (int) (o2.lastModified()/1000 - o1.lastModified()/1000);
+                }
+            });
+        }else if(compareType == Constant.SIZE_ASCENDING_ORDER){
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+
+                    if(o1.isFile() && o2.isFile()){
+                        return (int) (o1.length()/1000 - o2.length()/1000);
+                    }else{
+                        return (int) (Constant.getDirectoryMemorySize(o1)/1000 - Constant.getDirectoryMemorySize(o2)/1000);
+                    }
+
+                }
+            });
+        }else if(compareType == Constant.SIZE_DESCENDING_ORDER){
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    if(o1.isFile() && o2.isFile()){
+                        return (int) (o2.length()/1000 - o1.length()/1000);
+                    }else{
+                        return (int) (Constant.getDirectoryMemorySize(o2)/1000 - Constant.getDirectoryMemorySize(o1)/1000);
+                    }
+                }
+            });
+        }
+
+    }
 
     void showPath(File file) {
         if (backPress) {
@@ -572,10 +679,10 @@ public class MainActivity extends AppCompatActivity {
             pathAdapterList.clear();
             pathAdapterArrayDeque.pollLast();
             backPress = false;
-        }else if(Constant.HIDE_UN_HIDE_RENAME){
+        }else if(Constant.SAME_PATH){
             pathAdapterFastItemAdapter.clear();
             pathAdapterList.clear();
-            Constant.HIDE_UN_HIDE_RENAME = false;
+            Constant.SAME_PATH = false;
         } else {
             pathAdapterFastItemAdapter.clear();
             pathAdapterList.clear();
@@ -623,7 +730,7 @@ public class MainActivity extends AppCompatActivity {
             //fileAndFolderAdapterFastItemAdapter.clear();
             fileAndFolderItemAdapter.clear();
 
-            showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
+            showFileAndFolder(parent, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
 
             if (destinationPath.equals("/storage/emulated")) {
                 binding.noFileAvailable.setVisibility(View.GONE);
@@ -644,11 +751,11 @@ public class MainActivity extends AppCompatActivity {
         if (event.isFileDelete()) {
             String Path = event.getFilePath();
             File file = new File(Path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE,sharePref.getCompareType());
         } else if (event.isFileRename()) {
             String Path = event.getFilePath();
             File file = new File(Path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE);
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER ,Constant.HIDE,sharePref.getCompareType());
         }
 
     }
@@ -785,17 +892,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.show_file_size:
                 if(item.isCheckable()) {
                     if (!sharePref.getShowFileSize()) {
-                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        Constant.SAME_PATH = true;
                         sharePref.setShowFileSize(true);
                         item.setChecked(true);
                         File file = new File(path);
-                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     } else {
-                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        Constant.SAME_PATH = true;
                         sharePref.setShowFileSize(false);
                         item.setChecked(false);
                         File file = new File(path);
-                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     }
 
                 }
@@ -803,17 +910,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.show_folder_size:
                 if(item.isCheckable()) {
                     if (!sharePref.getShowFolderSize()) {
-                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        Constant.SAME_PATH = true;
                         sharePref.setShowFolderSize(true);
                         item.setChecked(true);
                         File file = new File(path);
-                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     } else {
-                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        Constant.SAME_PATH = true;
                         sharePref.setShowFolderSize(false);
                         item.setChecked(false);
                         File file = new File(path);
-                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder());
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     }
 
                 }
@@ -823,17 +930,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.show_hidden_folder_files:
                 if(item.isCheckable()) {
                     if (!sharePref.getShowHiddenFileAndFolder()) {
-                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        Constant.SAME_PATH = true;
                         sharePref.setShowHiddenFileAndFolder(true);
                         item.setChecked(true);
                         File file = new File(path);
-                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,false);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,false,sharePref.getCompareType());
                     } else {
-                        Constant.HIDE_UN_HIDE_RENAME = true;
+                        Constant.SAME_PATH = true;
                         sharePref.setShowHiddenFileAndFolder(false);
                         item.setChecked(false);
                         File file = new File(path);
-                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,true);
+                        showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,true,sharePref.getCompareType());
                     }
 
                 }
@@ -883,8 +990,8 @@ public class MainActivity extends AppCompatActivity {
                         String filePath=file.getParent();
                         if(filePath != null){
                             File currentFile = new File(filePath);
-                            Constant.HIDE_UN_HIDE_RENAME = true;
-                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
+                            Constant.SAME_PATH = true;
+                            showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                             Toast.makeText(MainActivity.this, "Folder created", Toast.LENGTH_SHORT).show();
                         }
 
@@ -943,8 +1050,8 @@ public class MainActivity extends AppCompatActivity {
                             String filePath=file.getParent();
                             if(filePath != null){
                                 File currentFile = new File(filePath);
-                                Constant.HIDE_UN_HIDE_RENAME = true;
-                                showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder());
+                                Constant.SAME_PATH = true;
+                                showFileAndFolder(currentFile, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                                 Toast.makeText(MainActivity.this, "File created", Toast.LENGTH_SHORT).show();
                             }
 
@@ -976,16 +1083,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void multiselectDelete() {
-
-        for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
-            if (fileAndFolderAdapter.fileAndFolder.delete()) {
-                Toast.makeText(MainActivity.this, fileAndFolderAdapter.fileAndFolder.getName() + " file is delete", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, fileAndFolderAdapter.fileAndFolder.getName() + " file is delete", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    private void multiselectDelete() {
+//
+//        for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
+//            if (fileAndFolderAdapter.fileAndFolder.delete()) {
+//                Toast.makeText(MainActivity.this, fileAndFolderAdapter.fileAndFolder.getName() + " file is delete", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(MainActivity.this, fileAndFolderAdapter.fileAndFolder.getName() + " file is delete", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     void sortingDialogBox() {
         TextView ascendingOrder, descendingOrder;
@@ -1043,109 +1150,46 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void setAscendingAndDescendingOrder(int checkedId) {
         Log.d(TAG, "setAscendingAndDescendingOrder: " + checkedId);
         sharePref.setSortId(checkedId);
+        File file = new File(path);
         if (Constant.ASCENDING_ORDER) {
             switch (checkedId) {
-                case Constant.ID_SORT_NAME:
-                    sortingStrategy = Constant.NAME_ASCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                case R.id.sort_name:
+                    sharePref.setCompareType(Constant.NAME_ASCENDING_ORDER);
+                    Constant.SAME_PATH  = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     break;
-                case Constant.ID_SORT_DATE:
-                    sortingStrategy = Constant.DATE_ASCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                case R.id.sort_last_modified_date:
+                    Constant.SAME_PATH  = true;
+                    sharePref.setCompareType(Constant.DATE_ASCENDING_ORDER);
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     break;
-                case Constant.ID_SORT_SIZE:
-                    sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
-                    break;
+                case R.id.sort_size:
+                    Constant.SAME_PATH  = true;
+                    sharePref.setCompareType(Constant.SIZE_ASCENDING_ORDER);
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
             }
         } else {
             switch (checkedId) {
-                case Constant.ID_SORT_NAME:
-                    sortingStrategy = Constant.NAME_DESCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                case R.id.sort_name:
+                    Constant.SAME_PATH = true;
+                    sharePref.setCompareType(Constant.NAME_DESCENDING_ORDER);
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     break;
-                case Constant.ID_SORT_DATE:
-                    sortingStrategy = Constant.DATE_DESCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                case R.id.sort_last_modified_date:
+                    Constant.SAME_PATH = true;
+                    sharePref.setCompareType(Constant.DATE_DESCENDING_ORDER);
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     break;
-                case Constant.ID_SORT_SIZE:
-                    sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                case R.id.sort_size:
+                    Constant.SAME_PATH = true;
+                    sharePref.setCompareType(Constant.SIZE_DESCENDING_ORDER);
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                     break;
             }
-        }
-    }
-
-    @NonNull
-    private Comparator<FileAndFolderAdapter> getComparator() {
-        switch (sortingStrategy) {
-            case Constant.NAME_ASCENDING_ORDER:
-                return new NameAscending();
-            case Constant.NAME_DESCENDING_ORDER:
-                return new NameDescending();
-            case Constant.SIZE_ASCENDING_ORDER:
-                return new SizeAscending();
-            case Constant.SIZE_DESCENDING_ORDER:
-                return new SizeDescending();
-            case Constant.DATE_ASCENDING_ORDER:
-                return new DateAscending();
-            case Constant.DATE_DESCENDING_ORDER:
-                return new DateDescending();
-        }
-
-        throw new RuntimeException("This sortingStrategy is not supported.");
-    }
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({Constant.NAME_ASCENDING_ORDER, Constant.NAME_DESCENDING_ORDER,
-            Constant.DATE_ASCENDING_ORDER, Constant.DATE_DESCENDING_ORDER,
-            Constant.SIZE_ASCENDING_ORDER, Constant.SIZE_DESCENDING_ORDER})
-    public @interface SortingStrategy {
-    }
-
-
-    private class NameAscending implements Comparator<FileAndFolderAdapter>, Serializable {
-        @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return o1.fileAndFolder.getName().compareTo(o2.fileAndFolder.getName());
-        }
-    }
-
-    private class NameDescending implements Comparator<FileAndFolderAdapter>, Serializable {
-        @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
-        }
-    }
-
-    private class DateAscending implements Comparator<FileAndFolderAdapter>, Serializable {
-        @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
-        }
-    }
-
-    private class DateDescending implements Comparator<FileAndFolderAdapter>, Serializable {
-        @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
-        }
-    }
-
-    private class SizeAscending implements Comparator<FileAndFolderAdapter>, Serializable {
-        @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
-        }
-    }
-
-    private class SizeDescending implements Comparator<FileAndFolderAdapter>, Serializable {
-        @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
         }
     }
 
@@ -1155,9 +1199,9 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
             if (item.getTitle().equals(getResources().getString(R.string.multi_select_delete))) {
-                for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
-                    if (fileAndFolderAdapter.fileAndFolder.delete()) {
-                        Toast.makeText(MainActivity.this, fileAndFolderAdapter.fileAndFolder.getName() + " item is delete", Toast.LENGTH_SHORT).show();
+                for (AbstractItem fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
+                    if (((FileAndFolderAdapter)fileAndFolderAdapter).fileAndFolder.delete()) {
+                        Toast.makeText(MainActivity.this, ((FileAndFolderAdapter)fileAndFolderAdapter).fileAndFolder.getName() + " item is delete", Toast.LENGTH_SHORT).show();
                     }
                 }
                 mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
@@ -1165,9 +1209,9 @@ public class MainActivity extends AppCompatActivity {
                 if (fileAndFolderFastAdapter.getSelectedItems().size() > 0) {
                     ArrayList<FileAndFolderAdapter> fileAndFolderAdapters = new ArrayList<>();
                     List<String> files = new ArrayList<>();
-                    for (FileAndFolderAdapter fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
-                        fileAndFolderAdapters.add(fileAndFolderAdapter);
-                        files.add(fileAndFolderAdapter.fileAndFolder.getAbsolutePath());
+                    for (AbstractItem fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
+                        fileAndFolderAdapters.add(((FileAndFolderAdapter)fileAndFolderAdapter));
+                        files.add(((FileAndFolderAdapter)fileAndFolderAdapter).fileAndFolder.getAbsolutePath());
                     }
 
                     JSONArray jsonArray = new JSONArray(files);

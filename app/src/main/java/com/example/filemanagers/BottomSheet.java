@@ -153,11 +153,11 @@ public class BottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if(!file.isHidden()){
-                    Constant.HIDE_UN_HIDE_RENAME = true;
+                    Constant.SAME_PATH = true;
                     hideItem(true);
                     hide.setText(R.string.un_hide);
                 }else {
-                    Constant.HIDE_UN_HIDE_RENAME = true;
+                    Constant.SAME_PATH = true;
                     hideItem(false);
                     hide.setText(R.string.hide);
                 }
@@ -231,7 +231,7 @@ public class BottomSheet extends BottomSheetDialogFragment {
                 }
                 File current = new File(file.getAbsolutePath());
                 if (current.renameTo(destination)) {
-                    Constant.HIDE_UN_HIDE_RENAME = true;
+                    Constant.SAME_PATH = true;
                     String FilePath=current.getParent();
                     EventMessage eventMessage = new EventMessage();
                     eventMessage.setFileRename(true);
