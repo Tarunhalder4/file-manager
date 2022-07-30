@@ -1056,12 +1056,12 @@ public class MainActivity extends AppCompatActivity {
                     comparableItemList.withComparator(getComparator());
                     break;
                 case R.id.sort_last_modified_date:
-                    sortingStrategy = Constant.DATE_ASCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                   // sortingStrategy = Constant.DATE_ASCENDING_ORDER;
+                   // comparableItemList.withComparator(getComparator());
                     break;
                 case R.id.sort_size:
-                    sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                    //sortingStrategy = Constant.SIZE_ASCENDING_ORDER;
+                   // comparableItemList.withComparator(getComparator());
                     break;
             }
         } else {
@@ -1071,12 +1071,12 @@ public class MainActivity extends AppCompatActivity {
                     comparableItemList.withComparator(getComparator());
                     break;
                 case R.id.sort_last_modified_date:
-                    sortingStrategy = Constant.DATE_DESCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                   // sortingStrategy = Constant.DATE_DESCENDING_ORDER;
+                   // comparableItemList.withComparator(getComparator());
                     break;
                 case R.id.sort_size:
-                    sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
-                    comparableItemList.withComparator(getComparator());
+                   // sortingStrategy = Constant.SIZE_DESCENDING_ORDER;
+                   // comparableItemList.withComparator(getComparator());
                     break;
             }
         }
@@ -1090,22 +1090,26 @@ public class MainActivity extends AppCompatActivity {
             case Constant.NAME_DESCENDING_ORDER:
                 return new NameDescending();
             case Constant.SIZE_ASCENDING_ORDER:
-                return new SizeAscending();
+//                return new SizeAscending();
             case Constant.SIZE_DESCENDING_ORDER:
-                return new SizeDescending();
+  //              return new SizeDescending();
             case Constant.DATE_ASCENDING_ORDER:
-                return new DateAscending();
+    //            return new DateAscending();
             case Constant.DATE_DESCENDING_ORDER:
-                return new DateDescending();
+      //          return new DateDescending();
         }
 
         throw new RuntimeException("This sortingStrategy is not supported.");
     }
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({Constant.NAME_ASCENDING_ORDER, Constant.NAME_DESCENDING_ORDER,
-            Constant.DATE_ASCENDING_ORDER, Constant.DATE_DESCENDING_ORDER,
-            Constant.SIZE_ASCENDING_ORDER, Constant.SIZE_DESCENDING_ORDER})
+    @IntDef({Constant.NAME_ASCENDING_ORDER, Constant.NAME_DESCENDING_ORDER})
+            //Constant.DATE_ASCENDING_ORDER, Constant.DATE_DESCENDING_ORDER,
+            //Constant.SIZE_ASCENDING_ORDER, Constant.SIZE_DESCENDING_ORDER})
+
+//    @IntDef({Constant.NAME_ASCENDING_ORDER, Constant.NAME_DESCENDING_ORDER,
+//            Constant.DATE_ASCENDING_ORDER, Constant.DATE_DESCENDING_ORDER,
+//            Constant.SIZE_ASCENDING_ORDER, Constant.SIZE_DESCENDING_ORDER})
     public @interface SortingStrategy {
     }
 
@@ -1134,53 +1138,53 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DateAscending implements Comparator<AbstractItem>, Serializable {
-        @Override
-        public int compare(AbstractItem o1, AbstractItem o2) {
-            //return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
-            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
-                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
-                return (FileAndFolderAdapter)o1).fileAndFolder.lastModified().(((FileAndFolderAdapter)o2).fileAndFolder.lastModified());
-            }
-            return 0;
-        }
-    }
+//    private class DateAscending implements Comparator<AbstractItem>, Serializable {
+//        @Override
+//        public int compare(AbstractItem o1, AbstractItem o2) {
+//            //return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
+//            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+//                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+//                return (FileAndFolderAdapter)o1).fileAndFolder.lastModified().(((FileAndFolderAdapter)o2).fileAndFolder.lastModified());
+//            }
+//            return 0;
+//        }
+//    }
 
-    private class DateDescending implements Comparator<AbstractItem>, Serializable {
-        @Override
-        public int compare(AbstractItem o1, AbstractItem o2) {
-            //return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
-            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
-                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
-                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
-            }
-            return 0;
-        }
-    }
+//    private class DateDescending implements Comparator<AbstractItem>, Serializable {
+//        @Override
+//        public int compare(AbstractItem o1, AbstractItem o2) {
+//            //return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
+//            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+//                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+//                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
+//            }
+//            return 0;
+//        }
+//    }
 
-    private class SizeAscending implements Comparator<AbstractItem>, Serializable {
-        @Override
-        public int compare(AbstractItem o1, AbstractItem o2) {
-            //return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
-            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
-                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
-                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
-            }
-            return 0;
-        }
-    }
+//    private class SizeAscending implements Comparator<AbstractItem>, Serializable {
+//        @Override
+//        public int compare(AbstractItem o1, AbstractItem o2) {
+//            //return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
+//            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+//                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+//                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o2).fileAndFolder.getName());
+//            }
+//            return 0;
+//        }
+//    }
 
-    private class SizeDescending implements Comparator<AbstractItem>, Serializable {
-        @Override
-        public int compare(AbstractItem o1, AbstractItem o2) {
-            //return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
-            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
-                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
-                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
-            }
-            return 0;
-        }
-    }
+//    private class SizeDescending implements Comparator<AbstractItem>, Serializable {
+//        @Override
+//        public int compare(AbstractItem o1, AbstractItem o2) {
+//            //return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+//            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+//                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+//                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
+//            }
+//            return 0;
+//        }
+//    }
 
     class ActionBarCallBack implements ActionMode.Callback {
 
