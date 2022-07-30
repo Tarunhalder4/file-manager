@@ -42,6 +42,7 @@ import com.example.filemanagers.adapter.PhotoGridAdapter;
 import com.example.filemanagers.databinding.ActivityMainBinding;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FastAdapter<AbstractItem> fileAndFolderFastAdapter;
     private ItemAdapter<AbstractItem> fileAndFolderItemAdapter;
-    private List<AbstractItem> fileAndFolderList;
+   // private List<FileAndFolderAdapter> fileAndFolderAdapterList;
 
     private FastItemAdapter<PhotoGridAdapter> photoGridAdapterFastItemAdapter;
     private List<PhotoGridAdapter> photoGridAdapterList;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<File> selectableFile;
 
-    private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
+    private ComparableItemListImpl<IItem> comparableItemList;
 
     private ActionModeHelper<AbstractItem> mActionModeHelper;
     private UndoHelper mUndoHelper;
@@ -133,17 +134,15 @@ public class MainActivity extends AppCompatActivity {
 
         fileAndFolderItemAdapter = new ItemAdapter<>();
         fileAndFolderFastAdapter = FastAdapter.with(fileAndFolderItemAdapter);
-        fileAndFolderList = new ArrayList<>();
+        //fileAndFolderAdapterList = new ArrayList<>();
 
         binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         binding.rec.setAdapter(fileAndFolderFastAdapter);
 
-        // mainItemAdapter.add(mainList);
-
         photoGridAdapterFastItemAdapter = new FastItemAdapter<>();
         pathAdapterFastItemAdapter = new FastItemAdapter<>();
 
-        //fileAndFolderFastAdapter.setHasStableIds(true);
+       // fileAndFolderFastAdapter.setHasStableIds(true);
         fileAndFolderFastAdapter.withSelectable(true);
         fileAndFolderFastAdapter.withMultiSelect(true);
         fileAndFolderFastAdapter.withSelectOnLongClick(true);
@@ -223,14 +222,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        fileAndFolderFastAdapter.withOnPreClickListener(new OnClickListener<AbstractItem>() {
-//            @Override
-//            public boolean onClick(View v, IAdapter<AbstractItem> adapter, @NonNull AbstractItem item, int position) {
-//                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-//                Boolean res = mActionModeHelper.onClick(((FileAndFolderAdapter) item));
-//                return res != null ? res : false;
-//            }
-//        });
+        fileAndFolderFastAdapter.withOnPreClickListener(new OnClickListener<AbstractItem>() {
+            @Override
+            public boolean onClick(View v, IAdapter<AbstractItem> adapter, @NonNull AbstractItem item, int position) {
+                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+                Boolean res = mActionModeHelper.onClick(((FileAndFolderAdapter) item));
+                return res != null ? res : false;
+            }
+        });
 
         fileAndFolderFastAdapter.withOnClickListener(new OnClickListener<AbstractItem>() {
             @Override
@@ -279,12 +278,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        mUndoHelper = new UndoHelper<>(fileAndFolderFastAdapter, new UndoHelper.UndoListener<FileAndFolderAdapter>() {
-//            @Override
-//            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<FileAndFolderAdapter>> removed) {
-//                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
-//            }
-//        });
+        mUndoHelper = new UndoHelper<>(fileAndFolderFastAdapter, new UndoHelper.UndoListener<AbstractItem>() {
+            @Override
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<AbstractItem>> removed) {
+                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
+            }
+        });
 
         fileAndFolderFastAdapter.withOnPreLongClickListener(new OnLongClickListener<AbstractItem>() {
             @Override
@@ -549,6 +548,8 @@ public class MainActivity extends AppCompatActivity {
 
                 File[] files = Objects.requireNonNull(mainFile.listFiles());
 
+
+
                 for (File file : files){
                     if(file.isDirectory()){
                         fileAndFolderItemAdapter.add(new HeaderItem("List of Folder"));
@@ -558,6 +559,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())) {
                     if (file.isDirectory() && !file.getName().startsWith(".") && hide) {
+                       //fileAndFolderList.add(file);
                         fileAndFolderItemAdapter.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
                     }else if(file.isDirectory() && !hide){
                         fileAndFolderItemAdapter.add(new FileAndFolderAdapter(file, MainActivity.this, MainActivity.this));
@@ -571,7 +573,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-
 
                 for (File file : Objects.requireNonNull(mainFile.listFiles())) {
                     if (file.isFile() && !file.getName().startsWith(".") && hide) {
@@ -1083,7 +1084,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Comparator<FileAndFolderAdapter> getComparator() {
+    private Comparator<File> getComparator() {
         switch (sortingStrategy) {
             case Constant.NAME_ASCENDING_ORDER:
                 return new NameAscending();
@@ -1110,46 +1111,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class NameAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private static class NameAscending implements Comparator<File>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return o1.fileAndFolder.getName().compareTo(o2.fileAndFolder.getName());
+        public int compare(File o1, File o2) {
+            return o1.getName().compareTo(o2.getName());
         }
 
     }
 
-    private class NameDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private static class NameDescending implements Comparator<File>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
+        public int compare(File o1, File  o2) {
+            return o2.getName().compareTo(o1.getName());
         }
     }
 
-    private class DateAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private static class DateAscending implements Comparator<File>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
+        public int compare(File o1, File o2) {
+            return String.valueOf(o1.lastModified()).compareTo(String.valueOf(o2.lastModified()));
         }
     }
 
-    private class DateDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private static class DateDescending implements Comparator<File>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
+        public int compare(File o1, File o2) {
+            return String.valueOf(o2.lastModified()).compareTo(String.valueOf(o1.lastModified()));
         }
     }
 
-    private class SizeAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private static class SizeAscending implements Comparator<File>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
+        public int compare(File o1, File o2) {
+            return String.valueOf(o1.length()).compareTo(String.valueOf(o2.length()));
         }
     }
 
-    private class SizeDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private static class SizeDescending implements Comparator<File>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+        public int compare(File o1, File o2) {
+            return Arrays.toString(o1.listFiles()).compareTo(Arrays.toString(o2.listFiles()));
         }
     }
 
