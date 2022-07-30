@@ -102,15 +102,15 @@ public class MainActivity extends AppCompatActivity {
     private List<PathAdapter> pathAdapterList;
     private List<File> selectableFile;
 
-    private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
+  //  private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
 
     private ActionModeHelper<FileAndFolderAdapter> mActionModeHelper;
     private UndoHelper mUndoHelper;
 
     ArrayList<File> newFiles = null;
 
-    @SortingStrategy
-    private int sortingStrategy;
+//    @SortingStrategy
+//    private int sortingStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,9 +125,10 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.folder_background_dark));
 
-        comparableItemList = new ComparableItemListImpl<>(getComparator());
+//        comparableItemList = new ComparableItemListImpl<>(getComparator());
 
-        fileAndFolderItemAdapter = new ItemAdapter<>(comparableItemList);
+  //      fileAndFolderItemAdapter = new ItemAdapter<>(comparableItemList);
+        fileAndFolderItemAdapter = new ItemAdapter<>();
         fileAndFolderFastAdapter = FastAdapter.with(fileAndFolderItemAdapter);
 
         photoGridAdapterFastItemAdapter = new FastItemAdapter<>();
@@ -300,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
         //add the values which need to be saved from the adapter to the bundle
         outState = fileAndFolderFastAdapter.saveInstanceState(outState);
         //We need to persist our sorting strategy between orientation changes
-        outState.putInt("sorting_strategy", sortingStrategy);
+    //    outState.putInt("sorting_strategy", sortingStrategy);
         super.onSaveInstanceState(outState);
     }
 
