@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<File> selectableFile;
 
-    private ComparableItemListImpl<FileAndFolderAdapter> comparableItemList;
+    private ComparableItemListImpl<AbstractItem> comparableItemList;
 
     private ActionModeHelper<AbstractItem> mActionModeHelper;
     private UndoHelper mUndoHelper;
@@ -1083,7 +1083,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Comparator<FileAndFolderAdapter> getComparator() {
+    private Comparator<AbstractItem> getComparator() {
         switch (sortingStrategy) {
             case Constant.NAME_ASCENDING_ORDER:
                 return new NameAscending();
@@ -1110,46 +1110,75 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class NameAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private class NameAscending implements Comparator<AbstractItem>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return o1.fileAndFolder.getName().compareTo(o2.fileAndFolder.getName());
+        public int compare(AbstractItem o1, AbstractItem o2) {
+            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+               // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o2).fileAndFolder.getName());
+            }
+            return 0;
         }
 
     }
 
-    private class NameDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private class NameDescending implements Comparator<AbstractItem>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
+        public int compare(AbstractItem o1, AbstractItem o2) {
+           // return o2.fileAndFolder.getName().compareTo(o1.fileAndFolder.getName());
+            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+                return ((FileAndFolderAdapter)o2).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
+            }
+            return 0;
         }
     }
 
-    private class DateAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private class DateAscending implements Comparator<AbstractItem>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
+        public int compare(AbstractItem o1, AbstractItem o2) {
+            //return String.valueOf(o1.fileAndFolder.lastModified()).compareTo(String.valueOf(o2.fileAndFolder.lastModified()));
+            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+                return (FileAndFolderAdapter)o1).fileAndFolder.lastModified().(((FileAndFolderAdapter)o2).fileAndFolder.lastModified());
+            }
+            return 0;
         }
     }
 
-    private class DateDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private class DateDescending implements Comparator<AbstractItem>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
+        public int compare(AbstractItem o1, AbstractItem o2) {
+            //return String.valueOf(o2.fileAndFolder.lastModified()).compareTo(String.valueOf(o1.fileAndFolder.lastModified()));
+            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
+            }
+            return 0;
         }
     }
 
-    private class SizeAscending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private class SizeAscending implements Comparator<AbstractItem>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
+        public int compare(AbstractItem o1, AbstractItem o2) {
+            //return String.valueOf(o1.fileAndFolder.length()).compareTo(String.valueOf(o2.fileAndFolder.length()));
+            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
+            }
+            return 0;
         }
     }
 
-    private class SizeDescending implements Comparator<FileAndFolderAdapter>, Serializable {
+    private class SizeDescending implements Comparator<AbstractItem>, Serializable {
         @Override
-        public int compare(FileAndFolderAdapter o1, FileAndFolderAdapter o2) {
-            return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+        public int compare(AbstractItem o1, AbstractItem o2) {
+            //return Arrays.toString(o1.fileAndFolder.listFiles()).compareTo(Arrays.toString(o2.fileAndFolder.listFiles()));
+            if(o1 instanceof FileAndFolderAdapter && o2 instanceof FileAndFolderAdapter){
+                // ((FileAndFolderAdapter)item1).fileAndFolder.delete()
+                return ((FileAndFolderAdapter)o1).fileAndFolder.getName().compareTo(((FileAndFolderAdapter)o1).fileAndFolder.getName());
+            }
+            return 0;
         }
     }
 
