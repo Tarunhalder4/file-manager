@@ -88,13 +88,14 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
         @Override
         public void bindView(FileAndFolderAdapter item, List<Object> payloads) {
             UIUtils.setBackground(itemView, FastAdapterUIUtils.getSelectableBackground(item.context, Color.RED, true));
-            if (item.fileAndFolder.isDirectory()){
 
-                if(item.fileAndFolder.getName().startsWith(".")){
-                    fileAndFolderName.setTextColor(item.context.getResources().getColor(R.color.gray1));
-                    date.setTextColor(item.context.getResources().getColor(R.color.gray1));
-                    fileSize.setTextColor(item.context.getResources().getColor(R.color.gray1));
-                }
+            if(item.fileAndFolder.getName().startsWith(".")){
+                fileAndFolderName.setTextColor(item.context.getResources().getColor(R.color.gray1));
+                date.setTextColor(item.context.getResources().getColor(R.color.gray1));
+                fileSize.setTextColor(item.context.getResources().getColor(R.color.gray1));
+            }
+
+            if (item.fileAndFolder.isDirectory()){
 
                 fileAndFolderBackGround.setCardBackgroundColor(item.context.getResources().getColor(R.color.folderBackground));
 
@@ -145,12 +146,6 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
 //                    fileSize.setText(String.valueOf(files.size()));
 //                }
             }else{
-
-                if(item.fileAndFolder.getName().startsWith(".")){
-                    fileAndFolderName.setTextColor(item.context.getResources().getColor(R.color.gray1));
-                    date.setTextColor(item.context.getResources().getColor(R.color.gray1));
-                    fileSize.setTextColor(item.context.getResources().getColor(R.color.gray1));
-                }
 
                 if (item.fileAndFolder.getName().endsWith("txt")){
                     fileAndFolderBackGround.setCardBackgroundColor(item.context.getResources().getColor(R.color.gray1));
@@ -256,6 +251,11 @@ public class FileAndFolderAdapter extends AbstractItem<FileAndFolderAdapter, Fil
             photo.setImageResource(0);
             folderIdentifierCardView.setVisibility(View.GONE);
 
+            if(item.fileAndFolder.getName().startsWith(".")){
+                fileAndFolderName.setTextColor(item.context.getResources().getColor(R.color.white));
+                date.setTextColor(item.context.getResources().getColor(R.color.white));
+                fileSize.setTextColor(item.context.getResources().getColor(R.color.white));
+            }
 
         }
 

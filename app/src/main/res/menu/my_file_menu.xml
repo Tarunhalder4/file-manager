@@ -27,10 +27,6 @@
         >
         <menu>
             <item
-                android:title="@string/advance_setting"
-                />
-
-            <item
                 android:id="@+id/show_file_size"
                 android:title="@string/show_file_size"
                 android:checkable="true"

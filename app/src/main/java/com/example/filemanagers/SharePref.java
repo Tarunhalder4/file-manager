@@ -51,15 +51,6 @@ public class SharePref {
         return sharedPreferences.getBoolean(Constant.SHOW_FOLDER_SIZE,false);
     }
 
-    public void setShowFullNameOfFile(boolean booleans){
-        editor.putBoolean(Constant.SHOW_FULL_NAME_OF_FILE,booleans);
-        editor.commit();
-    }
-
-    public boolean getShowFullNameOfFile(){
-        return sharedPreferences.getBoolean(Constant.SHOW_FULL_NAME_OF_FILE,false);
-    }
-
     public void setShowHiddenFileAndFolder(boolean booleans){
         editor.putBoolean(Constant.SHOW_HIDDEN_FILE_AND_FOLDER,booleans);
         editor.commit();
@@ -67,6 +58,15 @@ public class SharePref {
 
     public boolean getShowHiddenFileAndFolder(){
         return sharedPreferences.getBoolean(Constant.SHOW_HIDDEN_FILE_AND_FOLDER,false);
+    }
+
+    public void setShowFullNameOfFile(boolean booleans){
+        editor.putBoolean(Constant.SHOW_FULL_NAME_OF_FILE,booleans);
+        editor.commit();
+    }
+
+    public boolean getShowFullNameOfFile(){
+        return sharedPreferences.getBoolean(Constant.SHOW_FULL_NAME_OF_FILE,false);
     }
 
     public void setCompareType(int compareType){

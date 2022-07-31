@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                             binding.noFileAvailable.setVisibility(View.GONE);
                             path = ((FileAndFolderAdapter)item).fileAndFolder.getPath();
                             peekPath = true;
-                            showFileAndFolder(((FileAndFolderAdapter)item).fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                            showFileAndFolder(((FileAndFolderAdapter)item).fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER ,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
                         } else {
                             if (((FileAndFolderAdapter)item).fileAndFolder.getName().endsWith(".pdf")) {
                                 openFile(((FileAndFolderAdapter)item).fileAndFolder, Constant.PDF_FILE);
@@ -860,8 +860,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         Log.e(TAG, "onMenuOpened: " );
-        MenuItem item = menu.findItem(R.id.show_hidden_folder_files);
-        item.setChecked(sharePref.getShowHiddenFileAndFolder());
+        MenuItem showFileSize, showFolderSize, showFullNameOfFile, showHiddenFileAndFolder;
+
+        showFileSize = menu.findItem(R.id.show_file_size);
+        showFolderSize = menu.findItem(R.id.show_folder_size);
+        showFullNameOfFile = menu.findItem(R.id.show_full_name_of_files);
+        showHiddenFileAndFolder= menu.findItem(R.id.show_hidden_folder_files);
+
+        showFileSize.setChecked(sharePref.getShowFileSize());
+        showFolderSize.setChecked(sharePref.getShowFolderSize());
+        showFullNameOfFile.setChecked(sharePref.getShowFullNameOfFile());
+        showHiddenFileAndFolder.setChecked(sharePref.getShowHiddenFileAndFolder());
+
         return super.onMenuOpened(featureId, menu);
     }
 
