@@ -1,8 +1,5 @@
 package com.example.filemanagers;
 
-import static android.os.Build.VERSION.SDK_INT;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -12,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -48,7 +44,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import bolts.Continuation;
 import bolts.Task;
 
 public class LufickFileManager extends AppCompatActivity {
@@ -101,12 +96,6 @@ public class LufickFileManager extends AppCompatActivity {
 
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(LufickFileManager.this, R.color.folder_background_dark));
-
-        mainAdapterFastItemAdapter = new FastItemAdapter<>();
-        pieAdapterFastItemAdapter = new FastItemAdapter<>();
-        bookmarkAdapterFastItemAdapter = new FastItemAdapter<>();
-        containsInternalFastItemAdapter = new FastItemAdapter<>();
-        internalStorageAdapterFastItemAdapter = new FastItemAdapter<>();
 
         drawerFastItemAdapter = new FastItemAdapter<>();
         drawerFastItemAdapter.withSelectable(true);
@@ -180,51 +169,58 @@ public class LufickFileManager extends AppCompatActivity {
         Constant.requestPermission(LufickFileManager.this);
 
         drawerRec.setLayoutManager(new LinearLayoutManager(this));
-        //binding.rec.setItemAnimator(new SlideDownAlphaAnimator());
         drawerRec.setAdapter(drawerFastItemAdapter);
 
-        List<IItem> items = new ArrayList<>();
-        items.add(new DrawerExpendableAdapter(new StringHolder("Home"),R.drawable.home_24).withTag(Constant.Home));
-        items.add(new DrawerExpendableAdapter(new StringHolder("Internal Stroage"),R.drawable.mobile12).withTag(Constant.INTERNAL_STORAGE_FILE_FOLDER));
 
-        DrawerExpendableAdapter cloud = new DrawerExpendableAdapter(new StringHolder("Clouds"),R.drawable.cloud_12);
-        List<IItem> subClouds = new ArrayList<>();
-        subClouds.add(new DrawableItemAdapter(new StringHolder("Add cloud Storage"),R.drawable.cloud_12).withTag(Constant.ADD_CLOUD_STORAGE));
-        cloud.withSubItems(subClouds);
-        items.add(cloud);
+        Task.callInBackground(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
 
-        DrawerExpendableAdapter collection = new DrawerExpendableAdapter(new StringHolder("Collections"),R.drawable.api_12);
-        List<IItem> collections = new ArrayList<>();
-        collections.add(new DrawableItemAdapter(new StringHolder("images"),R.drawable.camera_24).withTag(Constant.PHOTO_FOLDER));
-        collections.add(new DrawableItemAdapter(new StringHolder("Videos"),R.drawable.video_24).withTag(Constant.VIDEO_FOLDER));
-        collections.add(new DrawableItemAdapter(new StringHolder("Audio"),R.drawable.music_24).withTag(Constant.AUDIO_FILE));
-        collections.add(new DrawableItemAdapter(new StringHolder("Documents"),R.drawable.file_24).withTag(Constant.DOCUMENTS_FOLDER));
-        collections.add(new DrawableItemAdapter(new StringHolder("Apks"),R.drawable.android_8).withTag(Constant.APK));
-        collections.add(new DrawableItemAdapter(new StringHolder("Compressed"),R.drawable.folder_zip_24).withTag(Constant.COMPRESS_FOLDER));
-        collections.add(new DrawableItemAdapter(new StringHolder("Quick Access"),R.drawable.add_box_24).withTag(Constant.AAD_TO_QUICK_ACCESS));
-        collections.add(new DrawableItemAdapter(new StringHolder("Recent Files"),R.drawable.watch_later_24).withTag(Constant.RECENT_FILE));
-        collection.withSubItems(collections);
-        items.add(collection);
+                List<IItem> items = new ArrayList<>();
+                items.add(new DrawerExpendableAdapter(new StringHolder("Home"),R.drawable.home_24).withTag(Constant.Home));
+                items.add(new DrawerExpendableAdapter(new StringHolder("Internal Stroage"),R.drawable.mobile12).withTag(Constant.INTERNAL_STORAGE_FILE_FOLDER));
 
-        DrawerExpendableAdapter network = new DrawerExpendableAdapter(new StringHolder("Network"),R.drawable.network_12);
-        List<IItem> networks = new ArrayList<>();
-        networks.add(new DrawableItemAdapter(new StringHolder("FTP Server"),R.drawable.ftp_server_24).withTag(Constant.FTP_SERVER));
-        networks.add(new DrawableItemAdapter(new StringHolder("Lan(SMB 2.0)"),R.drawable.lan_24).withTag(Constant.LAN));
-        network.withSubItems(networks);
-        items.add(network);
+                DrawerExpendableAdapter cloud = new DrawerExpendableAdapter(new StringHolder("Clouds"),R.drawable.cloud_12);
+                List<IItem> subClouds = new ArrayList<>();
+                subClouds.add(new DrawableItemAdapter(new StringHolder("Add cloud Storage"),R.drawable.cloud_12).withTag(Constant.ADD_CLOUD_STORAGE));
+                cloud.withSubItems(subClouds);
+                items.add(cloud);
 
-        DrawerExpendableAdapter more = new DrawerExpendableAdapter(new StringHolder("More"),R.drawable.more_12);
-        List<IItem> mores = new ArrayList<>();
-        mores.add(new DrawableItemAdapter(new StringHolder("Trash"),R.drawable.ic_baseline_delete_24).withTag(Constant.TRASH));
-        mores.add(new DrawableItemAdapter(new StringHolder("Safe box"),R.drawable.safe_box_24).withTag(Constant.SAFE_BOX_FOLDER));
-        mores.add(new DrawableItemAdapter(new StringHolder("Connect with us"),R.drawable.user_12).withTag(Constant.CONNECT_WITH_US));
-        mores.add(new DrawableItemAdapter(new StringHolder("App Manager"),R.drawable.app_24).withTag(Constant.APP_MANAGER_FOLDER));
-        more.withSubItems(mores);
-        items.add(more);
+                DrawerExpendableAdapter collection = new DrawerExpendableAdapter(new StringHolder("Collections"),R.drawable.api_12);
+                List<IItem> collections = new ArrayList<>();
+                collections.add(new DrawableItemAdapter(new StringHolder("images"),R.drawable.camera_24).withTag(Constant.PHOTO_FOLDER));
+                collections.add(new DrawableItemAdapter(new StringHolder("Videos"),R.drawable.video_24).withTag(Constant.VIDEO_FOLDER));
+                collections.add(new DrawableItemAdapter(new StringHolder("Audio"),R.drawable.music_24).withTag(Constant.AUDIO_FILE));
+                collections.add(new DrawableItemAdapter(new StringHolder("Documents"),R.drawable.file_24).withTag(Constant.DOCUMENTS_FOLDER));
+                collections.add(new DrawableItemAdapter(new StringHolder("Apks"),R.drawable.android_8).withTag(Constant.APK));
+                collections.add(new DrawableItemAdapter(new StringHolder("Compressed"),R.drawable.folder_zip_24).withTag(Constant.COMPRESS_FOLDER));
+                collections.add(new DrawableItemAdapter(new StringHolder("Quick Access"),R.drawable.add_box_24).withTag(Constant.AAD_TO_QUICK_ACCESS));
+                collections.add(new DrawableItemAdapter(new StringHolder("Recent Files"),R.drawable.watch_later_24).withTag(Constant.RECENT_FILE));
+                collection.withSubItems(collections);
+                items.add(collection);
 
-        items.add(new DrawerExpendableAdapter(new StringHolder("Information"),R.drawable.information_whight_24).withTag(Constant.INFORMATION));
+                DrawerExpendableAdapter network = new DrawerExpendableAdapter(new StringHolder("Network"),R.drawable.network_12);
+                List<IItem> networks = new ArrayList<>();
+                networks.add(new DrawableItemAdapter(new StringHolder("FTP Server"),R.drawable.ftp_server_24).withTag(Constant.FTP_SERVER));
+                networks.add(new DrawableItemAdapter(new StringHolder("Lan(SMB 2.0)"),R.drawable.lan_24).withTag(Constant.LAN));
+                network.withSubItems(networks);
+                items.add(network);
 
-        drawerFastItemAdapter.add(items);
+                DrawerExpendableAdapter more = new DrawerExpendableAdapter(new StringHolder("More"),R.drawable.more_12);
+                List<IItem> mores = new ArrayList<>();
+                mores.add(new DrawableItemAdapter(new StringHolder("Trash"),R.drawable.ic_baseline_delete_24).withTag(Constant.TRASH));
+                mores.add(new DrawableItemAdapter(new StringHolder("Safe box"),R.drawable.safe_box_24).withTag(Constant.SAFE_BOX_FOLDER));
+                mores.add(new DrawableItemAdapter(new StringHolder("Connect with us"),R.drawable.user_12).withTag(Constant.CONNECT_WITH_US));
+                mores.add(new DrawableItemAdapter(new StringHolder("App Manager"),R.drawable.app_24).withTag(Constant.APP_MANAGER_FOLDER));
+                more.withSubItems(mores);
+                items.add(more);
+
+                items.add(new DrawerExpendableAdapter(new StringHolder("Information"),R.drawable.information_whight_24).withTag(Constant.INFORMATION));
+
+                drawerFastItemAdapter.add(items);
+                return null;
+            }
+        });
 
 
         mainAdapterFastItemAdapter = new FastItemAdapter<>();
@@ -236,7 +232,6 @@ public class LufickFileManager extends AppCompatActivity {
         Task.callInBackground(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-
                 setItemInPieAdapter();
                 setBookmarkAdapter();
                 setItemInContainsInternalAdapter();
@@ -245,7 +240,6 @@ public class LufickFileManager extends AppCompatActivity {
                 setMainAdapter();
                 binding.rec.setLayoutManager(new LinearLayoutManager(LufickFileManager.this));
                 binding.rec.setAdapter(mainAdapterFastItemAdapter);
-
 
                 mainAdapterFastItemAdapter.getAdapterItem(2).withSelectable(true);
 
