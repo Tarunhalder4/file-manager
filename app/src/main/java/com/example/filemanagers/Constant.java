@@ -75,22 +75,18 @@ public class Constant {
 
     /////sorting Constant
     public static final String SORT_ID = "sort_id";
-    public static final int ID_SORT_NAME = 2131231261;
-    public static final int ID_SORT_DATE = 2131231260;
-    public static final int ID_SORT_SIZE = 2131231263;
-    public static final int ID_SORT_TYPE = 2131231264;
+    //public static boolean  = "sort_id";
 
     public static boolean ASCENDING_ORDER =false;
-    //public static final int DESCENDING_ORDER =1;
+    public static final String ASCENDING_ORDER_STRING = "ascending_order_string";
 
-    public static final int NAME_ASCENDING_ORDER =0;
-    public static final int NAME_DESCENDING_ORDER =1;
-    public static final int DATE_ASCENDING_ORDER =2;
-    public static final int DATE_DESCENDING_ORDER =3;
-    public static final int SIZE_ASCENDING_ORDER =4;
-    public static final int SIZE_DESCENDING_ORDER =5;
-    public static final int TYPE_ASCENDING_ORDER =6;
-    public static final int TYPE_DESCENDING_ORDER =7;
+
+    public static final String NAME_ASCENDING_ORDER ="name_ascending_order";
+    public static final String NAME_DESCENDING_ORDER ="name_descending_order";
+    public static final String DATE_ASCENDING_ORDER = "date_ascending_order";
+    public static final String DATE_DESCENDING_ORDER ="date_descending_order";
+    public static final String SIZE_ASCENDING_ORDER ="size_ascending_order";
+    public static final String SIZE_DESCENDING_ORDER ="size_descending_order";
 
     public static final String COMPARE_TYPE = "compare_type";
 

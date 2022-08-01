@@ -49,6 +49,8 @@
     <string name="sort_modified_date">Date</string>
     <string name="sort_type">Type</string>
     <string name="sort_only_this_folder">Only this Folder</string>
+    <string name="ascending_order">Ascending order</string>
+    <string name="descending_order">Descending order</string>
 
 <!--    rename dialog box-->
     <string name="rename_save">Save</string>

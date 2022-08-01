@@ -477,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showFileAndFolder(File mainFile, String requiredFile, boolean hide , int compareType ) {
+    private void showFileAndFolder(File mainFile, String requiredFile, boolean hide , String compareType ) {
 
         fileAndFolderItemAdapter.clear();
         showPath(mainFile);
@@ -611,64 +611,68 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void compare(List<File> files , int compareType){
-        if(compareType==Constant.NAME_ASCENDING_ORDER){
-            Collections.sort(files, new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
-                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                }
-            });
-        }else if(compareType == Constant.NAME_DESCENDING_ORDER){
-            Collections.sort(files, new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
-                    return o2.getName().toLowerCase().compareTo(o1.getName().toLowerCase());
-                }
-            });
-        }else if(compareType == Constant.DATE_ASCENDING_ORDER){
-            Collections.sort(files, new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
+    private void compare(List<File> files , String compareType){
+        if(sharePref.getSortAscending()){
+            if(compareType.equals(Constant.NAME_ASCENDING_ORDER)){
+                Collections.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
+                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                    }
+                });
+            }else if(compareType.equals(Constant.DATE_ASCENDING_ORDER)){
+                Collections.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
 //                    Log.e(TAG, "compare: " +o2.lastModified());
 //                    Log.e(TAG, "compare: " +o1.lastModified() );
-                    Log.e(TAG, "compare: " +(int) (o1.lastModified()/1000 - o2.lastModified()/1000));
+                        //Log.e(TAG, "compare: " +(int) (o1.lastModified()/1000 - o2.lastModified()/1000));
 
-                    return (int) (o1.lastModified()/1000 - o2.lastModified()/1000);
-                }
-            });
-        }else if(compareType == Constant.DATE_DESCENDING_ORDER){
-            Collections.sort(files, new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
-                    Log.e(TAG, "compare: " +(int) (o1.lastModified()/1000 - o2.lastModified()/1000));
-                    return (int) (o2.lastModified()/1000 - o1.lastModified()/1000);
-                }
-            });
-        }else if(compareType == Constant.SIZE_ASCENDING_ORDER){
-            Collections.sort(files, new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
-
-                    if(o1.isFile() && o2.isFile()){
-                        return (int) (o1.length()/1000 - o2.length()/1000);
-                    }else{
-                        return (int) (Constant.getDirectoryMemorySize(o1)/1000 - Constant.getDirectoryMemorySize(o2)/1000);
+                        return (int) (o1.lastModified()/1000 - o2.lastModified()/1000);
                     }
+                });
+            }else if(compareType.equals(Constant.SIZE_ASCENDING_ORDER)){
+                Collections.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
 
-                }
-            });
-        }else if(compareType == Constant.SIZE_DESCENDING_ORDER){
-            Collections.sort(files, new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
-                    if(o1.isFile() && o2.isFile()){
-                        return (int) (o2.length()/1000 - o1.length()/1000);
-                    }else{
-                        return (int) (Constant.getDirectoryMemorySize(o2)/1000 - Constant.getDirectoryMemorySize(o1)/1000);
+                        if(o1.isFile() && o2.isFile()){
+                            return (int) (o1.length()/1000 - o2.length()/1000);
+                        }else{
+                            return (int) (Constant.getDirectoryMemorySize(o1)/1000 - Constant.getDirectoryMemorySize(o2)/1000);
+                        }
+
                     }
-                }
-            });
+                });
+            }
+        }else {
+            if(compareType.equals(Constant.NAME_DESCENDING_ORDER)){
+                Collections.sort(files, new Comparator<File>(){
+                    @Override
+                    public int compare(File o1, File o2) {
+                        return o2.getName().toLowerCase().compareTo(o1.getName().toLowerCase());
+                    }
+                });
+            }else if(compareType.equals(Constant.DATE_DESCENDING_ORDER)){
+                Collections.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
+                      //  Log.e(TAG, "compare: " +(int) (o1.lastModified()/1000 - o2.lastModified()/1000));
+                        return (int) (o2.lastModified()/1000 - o1.lastModified()/1000);
+                    }
+                });
+            }else if(compareType.equals(Constant.SIZE_DESCENDING_ORDER)){
+                Collections.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File o1, File o2) {
+                        if(o1.isFile() && o2.isFile()){
+                            return (int) (o2.length()/1000 - o1.length()/1000);
+                        }else{
+                            return (int) (Constant.getDirectoryMemorySize(o2)/1000 - Constant.getDirectoryMemorySize(o1)/1000);
+                        }
+                    }
+                });
+            }
         }
 
     }
@@ -1118,27 +1122,43 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
 
         ascendingOrder = view.findViewById(R.id.sort_ascending);
-        descendingOrder = view.findViewById(R.id.sort_descending);
-        checkBoxShowOnlyFolder = view.findViewById(R.id.sort_only_this_folder);
+       // descendingOrder = view.findViewById(R.id.sort_descending);
+       // checkBoxShowOnlyFolder = view.findViewById(R.id.sort_only_this_folder);
         radioGroup = view.findViewById(R.id.radio_group);
         nameSort = view.findViewById(R.id.sort_name);
 
+        if(sharePref.getSortAscending()){
+            ascendingOrder.setText(getResources().getString(R.string.ascending_order));
+        }else{
+            ascendingOrder.setText(getResources().getString(R.string.descending_order));
+        }
 
         ascendingOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Constant.ASCENDING_ORDER = true;
-                setAscendingAndDescendingOrder(sharePref.getSortId());
-                Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
-            }
-        });
+                if(sharePref.getSortAscending()){
+                    Constant.ASCENDING_ORDER = false;
+                    sharePref.setSortAscending(false);
+                    Log.e(TAG, "onClick: " + sharePref.getSortAscending() );
+                    ascendingOrder.setText(getResources().getString(R.string.descending_order));
+                    setAscendingAndDescendingOrder(sharePref.getSortId());
+                    File file = new File(path);
+                    Constant.SAME_PATH = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
+                }else {
+                    Constant.ASCENDING_ORDER = true;
+                    sharePref.setSortAscending(true);
+                    Log.e(TAG, "onClick: " + sharePref.getSortAscending() );
+                    ascendingOrder.setText(getResources().getString(R.string.ascending_order));
+                    setAscendingAndDescendingOrder(sharePref.getSortId());
+                    File file = new File(path);
+                    Constant.SAME_PATH = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Toast.makeText(MainActivity.this, "descending order", Toast.LENGTH_SHORT).show();
+                }
 
-        descendingOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Constant.ASCENDING_ORDER = false;
-                setAscendingAndDescendingOrder(sharePref.getSortId());
-                Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -1165,39 +1185,51 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "setAscendingAndDescendingOrder: " + checkedId);
         sharePref.setSortId(checkedId);
         File file = new File(path);
-        if (Constant.ASCENDING_ORDER) {
+        if (sharePref.getSortAscending()) {
             switch (checkedId) {
                 case R.id.sort_name:
                     sharePref.setCompareType(Constant.NAME_ASCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: name as" );
                     Constant.SAME_PATH  = true;
-                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),Constant.NAME_ASCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: " + sharePref.getCompareType() );
                     break;
                 case R.id.sort_last_modified_date:
-                    Constant.SAME_PATH  = true;
                     sharePref.setCompareType(Constant.DATE_ASCENDING_ORDER);
-                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Log.e(TAG, "setAscendingAndDescendingOrder: date as" );
+                    Constant.SAME_PATH  = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),Constant.DATE_ASCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: " + sharePref.getCompareType() );
                     break;
                 case R.id.sort_size:
-                    Constant.SAME_PATH  = true;
                     sharePref.setCompareType(Constant.SIZE_ASCENDING_ORDER);
-                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Log.e(TAG, "setAscendingAndDescendingOrder: size as" );
+                    Constant.SAME_PATH  = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),Constant.SIZE_ASCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: " + sharePref.getCompareType() );
             }
         } else {
             switch (checkedId) {
                 case R.id.sort_name:
-                    Constant.SAME_PATH = true;
                     sharePref.setCompareType(Constant.NAME_DESCENDING_ORDER);
-                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Log.e(TAG, "setAscendingAndDescendingOrder: name ds" );
+                    Constant.SAME_PATH = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),Constant.NAME_DESCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: " + sharePref.getCompareType() );
                     break;
                 case R.id.sort_last_modified_date:
-                    Constant.SAME_PATH = true;
                     sharePref.setCompareType(Constant.DATE_DESCENDING_ORDER);
-                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Log.e(TAG, "setAscendingAndDescendingOrder: date ds" );
+                    Constant.SAME_PATH = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),Constant.DATE_DESCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: " + sharePref.getCompareType() );
                     break;
                 case R.id.sort_size:
-                    Constant.SAME_PATH = true;
                     sharePref.setCompareType(Constant.SIZE_DESCENDING_ORDER);
-                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),sharePref.getCompareType());
+                    Log.e(TAG, "setAscendingAndDescendingOrder: size ds" );
+                    Constant.SAME_PATH = true;
+                    showFileAndFolder(file,Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(),Constant.SIZE_DESCENDING_ORDER);
+                    Log.e(TAG, "setAscendingAndDescendingOrder: " + sharePref.getCompareType() );
                     break;
             }
         }
