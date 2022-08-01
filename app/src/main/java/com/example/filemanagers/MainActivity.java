@@ -868,12 +868,12 @@ public class MainActivity extends AppCompatActivity {
 
         showFileSize = menu.findItem(R.id.show_file_size);
         showFolderSize = menu.findItem(R.id.show_folder_size);
-        showFullNameOfFile = menu.findItem(R.id.show_full_name_of_files);
+       // showFullNameOfFile = menu.findItem(R.id.show_full_name_of_files);
         showHiddenFileAndFolder= menu.findItem(R.id.show_hidden_folder_files);
 
         showFileSize.setChecked(sharePref.getShowFileSize());
         showFolderSize.setChecked(sharePref.getShowFolderSize());
-        showFullNameOfFile.setChecked(sharePref.getShowFullNameOfFile());
+       // showFullNameOfFile.setChecked(sharePref.getShowFullNameOfFile());
         showHiddenFileAndFolder.setChecked(sharePref.getShowHiddenFileAndFolder());
 
         return super.onMenuOpened(featureId, menu);
@@ -939,8 +939,8 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 break;
-            case R.id.show_full_name_of_files:
-                break;
+//            case R.id.show_full_name_of_files:
+//                break;
             case R.id.show_hidden_folder_files:
                 if(item.isCheckable()) {
                     if (!sharePref.getShowHiddenFileAndFolder()) {
