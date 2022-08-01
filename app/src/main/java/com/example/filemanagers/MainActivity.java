@@ -353,80 +353,80 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void formIntentGetData() {
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PHOTO_FILE)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.PHOTO_FILE)) {
             File file = Environment.getExternalStorageDirectory();
             showPath(file);
             showPhotoFolder(file);
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.DOWNLOAD_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.SAFE_BOX_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.SAFE_BOX_FOLDER)) {
             Toast.makeText(MainActivity.this, Constant.SAFE_BOX_FOLDER, Toast.LENGTH_SHORT).show();
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MUSIC_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.MUSIC_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
             showFileAndFolder(file, Constant.AUDIO_FILE, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.RECENT_FILE)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.RECENT_FILE)) {
             Toast.makeText(MainActivity.this, Constant.RECENT_FILE, Toast.LENGTH_SHORT).show();
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DOCUMENTS_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.DOCUMENTS_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
             showFileAndFolder(file, Constant.DOCUMENTS_FILE, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.APP_MANAGER_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.APP_MANAGER_FOLDER)) {
             Toast.makeText(MainActivity.this, Constant.APP_MANAGER_FOLDER, Toast.LENGTH_SHORT).show();
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.VIDEO_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.VIDEO_FOLDER)) {
             File file = Environment.getExternalStorageDirectory();
             showFileAndFolder(file, Constant.VIDEO_FILE, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.AAD_TO_QUICK_ACCESS)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.AAD_TO_QUICK_ACCESS)) {
             Toast.makeText(MainActivity.this, Constant.AAD_TO_QUICK_ACCESS, Toast.LENGTH_SHORT).show();
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.INTERNAL_STORAGE_PATH)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.INTERNAL_STORAGE_PATH)) {
             path = Environment.getExternalStorageDirectory().toString();
             File file = new File(path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = 1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.FOLDER_PATH)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.FOLDER_PATH)) {
             String path = getIntent().getStringExtra(Constant.FOLDER_PATH);
             File file = new File(path);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.DCIM_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.DCIM_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.PICTURES_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.PICTURES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
         }
 
-        if (getIntent().getStringExtra(Constant.PATH).equals(Constant.MOVIES_FOLDER)) {
+        if (getIntent().getStringExtra(Constant.PATH)!=null && getIntent().getStringExtra(Constant.PATH).equals(Constant.MOVIES_FOLDER)) {
             File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
             showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
             backCount = -1;
@@ -519,6 +519,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public Object call() throws Exception {
 
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.progressBar.setVisibility(View.VISIBLE);
+                            }
+                        });
                         File[] files = Objects.requireNonNull(mainFile.listFiles());
                         List<File> fileList = new ArrayList<>(Arrays.asList(files));
 
@@ -541,9 +547,8 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d(TAG, "showFileAndFolder: " + files1);
 
-
-                        for(File file : files1){
-                            if(file.isDirectory()){
+                        for (File file : files1) {
+                            if (file.isDirectory()) {
                                 fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
                                 break;
                             }
@@ -585,6 +590,7 @@ public class MainActivity extends AppCompatActivity {
                             fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
                             binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                             binding.rec.setAdapter(fileAndFolderFastAdapter);
+                            binding.progressBar.setVisibility(View.GONE);
                         }
 
                         return null;
@@ -1106,8 +1112,7 @@ public class MainActivity extends AppCompatActivity {
                     setAscendingAndDescendingOrder(sharePref.getSortId());
                     Toast.makeText(MainActivity.this, "descending order", Toast.LENGTH_SHORT).show();
                 }
-
-
+                dialog.dismiss();
             }
         });
 
