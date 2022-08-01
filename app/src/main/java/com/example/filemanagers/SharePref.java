@@ -71,7 +71,7 @@ public class SharePref {
 
     public void setShowFullNameOfFile(boolean booleans){
         editor.putBoolean(Constant.SHOW_FULL_NAME_OF_FILE,booleans);
-
+        editor.commit();
     }
 
     public boolean getShowFullNameOfFile(){
