@@ -523,6 +523,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public Object call() throws Exception {
 
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.progressBar.setVisibility(View.VISIBLE);
+                            }
+                        });
                         File[] files = Objects.requireNonNull(mainFile.listFiles());
                         List<File> fileList = new ArrayList<>(Arrays.asList(files));
 
@@ -544,8 +550,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         fileAndFolderAdapterList.clear();
-
-                      //  fileAndFolderItemAdapter.clear();
 
                         for (File file : files1) {
                             if (file.isDirectory()) {
@@ -590,6 +594,7 @@ public class MainActivity extends AppCompatActivity {
                             fileAndFolderItemAdapter.add(fileAndFolderAdapterList);
                             binding.rec.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                             binding.rec.setAdapter(fileAndFolderFastAdapter);
+                            binding.progressBar.setVisibility(View.GONE);
                         }
 
                         return null;
@@ -1103,24 +1108,15 @@ public class MainActivity extends AppCompatActivity {
                     sharePref.setSortAscending(false);
                     ascendingOrder.setText(getResources().getString(R.string.descending_order));
                     setAscendingAndDescendingOrder(sharePref.getSortId());
-//                    File file = new File(path);
-//                    Constant.SAME_PATH = true;
-//                   // fileAndFolderAdapterList.clear();
-//                    showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
                     Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
                 } else {
                     Constant.ASCENDING_ORDER = true;
                     sharePref.setSortAscending(true);
                     ascendingOrder.setText(getResources().getString(R.string.ascending_order));
                     setAscendingAndDescendingOrder(sharePref.getSortId());
-//                    File file = new File(path);
-//                    Constant.SAME_PATH = true;
-//                   // fileAndFolderAdapterList.clear();
-//                    showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
                     Toast.makeText(MainActivity.this, "descending order", Toast.LENGTH_SHORT).show();
                 }
-
-
+                dialog.dismiss();
             }
         });
 
