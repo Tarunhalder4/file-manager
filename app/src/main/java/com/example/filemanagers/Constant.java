@@ -4,7 +4,6 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,11 +20,9 @@ import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 
 public class Constant {
 
@@ -75,7 +72,6 @@ public class Constant {
 
     /////sorting Constant
     public static final String SORT_ID = "sort_id";
-    //public static boolean  = "sort_id";
 
     public static boolean ASCENDING_ORDER =false;
     public static final String ASCENDING_ORDER_STRING = "ascending_order_string";
@@ -94,13 +90,9 @@ public class Constant {
 
     public static boolean LOG_CLICK_ACTIVATED = false;
     public static boolean MOVE = false;
-    public static boolean HIDE = true;
     public static boolean SAME_PATH = false;
 
     ///////////For drawable background
-    public static final int WITH_BACK_GROUND_VIEW =0;
-    public static final int WITHOUT_BACK_GROUND_VIEW =1;
-
     public static final String Home ="home";
     public static final String ADD_CLOUD_STORAGE ="add cloud storage";
     public static final String FTP_SERVER ="ftp server";
@@ -113,31 +105,31 @@ public class Constant {
 
 
     public static boolean checkPermission(Context context) {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
+//        if (SDK_INT >= Build.VERSION_CODES.R) {
+//            return Environment.isExternalStorageManager();
+//        } else {
             int write = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE);
             int read = ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE);
             return write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED;
-        }
+       // }
     }
 
     public static void requestPermission(Activity activity) {
 
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-
-            try {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s", activity.getApplicationContext().getPackageName())));
-                activity.startActivityForResult(intent, REQUEST_CODE);
-            } catch (Exception e) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                activity.startActivityForResult(intent, REQUEST_CODE);
-            }
-        }else{
+//        if (SDK_INT >= Build.VERSION_CODES.R) {
+//
+//            try {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                intent.addCategory("android.intent.category.DEFAULT");
+//                intent.setData(Uri.parse(String.format("package:%s", activity.getApplicationContext().getPackageName())));
+//                activity.startActivityForResult(intent, REQUEST_CODE);
+//            } catch (Exception e) {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                activity.startActivityForResult(intent, REQUEST_CODE);
+//            }
+//        }else{
             ActivityCompat.requestPermissions(activity, new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, REQUEST_CODE);
-        }
+//        }
 
     }
 

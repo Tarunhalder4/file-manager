@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.pathRec.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     binding.pathRec.setAdapter(pathAdapterFastItemAdapter);
 
-                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER, sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
+                    showFileAndFolder(item.file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
                 }
                 return false;
             }
@@ -224,10 +224,6 @@ public class MainActivity extends AppCompatActivity {
 
                             if (((FileAndFolderAdapter) item).fileAndFolder.getName().endsWith(".mp4")) {
                                 openFile(((FileAndFolderAdapter) item).fileAndFolder, Constant.VIDEO_FILE);
-                            }
-
-                            if (((FileAndFolderAdapter) item).fileAndFolder.isDirectory()) {
-                                showFileAndFolder(((FileAndFolderAdapter) item).fileAndFolder, Constant.INTERNAL_STORAGE_FILE_FOLDER, sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
                             }
 
                         }
@@ -545,14 +541,28 @@ public class MainActivity extends AppCompatActivity {
 
                         fileAndFolderAdapterList.clear();
 
-                      //  fileAndFolderItemAdapter.clear();
+//                        boolean allFolderIsHidden = true;
+//                        for (File file : files1) {
+//                            if(file.isDirectory()) {
+//                                if(!file.isHidden() && !sharePref.getShowHiddenFileAndFolder()){
+//                                     allFolderIsHidden = false;
+//                                     break;
+//                                }
+//                            }
+//                        }
 
-                        for (File file : files1) {
-                            if (file.isDirectory()) {
-                                fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
-                                break;
-                            }
+                        for(File file : files1){
+                            if(file.isDirectory()){
+//                                if(allFolderIsHidden){
+//                                    //fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
+//                                    break;
+//                                }else {
+                                    fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
+                                    break;
+                                }
+                            //}
                         }
+
 
                         for (File file : files1) {
                             if (file.isDirectory() && !file.getName().startsWith(".") && hide) {
@@ -563,11 +573,26 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                        for (File file : files1) {
-                            if (file.isFile()) {
-                                fileAndFolderAdapterList.add(new HeaderItem("List of File"));
-                                break;
-                            }
+//                        boolean allFileIsHidden = true;
+//                        for (File file : files1) {
+//                            if(file.isFile()) {
+//                                if(!file.isHidden() && !sharePref.getShowHiddenFileAndFolder()){
+//                                    allFileIsHidden = false;
+//                                    break;
+//                                }
+//                            }
+//                        }
+
+                        for(File file : files1){
+                            if(file.isFile()){
+//                                if(allFileIsHidden){
+//                                    //fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
+//                                    break;
+//                                }else {
+                                    fileAndFolderAdapterList.add(new HeaderItem("List of File"));
+                                    break;
+                                }
+                            //}
                         }
 
                         for (File file : files1) {
@@ -743,11 +768,11 @@ public class MainActivity extends AppCompatActivity {
         if (event.isFileDelete()) {
             String Path = event.getFilePath();
             File file = new File(Path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, Constant.HIDE, sharePref.getCompareType());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
         } else if (event.isFileRename()) {
             String Path = event.getFilePath();
             File file = new File(Path);
-            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, Constant.HIDE, sharePref.getCompareType());
+            showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER,!sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
         }
 
     }
@@ -1103,20 +1128,12 @@ public class MainActivity extends AppCompatActivity {
                     sharePref.setSortAscending(false);
                     ascendingOrder.setText(getResources().getString(R.string.descending_order));
                     setAscendingAndDescendingOrder(sharePref.getSortId());
-//                    File file = new File(path);
-//                    Constant.SAME_PATH = true;
-//                   // fileAndFolderAdapterList.clear();
-//                    showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
                     Toast.makeText(MainActivity.this, "ascending order", Toast.LENGTH_SHORT).show();
                 } else {
                     Constant.ASCENDING_ORDER = true;
                     sharePref.setSortAscending(true);
                     ascendingOrder.setText(getResources().getString(R.string.ascending_order));
                     setAscendingAndDescendingOrder(sharePref.getSortId());
-//                    File file = new File(path);
-//                    Constant.SAME_PATH = true;
-//                   // fileAndFolderAdapterList.clear();
-//                    showFileAndFolder(file, Constant.INTERNAL_STORAGE_FILE_FOLDER, !sharePref.getShowHiddenFileAndFolder(), sharePref.getCompareType());
                     Toast.makeText(MainActivity.this, "descending order", Toast.LENGTH_SHORT).show();
                 }
 
