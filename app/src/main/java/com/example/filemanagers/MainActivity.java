@@ -541,18 +541,13 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d(TAG, "showFileAndFolder: " + files1);
 
+
                         for(File file : files1){
                             if(file.isDirectory()){
-//                                if(allFolderIsHidden){
-//                                    //fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
-//                                    break;
-//                                }else {
-                                    fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
-                                    break;
-                                }
-                            //}
+                                fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
+                                break;
+                            }
                         }
-
 
                         for (File file : files1) {
                             if (file.isDirectory() && !file.getName().startsWith(".") && hide) {
@@ -563,26 +558,11 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-//                        boolean allFileIsHidden = true;
-//                        for (File file : files1) {
-//                            if(file.isFile()) {
-//                                if(!file.isHidden() && !sharePref.getShowHiddenFileAndFolder()){
-//                                    allFileIsHidden = false;
-//                                    break;
-//                                }
-//                            }
-//                        }
-
                         for(File file : files1){
                             if(file.isFile()){
-//                                if(allFileIsHidden){
-//                                    //fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
-//                                    break;
-//                                }else {
-                                    fileAndFolderAdapterList.add(new HeaderItem("List of File"));
-                                    break;
-                                }
-                            //}
+                                fileAndFolderAdapterList.add(new HeaderItem("List of File"));
+                                break;
+                            }
                         }
 
                         for (File file : files1) {
