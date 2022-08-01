@@ -539,17 +539,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        fileAndFolderAdapterList.clear();
-
-//                        boolean allFolderIsHidden = true;
-//                        for (File file : files1) {
-//                            if(file.isDirectory()) {
-//                                if(!file.isHidden() && !sharePref.getShowHiddenFileAndFolder()){
-//                                     allFolderIsHidden = false;
-//                                     break;
-//                                }
-//                            }
-//                        }
+                        Log.d(TAG, "showFileAndFolder: " + files1);
 
                         for(File file : files1){
                             if(file.isDirectory()){
