@@ -114,14 +114,21 @@ public class BottomSheet extends BottomSheetDialogFragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(file.delete()){
-                    String FilePath=file.getParent();
-                    EventMessage eventMessage = new EventMessage();
-                    eventMessage.setFileDelete(true);
-                    eventMessage.setFilePath(FilePath);
-                    EventBus.getDefault().post(eventMessage);
-                    Toast.makeText(getActivity(), "file is Delete", Toast.LENGTH_SHORT).show();
+
+                if(file.isFile()){
+                    if(file.delete()){
+                        Toast.makeText(getActivity(), "File is Delete", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    CopyActivity.deleteFolder(file);
+                    Toast.makeText(getActivity(), "Folder is Delete", Toast.LENGTH_SHORT).show();
                 }
+                Constant.SAME_PATH = true;
+                String FilePath=file.getParent();
+                EventMessage eventMessage = new EventMessage();
+                eventMessage.setFileDelete(true);
+                eventMessage.setFilePath(FilePath);
+                EventBus.getDefault().post(eventMessage);
                 dismiss();
             }
         });

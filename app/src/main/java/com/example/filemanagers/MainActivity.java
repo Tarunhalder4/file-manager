@@ -1183,10 +1183,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
             if (item.getTitle().equals(getResources().getString(R.string.multi_select_delete))) {
+
                 for (AbstractItem fileAndFolderAdapter : fileAndFolderFastAdapter.getSelectedItems()) {
-                    if (((FileAndFolderAdapter) fileAndFolderAdapter).fileAndFolder.delete()) {
-                        Toast.makeText(MainActivity.this, ((FileAndFolderAdapter) fileAndFolderAdapter).fileAndFolder.getName() + " item is delete", Toast.LENGTH_SHORT).show();
+                    if(((FileAndFolderAdapter) fileAndFolderAdapter).fileAndFolder.isFile()){
+                        if (((FileAndFolderAdapter) fileAndFolderAdapter).fileAndFolder.delete()) {
+                            Toast.makeText(MainActivity.this, ((FileAndFolderAdapter) fileAndFolderAdapter).fileAndFolder.getName() + " item is delete", Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        CopyActivity.deleteFolder(((FileAndFolderAdapter) fileAndFolderAdapter).fileAndFolder);
                     }
+
                 }
                 mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", 1, fileAndFolderFastAdapter.getSelections());
             } else {
