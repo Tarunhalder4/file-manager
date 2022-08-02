@@ -530,8 +530,6 @@ public class MainActivity extends AppCompatActivity {
 
                         compare(fileList, compareType);
 
-                        Log.d(TAG, "showFileAndFolder: " + fileList);
-
                         List<File> files1 = new ArrayList<>();
                         for (File file : fileList) {
                             if (file.isDirectory()) {
@@ -545,12 +543,14 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        Log.d(TAG, "showFileAndFolder: " + files1);
+                        for(File file : files1){
+                            if(file.isDirectory()){
+                                if(file.isHidden() && !sharePref.getShowHiddenFileAndFolder()){
 
-                        for (File file : files1) {
-                            if (file.isDirectory()) {
+                                }else {
                                 fileAndFolderAdapterList.add(new HeaderItem("List of Folder"));
                                 break;
+                            }
                             }
                         }
 
@@ -565,8 +565,12 @@ public class MainActivity extends AppCompatActivity {
 
                         for(File file : files1){
                             if(file.isFile()){
+                                if(file.isHidden() && !sharePref.getShowHiddenFileAndFolder()){
+
+                                }else {
                                 fileAndFolderAdapterList.add(new HeaderItem("List of File"));
                                 break;
+                                }
                             }
                         }
 
@@ -579,7 +583,6 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                        Log.e(TAG, "call: " + Thread.currentThread().getName());
                         return null;
                     }
                 }).continueWith(new Continuation<Object, Object>() {
