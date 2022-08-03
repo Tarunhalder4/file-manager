@@ -86,7 +86,7 @@ public class CopyActivity extends AppCompatActivity {
 
                         try {
                             if (Constant.MOVE) {
-                                multipleFileMove();
+                                multipleFileAndFolderMove();
                             } else {
                                 multipleFileAndFolderCopy();
                             }
@@ -339,7 +339,7 @@ public class CopyActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void multipleFileMove() throws IOException {
+    void multipleFileAndFolderMove() throws IOException {
         String sourcePath = getIntent().getStringExtra(Constant.PATH);
         ArrayList<Object> listdata = new ArrayList<Object>();
         try {
@@ -375,7 +375,20 @@ public class CopyActivity extends AppCompatActivity {
             });
             Log.e(TAG, "call: file copy");
 
-            singleFileMove(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+            if(sourceFile.isFile()){
+                singleFileMove(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+            }else {
+                long totalFolderMemory = Constant.getDirectoryMemorySize(new File(sourceFile.getAbsolutePath()));
+                singleFolderMove(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName(), totalFolderMemory);
+            }
+
+
+//            if (sourceFile.isFile()) {
+//                singleFileCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName());
+//            } else {
+//                long totalFolderMemory = Constant.getDirectoryMemorySize(new File(sourceFile.getAbsolutePath()));
+//                singleFolderCopy(sourceFile.getAbsolutePath(), destinationPath + "/" + sourceFile.getName(), totalFolderMemory);
+//            }
 
         }
 
@@ -432,6 +445,79 @@ public class CopyActivity extends AppCompatActivity {
         }
 
     }
+
+    public void singleFolderMove(String source, String destination, long totalFolderMemory) {
+
+        File sourceFolder = new File(source);
+        File destinationFolder = new File(destination);
+
+        if (sourceFolder.isDirectory()) {
+            if (!destinationFolder.exists()) {
+                boolean make = destinationFolder.mkdirs();
+                if (make) {
+                    Log.e(TAG, "make destination folder: ");
+                }
+            }
+
+            String[] files = sourceFolder.list();
+
+            assert files != null;
+            for (String file : files) {
+                File srcFile = new File(source, file);
+                File destFile = new File(destination, file);
+                singleFolderCopy(srcFile.getAbsolutePath(), destFile.getAbsolutePath(), totalFolderMemory);
+            }
+        } else {
+            InputStream in = null;
+            OutputStream out = null;
+
+            try {
+                in = new FileInputStream(source);
+                out = new FileOutputStream(destination);
+
+                byte[] buffer = new byte[512];
+                int length;
+                while ((length = in.read(buffer)) != -1) {
+                    long copyByte = totalFolderMemory - in.available();
+                    long percentByte = ((copyByte * 100) / totalFolderMemory);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.copyProgressbar.setVisibility(View.VISIBLE);
+                            binding.pastImage.setVisibility(View.GONE);
+                            binding.past.setVisibility(View.GONE);
+                            binding.cancelImage.setVisibility(View.GONE);
+                            binding.cancel.setVisibility(View.GONE);
+                            binding.copyProgressbar.setProgress((int) percentByte);
+                        }
+                    });
+                    out.write(buffer, 0, length);
+                }
+
+                Log.e(TAG, " copied the folder successfully ");
+            } catch (Exception e) {
+                try {
+                    assert in != null;
+                    in.close();
+                } catch (IOException e1) {
+                    Log.e(TAG, "singleFolderCopy: ", e1);
+                }
+
+                try {
+                    assert out != null;
+                    out.close();
+                } catch (IOException e1) {
+                    Log.e(TAG, "singleFolderCopy: ", e1);
+                }
+            }
+        }
+
+        CopyActivity.deleteFolder(new File(source));
+    }
+
+
+
 
     @Override
     public void onBackPressed() {
