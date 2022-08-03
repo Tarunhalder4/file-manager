@@ -46,9 +46,6 @@
                 android:text="Download"
                 android:textColor="@color/white"
                 android:textSize="11dp"
-                android:background="@drawable/ripple_effect"
-                android:clickable="true"
-                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/folder_image"
                 app:layout_constraintTop_toTopOf="parent" />

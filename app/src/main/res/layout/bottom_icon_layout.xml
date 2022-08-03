@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@color/gray">
 
-
     <View
         android:id="@+id/cut_view2"
         android:layout_width="36dp"
@@ -23,6 +22,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:src="@drawable/cut_24"
+        android:background="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="@+id/cut_view2"
         app:layout_constraintEnd_toEndOf="@+id/cut_view2"
         app:layout_constraintStart_toStartOf="@+id/cut_view2"
@@ -58,6 +58,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:src="@drawable/copy_24"
+        android:background="@drawable/ripple_effect"
         app:layout_constraintBottom_toBottomOf="@+id/copy_view3"
         app:layout_constraintEnd_toEndOf="@+id/copy_view3"
         app:layout_constraintStart_toStartOf="@+id/copy_view3"

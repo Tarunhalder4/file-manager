@@ -23,6 +23,7 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/file_download_8.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/fill_folder_48.xml" value="0.1835" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/flash_background.xml" value="0.1145" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/folder_repple.xml" value="0.1685" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/folder_zip_24.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/ftp_server_24.xml" value="0.2105" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/green_dot.xml" value="0.204" />
@@ -54,12 +55,15 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/watch_later_24.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/white_dot_24.xml" value="0.204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/drawable/yellow_dot.xml" value="0.204" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout-v23/bookmark_item.xml" value="0.15813953488372093" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout-v23/internal_storage_cardview.xml" value="0.203125" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout-v23/simple_item.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_copy.xml" value="0.22" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_lufick_file_manager.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_main.xml" value="0.12" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_splash.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/activity_test.xml" value="0.1983695652173913" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmark_item.xml" value="0.33" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmark_item.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/bookmarks_cardview.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/botom_sheet_layout.xml" value="0.5" />
@@ -73,17 +77,18 @@
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/drawer_header.xml" value="0.19927536231884058" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_path.xml" value="0.22" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_photo_row.xml" value="0.5518672199170125" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row.xml" value="0.25" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row.xml" value="0.17346938775510204" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/each_row_of_drawable_bottom_layout.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/erch_photo_row.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/fragment_copy.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage.xml" value="0.3440514469453376" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage_cardview.xml" value="0.5" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/internal_storage_cardview.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/path_layout.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_card_view.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_cardview.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/pie_chat_item.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/rename_dialog_box.xml" value="0.19927536231884058" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/ripple.xml" value="0.203125" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/simple_item.xml" value="0.2" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/sort_dialog_box.xml" value="0.18885869565217392" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/FileManagers/app/src/main/res/layout/tittle_bottom_sheet.xml" value="0.33" />
